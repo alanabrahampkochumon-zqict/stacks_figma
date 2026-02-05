@@ -14,9 +14,8 @@ export const EventHandlers = {
     },
 } as const;
 
-type Events = keyof typeof EventHandlers;
-export type _Events = (typeof EventHandlers)[Events]["name"];
+type Key = keyof typeof EventHandlers;
+export type EventType = (typeof EventHandlers)[Key]["name"];
+export type EventHandlerType = (typeof EventHandlers)[Key]["handler"];
 
 EventHandlers.GenerateCircle;
-
-class Events {}
