@@ -1,7 +1,7 @@
 import { render } from "@create-figma-plugin/ui";
 import { emit } from "@create-figma-plugin/utilities";
 import { h } from "preact";
-import { Events } from "../common/constants";
+import { EventHandlers } from "../common/event-handlers/Events";
 
 function UI() {
     return (
@@ -9,7 +9,7 @@ function UI() {
             <p>Sample Generate Circle</p>
             <button
                 style={{ background: "white", color: "black", padding: "1rem" }}
-                onClick={() => emit(Events.GenCirlce)}
+                onClick={() => emit(EventHandlers.GenerateCircle.name)}
             >
                 Generate Circle
             </button>

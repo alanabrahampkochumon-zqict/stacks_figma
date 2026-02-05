@@ -1,7 +1,7 @@
 import { EventHandler } from "@create-figma-plugin/utilities";
-import { EventTypes } from "../constants";
+import { EventHandlers, Events } from "./Events";
 
 export interface GenerateCircleHandler extends EventHandler {
-    name: EventTypes;
-    handler: (args: any) => void;
+    name: (typeof EventHandlers)[Events]["name"];
+    handler: (typeof EventHandlers)[Events]["handler"];
 }
