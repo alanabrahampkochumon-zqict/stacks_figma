@@ -11,11 +11,13 @@
     "@create-figma-plugin/tsconfig": "^4.0.3",
     "@figma/plugin-typings": "1.109.0",
     "@types/prismjs": "1.26.3",
-    "typescript": ">=5"
+    "typescript": ">=5",
+    "vitest": "^4.0.18"
   },
   "scripts": {
     "build": "build-figma-plugin --typecheck --minify",
-    "watch": "build-figma-plugin --typecheck --watch"
+    "watch": "build-figma-plugin --typecheck --watch",
+    "test": "vitest"
   },
   "figma-plugin": {
     "editorType": [
