@@ -23,19 +23,19 @@ export type ScaleConfig = {
 };
 
 export const ScalePresets: Record<string, ScaleConfig> = {
-    "2px-grid": {
+    "2px_grid": {
         base: 2,
         interpolator: Interpolator.Linear,
         steps: 11,
         minLimit: 0,
     },
-    "4px-grid": {
+    "4px_grid": {
         base: 4,
         interpolator: Interpolator.Linear,
         steps: 11,
         minLimit: 0,
     },
-    "4px-ease": {
+    "4px_ease": {
         base: 4,
         interpolator: Interpolator.Linear,
         steps: 21,
@@ -55,13 +55,13 @@ export const ScalePresets: Record<string, ScaleConfig> = {
             },
         ],
     },
-    "8px-grid": {
+    "8px_grid": {
         base: 8,
         interpolator: Interpolator.Linear,
         steps: 11,
         minLimit: 0,
     },
-    "8px-ease": {
+    "8px_ease": {
         base: 8,
         interpolator: Interpolator.Linear,
         steps: 21,
@@ -81,7 +81,7 @@ export const ScalePresets: Record<string, ScaleConfig> = {
             },
         ],
     },
-    "geometric-base2": {
+    geometric_base2: {
         base: 2,
         interpolator: Interpolator.Geometric,
         steps: 10,
@@ -108,5 +108,18 @@ export const ScalePresets: Record<string, ScaleConfig> = {
  * @returns an array of scales.
  */
 export function generateScale(config: ScaleConfig): Array<number> {
+    const start = config.startValues
+        ? config.startValues
+        : config.minLimit
+          ? [config.minLimit]
+          : [0];
+    const end = config.endValues;
+    if (!config.steps || !config.endValues)
+        throw Error("Either steps or end values must be specified");
+
+    const maxValuesToBeFilled = end
+        ? (end[0] - start[start.length - 1]) / config.base - 1
+        : config.steps - start.length;
+
     return [];
 }
