@@ -99,7 +99,13 @@ export const ScalePresets: Record<string, ScaleConfig> = {
         startValues: [0, 50],
         endValues: [950],
     },
-};
+} as const;
+
+export function getConfigPreset(
+    presetName: keyof typeof ScalePresets,
+): ScaleConfig {
+    return ScalePresets[presetName];
+}
 
 /**
  * Generates a scale given the right configuration.
@@ -114,12 +120,45 @@ export function generateScale(config: ScaleConfig): Array<number> {
           ? [config.minLimit]
           : [0];
     const end = config.endValues;
-    if (!config.steps || !config.endValues)
-        throw Error("Either steps or end values must be specified");
+
+    if (!config.steps && !end)
+        throw Error(
+            "[Generate Error]: Either steps or end values must be specified",
+        );
 
     const maxValuesToBeFilled = end
         ? (end[0] - start[start.length - 1]) / config.base - 1
-        : config.steps - start.length;
+        : config.steps && config.steps - start.length; // Just to make eslint happy. If end is not null this step won't execute.
+    if (!maxValuesToBeFilled)
+        throw new Error("[Generate Error]: Invalid steps");
+    // FIXME: Iterate upto maxValues, not always since if max values are not interpolatable, break then
+    //TODO: Support Geometric Value Generation
+    // TODO: Support StepInterpolation
+    const interpolatedValues = Array.from(
+        { length: maxValuesToBeFilled },
+        (_, index) => {
+            return interpolate(
+                config.interpolator,
+                start[start.length - 1],
+                config.base,
+                index + 1,
+            );
+        },
+    );
+    console.log([...start, ...interpolatedValues, ...(end ? end : [])]);
+    return [...start, ...interpolatedValues, ...(end ? end : [])];
+}
 
-    return [];
+function interpolate(
+    interpolator: Interpolator,
+    start: number,
+    base: number,
+    modifier: number,
+): number {
+    switch (interpolator) {
+        case Interpolator.Linear:
+            return start + base * modifier;
+        case Interpolator.Geometric:
+            return start * (base ^ modifier);
+    }
 }
