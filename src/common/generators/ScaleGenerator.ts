@@ -109,8 +109,6 @@ export function getConfigPreset(
 
 /**
  * Generates a scale given the right configuration.
- * NOTE: The start values decided how the values are being interpolated.
- * Eg: If the startValues end with a fifty for 100 scale, then the next generated scale will be 150, not 100.
  * @param config Configuration on how to generate scales.
  *               Use `ScalePresets` if you don't want to make your own cuomst preset.
  * @returns an array of scales.
@@ -127,24 +125,28 @@ export function generateScale(config: ScaleConfig): Array<number> {
         throw Error(
             "[Generate Error]: Either steps or end values must be specified",
         );
+
+    // Calculate the actual start index, ie, if a sequence has startValues of [0, 5, 10] for base-10
+    // Then, the start is 10. But if the startValues are [0, 5], the start values is 0, not 5.
+    // By iterating backwards, we are hitting the last value in the sequence that is multiple of base.
+    // Eg: [0, 5, 10] -> We'll hit 10, which we can use as our starting value, compared to 0, which needs generation from 0..10, then from there, which is duplicated work.
     let sequenceStartIndex = start.length - 1;
     for (let i = start.length - 1; i >= 0 && start[i] % config.base != 0; i--)
         sequenceStartIndex--;
-    console.log(`sequence start: ${sequenceStartIndex}`);
 
+    // Precedence given for missing values over steps.
     const maxValuesToBeFilled = end
         ? Math.ceil((end[0] - start[sequenceStartIndex]) / config.base - 1)
-        : config.steps && config.steps - start.length; // Just to make eslint happy. If end is not null this step won't execute.
+        : config.steps && config.steps - start.length;
+    // Just to make eslint happy. If end is not null this step won't execute.
 
-    console.log("Slots: " + maxValuesToBeFilled);
     if (!maxValuesToBeFilled)
         throw new Error("[Generate Error]: Invalid steps");
-    // FIXME: Iterate upto maxValues, not always since if max values are not interpolatable, break then
     // TODO: Support StepInterpolation
     let startIndex = 0;
     for (let i = 0; i < start.length && start[i] % config.base == 0; i++)
         startIndex++;
-    console.log("Start Index: " + startIndex);
+
     const interpolatedValues = Array.from(
         { length: maxValuesToBeFilled },
         (_, index) => {

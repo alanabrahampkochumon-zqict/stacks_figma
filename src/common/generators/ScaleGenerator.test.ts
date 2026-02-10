@@ -86,30 +86,30 @@ test("generateScale with start end values with lower, interpolates between start
     expect(generateScale(config)).toStrictEqual(expectedGeneration);
 });
 
-// test("generateScale with start end values with higher step, but lower interpolating points, interpolates only missing points based on the base", () => {
-//     const steps = 10;
-//     const startValues = [0, 5, 10, 15, 20, 25, 30];
-//     const endValues = [50, 55, 60, 65, 70, 75, 80];
-//     const config: ScaleConfig = {
-//         base: 5,
-//         interpolator: Interpolator.Linear,
-//         steps: steps,
-//         startValues: startValues,
-//         endValues: endValues,
-//     };
-//     const expectedGeneration = [...startValues, 35, 40, 45, ...endValues];
-//     expect(generateScale(config)).toBe(expectedGeneration);
-// });
+test("generateScale with start end values with higher step, but lower interpolating points, interpolates only missing points based on the base", () => {
+    const steps = 10;
+    const startValues = [0, 5, 10, 15, 20, 25, 30];
+    const endValues = [50, 55, 60, 65, 70, 75, 80];
+    const config: ScaleConfig = {
+        base: 5,
+        interpolator: Interpolator.Linear,
+        steps: steps,
+        startValues: startValues,
+        endValues: endValues,
+    };
+    const expectedGeneration = [...startValues, 35, 40, 45, ...endValues];
+    expect(generateScale(config)).toStrictEqual(expectedGeneration);
+});
 
-// test("generateScale with custom config generates correct values", () => {
-//     const expectedGeneration = [
-//         0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 30, 32, 34, 36, 38,
-//         40,
-//     ];
-//     const custom2Px = { ...ScalePresets["2px_grid"], steps: 11 };
+test("generateScale with custom config generates correct values", () => {
+    const expectedGeneration = [
+        0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36,
+        38, 40,
+    ];
+    const custom2Px = { ...ScalePresets["2px_grid"], steps: 21 };
 
-//     expect(generateScale(custom2Px)).toBe(expectedGeneration);
-// });
+    expect(generateScale(custom2Px)).toStrictEqual(expectedGeneration);
+});
 
 test("generateScale with no steps or endValues, throwsError", () => {
     const config: ScaleConfig = {
