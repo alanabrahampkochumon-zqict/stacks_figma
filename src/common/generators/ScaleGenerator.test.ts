@@ -20,15 +20,15 @@ test("generateScale 4px-grid generates scale from 0..40", () => {
     );
 });
 
-// test("generateScale 4px-ease generates scale in 0,2,4,..,16,20,24,..40, 48, 56,..96", () => {
-//     const expectedGeneration = [
-//         0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36, 40, 56, 64, 72, 80, 88,
-//         96,
-//     ];
-//     expect(generateScale(ScalePresets["4px_ease"])).toStrictEqual(
-//         expectedGeneration,
-//     );
-// });
+test("generateScale 4px-ease generates scale in 0,2,4,..,16,20,24,..40, 48, 56,..96", () => {
+    const expectedGeneration = [
+        0, 2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36, 40, 56, 64, 72, 80, 88,
+        96,
+    ];
+    expect(generateScale(ScalePresets["4px_ease"])).toStrictEqual(
+        expectedGeneration,
+    );
+});
 
 test("generateScale 8px generates scale in 0..80", () => {
     const expectedGeneration = [0, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80];
@@ -37,13 +37,13 @@ test("generateScale 8px generates scale in 0..80", () => {
     );
 });
 
-// test("generateScale 8px-ease generates scale in 0,4,8,..,32,40,48,..80, 96, 112,..192", () => {
-//     const expectedGeneration = [
-//         0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 80, 96, 112, 128, 134,
-//         160, 176, 192,
-//     ];
-//     expect(generateScale(ScalePresets["8px_ease"])).toBe(expectedGeneration);
-// });
+test("generateScale 8px-ease generates scale in 0,4,8,..,32,40,48,..80, 96, 112,..192", () => {
+    const expectedGeneration = [
+        0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 80, 96, 112, 128, 134,
+        160, 176, 192,
+    ];
+    expect(generateScale(ScalePresets["8px_ease"])).toBe(expectedGeneration);
+});
 
 test("generateScale geometric-base2 generates scales in the form 0, 2, 4, 8, 16...", () => {
     const expectedGeneration = [0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
@@ -118,3 +118,7 @@ test("generateScale with no steps or endValues, throwsError", () => {
     };
     expect(() => generateScale(config)).toThrow();
 });
+
+// TESTCASES: Config with start, end and interpolation steps
+// TESTCASES: Config with start, and interpolation steps, and stepscount
+// TESTCASES: Config with start, and interpolation steps, and stepscount

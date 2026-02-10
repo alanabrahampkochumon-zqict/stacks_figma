@@ -107,13 +107,22 @@ export function getConfigPreset(
     return ScalePresets[presetName];
 }
 
+export function generateScale(config: ScaleConfig): Array<Number> {
+    if (!config.steps && !config.endValues)
+        throw Error(
+            "[Generate Error]: Either steps or end values must be specified",
+        );
+    if (!config.cutoffConfig) return _generateScale(config);
+    return _generateScale(config);
+}
+
 /**
  * Generates a scale given the right configuration.
  * @param config Configuration on how to generate scales.
  *               Use `ScalePresets` if you don't want to make your own cuomst preset.
  * @returns an array of scales.
  */
-export function generateScale(config: ScaleConfig): Array<number> {
+function _generateScale(config: ScaleConfig): Array<number> {
     const start = config.startValues
         ? config.startValues
         : config.minLimit
