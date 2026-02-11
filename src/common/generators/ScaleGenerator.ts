@@ -118,32 +118,22 @@ export function generateScale(config: ScaleConfig): Array<Number> {
           ? [config.minLimit]
           : [0];
 
-    if (!config.cutoffConfig) return _generateScale(config);
+    // if (!config.cutoffConfig) return _generateScale(config);
     // let range: { start: number; end: number; interpolator: Interpolator }[] =
     //     [];
     // let generatedSteps = 0;
     let cutoffIndex = 0;
     const generatedSteps: number[] = [...start];
+
+    // Calculate the actual start index, ie, if a sequence has startValues of [0, 5, 10] for base-10
+    // Then, the start is 10. But if the startValues are [0, 5], the start values is 0, not 5.
+    // By iterating backwards, we are hitting the last value in the sequence that is multiple of base.
+    // Eg: [0, 5, 10] -> We'll hit 10, which we can use as our starting value, compared to 0, which needs generation from 0..10, then from there, which is duplicated work.
     let sequenceStartIndex = start.length - 1;
-    while (
-        // (config.steps && generatedSteps.length < config.steps) ||
-        // (config.endValues &&
-        //     generatedSteps[generatedSteps.length - 1] < config.endValues[0]) ||
-        cutoffIndex < config.cutoffConfig.length
-    ) {
+    for (let i = start.length - 1; i >= 0 && start[i] % config.base != 0; i--)
+        sequenceStartIndex--;
+    while (config.cutoffConfig && cutoffIndex < config.cutoffConfig.length) {
         const currentConfig = config.cutoffConfig[cutoffIndex];
-        if (cutoffIndex == 0) {
-            // Calculate the actual start index, ie, if a sequence has startValues of [0, 5, 10] for base-10
-            // Then, the start is 10. But if the startValues are [0, 5], the start values is 0, not 5.
-            // By iterating backwards, we are hitting the last value in the sequence that is multiple of base.
-            // Eg: [0, 5, 10] -> We'll hit 10, which we can use as our starting value, compared to 0, which needs generation from 0..10, then from there, which is duplicated work.
-            for (
-                let i = start.length - 1;
-                i >= 0 && start[i] % config.base != 0;
-                i--
-            )
-                sequenceStartIndex--;
-        }
 
         let endGen = currentConfig.cutoff;
         let base = config.base;
@@ -164,31 +154,41 @@ export function generateScale(config: ScaleConfig): Array<Number> {
         sequenceStartIndex = generatedSteps.length - 1;
         cutoffIndex++;
     }
-    const remainingStep = config.steps
-        ? config.steps - generatedSteps.length
-        : 0;
-    let interpolator = config.interpolator;
+
     let base = config.base;
     let end = config.endValues && config.endValues[0];
     let lastConfig =
         config.cutoffConfig &&
         config.cutoffConfig[config.cutoffConfig.length - 1];
+    let interpolator = config.interpolator;
     if (lastConfig && lastConfig.cutoffType == "post") {
         base = lastConfig.base;
         interpolator = lastConfig.interpolator || config.interpolator;
     }
-    if (remainingStep > 0)
-        generatedSteps.push(
-            ...genScale(
-                generatedSteps[sequenceStartIndex],
-                base,
-                interpolator,
-                end,
-                remainingStep,
-            ),
+
+    // Calculates the remaining steps by
+    // Taking remaining steps from generated steps if config.steps was provided
+    // Else taking the first number from last values and subracting it from generatedStep's start index(i.e, where the next generation must start)
+    const remainingStep = config.endValues
+        ? (config.endValues[0] - generatedSteps[sequenceStartIndex]) / base
+        : config.steps
+          ? config.steps - generatedSteps.length
+          : 0;
+
+    if (remainingStep > 0) {
+        const _gen = genScale(
+            generatedSteps[sequenceStartIndex],
+            base,
+            interpolator,
+            end,
+            remainingStep,
         );
-    console.log(generatedSteps);
-    return generatedSteps;
+        if (config.endValues && _gen[_gen.length - 1] === config.endValues[0])
+            generatedSteps.push(..._gen.slice(0, _gen.length - 1));
+        else generatedSteps.push(..._gen);
+    }
+
+    return [...generatedSteps, ...(config.endValues ? config.endValues : [])];
 }
 
 function genScale(
@@ -244,7 +244,6 @@ function _generateScale(config: ScaleConfig): Array<number> {
 
     if (!maxValuesToBeFilled)
         throw new Error("[Generate Error]: Invalid steps");
-    // TODO: Support StepInterpolation
     let startIndex = 0;
     for (let i = 0; i < start.length && start[i] % config.base == 0; i++)
         startIndex++;
