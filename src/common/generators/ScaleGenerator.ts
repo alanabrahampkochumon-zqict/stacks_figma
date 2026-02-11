@@ -101,12 +101,6 @@ export const ScalePresets: Record<string, ScaleConfig> = {
     },
 } as const;
 
-export function getConfigPreset(
-    presetName: keyof typeof ScalePresets,
-): ScaleConfig {
-    return ScalePresets[presetName];
-}
-
 export function generateScale(config: ScaleConfig): Array<Number> {
     if (!config.steps && !config.endValues)
         throw Error(
@@ -124,25 +118,35 @@ export function generateScale(config: ScaleConfig): Array<Number> {
     // let generatedSteps = 0;
     let cutoffIndex = 0;
     const generatedSteps: number[] = [...start];
+    const sortedConfig = config.cutoffConfig?.sort(
+        ({ cutoff: a }, { cutoff: b }) => a - b,
+    );
 
     // Calculate the actual start index, ie, if a sequence has startValues of [0, 5, 10] for base-10
     // Then, the start is 10. But if the startValues are [0, 5], the start values is 0, not 5.
     // By iterating backwards, we are hitting the last value in the sequence that is multiple of base.
     // Eg: [0, 5, 10] -> We'll hit 10, which we can use as our starting value, compared to 0, which needs generation from 0..10, then from there, which is duplicated work.
     let sequenceStartIndex = start.length - 1;
-    for (let i = start.length - 1; i >= 0 && start[i] % config.base != 0; i--)
+    let base =
+        config.cutoffConfig && config.cutoffConfig[0].cutoffType == "pre"
+            ? config.cutoffConfig[0].base
+            : config.base;
+    for (let i = start.length - 1; i >= 0 && start[i] % base != 0; i--)
         sequenceStartIndex--;
+
     while (config.cutoffConfig && cutoffIndex < config.cutoffConfig.length) {
         const currentConfig = config.cutoffConfig[cutoffIndex];
 
         let endGen = currentConfig.cutoff;
-        let base = config.base;
+        base = config.base;
         let interpolator = config.interpolator;
+
         if (currentConfig.cutoffType == "pre") {
             endGen = currentConfig.cutoff;
             base = currentConfig.base;
             interpolator = currentConfig.interpolator || config.interpolator;
         }
+
         generatedSteps.push(
             ...genScale(
                 generatedSteps[sequenceStartIndex],
@@ -151,11 +155,13 @@ export function generateScale(config: ScaleConfig): Array<Number> {
                 endGen,
             ),
         );
+
         sequenceStartIndex = generatedSteps.length - 1;
         cutoffIndex++;
     }
 
-    let base = config.base;
+    // Calculates the cutOffConfig, or if there are no cutOff config then that.
+    base = config.base;
     let end = config.endValues && config.endValues[0];
     let lastConfig =
         config.cutoffConfig &&

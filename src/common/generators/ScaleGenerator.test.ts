@@ -121,6 +121,163 @@ test("generateScale with no steps or endValues, throwsError", () => {
     expect(() => generateScale(config)).toThrow();
 });
 
-// TESTCASES: Config with start, end and interpolation steps
-// TESTCASES: Config with start, and interpolation steps, and stepscount
-// TESTCASES: Config with start, and interpolation steps, and stepscount
+test("generateScale with startValues, endValues, and interpolation, returns Correct Values", () => {
+    const expectedGeneration = [
+        0, 1, 2, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 92, 100,
+    ];
+    const config: ScaleConfig = {
+        base: 8,
+        interpolator: Interpolator.Linear,
+        startValues: [0, 1, 2, 4],
+        endValues: [100],
+        cutoffConfig: [
+            {
+                cutoff: 20,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 4,
+            },
+            {
+                cutoff: 80,
+                cutoffType: "post",
+                interpolator: Interpolator.Linear,
+                base: 16,
+            },
+        ],
+    };
+    expect(generateScale(config)).toStrictEqual(expectedGeneration);
+});
+
+test("generateScale with pre, pre, postConfig, returns Correct Values", () => {
+    const expectedGeneration = [
+        0, 1, 2, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 92, 100,
+    ];
+    const config: ScaleConfig = {
+        base: 16,
+        interpolator: Interpolator.Linear,
+        startValues: [0, 1, 2, 4],
+        endValues: [100],
+        cutoffConfig: [
+            {
+                cutoff: 20,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 4,
+            },
+            {
+                cutoff: 80,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 8,
+            },
+        ],
+    };
+    expect(generateScale(config)).toStrictEqual(expectedGeneration);
+});
+
+test("generateScale with start, interpolation steps and stepCount, returns Correct Values", () => {
+    const expectedGeneration = [
+        0, 1, 2, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 92, 108, 124,
+        140, 156,
+    ];
+    const config: ScaleConfig = {
+        base: 16,
+        steps: 20,
+        interpolator: Interpolator.Linear,
+        startValues: [0, 1, 2, 4],
+        cutoffConfig: [
+            {
+                cutoff: 20,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 4,
+            },
+            {
+                cutoff: 80,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 8,
+            },
+        ],
+    };
+    expect(generateScale(config)).toStrictEqual(expectedGeneration);
+});
+
+test("generateScale with start, end and large stepcount, ignores step count returns Correct Values", () => {
+    const expectedGeneration = [
+        0, 1, 2, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 92, 108, 124,
+        140, 156, 160,
+    ];
+    const config: ScaleConfig = {
+        base: 16,
+        steps: 50,
+        interpolator: Interpolator.Linear,
+        startValues: [0, 1, 2, 4],
+        endValues: [160],
+        cutoffConfig: [
+            {
+                cutoff: 20,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 4,
+            },
+            {
+                cutoff: 80,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 8,
+            },
+        ],
+    };
+    expect(generateScale(config)).toStrictEqual(expectedGeneration);
+});
+
+test("generateScale handles unsorted cutoffConfigs automatically", () => {
+    const expected = [
+        0, 1, 2, 4, 8, 12, 16, 20, 28, 36, 44, 52, 60, 68, 76, 92, 108, 124,
+        140, 156,
+    ];
+
+    const config: ScaleConfig = {
+        base: 16,
+        interpolator: Interpolator.Linear,
+        startValues: [0, 1, 2, 4],
+        steps: 20,
+        cutoffConfig: [
+            {
+                cutoff: 80,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 8,
+            }, // Passed first!
+            {
+                cutoff: 20,
+                cutoffType: "pre",
+                interpolator: Interpolator.Linear,
+                base: 4,
+            },
+        ],
+    };
+
+    expect(generateScale(config)).toStrictEqual(expected);
+});
+
+test("generateScale handles cutoff that is not a multiple of current base", () => {
+    const config: ScaleConfig = {
+        base: 10,
+        interpolator: Interpolator.Linear,
+        minLimit: 0,
+        steps: 4,
+        cutoffConfig: [
+            // Sequence starts 0, 10, 20... but cutoff is 15.
+            {
+                cutoff: 15,
+                base: 5,
+                cutoffType: "post",
+                interpolator: Interpolator.Linear,
+            },
+        ],
+    };
+
+    expect(generateScale(config)).toContain(15);
+});
