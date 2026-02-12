@@ -101,6 +101,12 @@ export const ScalePresets: Record<string, ScaleConfig> = {
     },
 } as const;
 
+/**
+ * Generates a scale given the right configuration.
+ * @param config Configuration on how to generate scales.
+ *               Use `ScalePresets` if you don't want to make your own cuomst preset.
+ * @returns an array of scales.
+ */
 export function generateScale(config: ScaleConfig): Array<Number> {
     if (!config.steps && !config.endValues)
         throw Error(
@@ -112,15 +118,10 @@ export function generateScale(config: ScaleConfig): Array<Number> {
           ? [config.minLimit]
           : [0];
 
-    // if (!config.cutoffConfig) return _generateScale(config);
-    // let range: { start: number; end: number; interpolator: Interpolator }[] =
-    //     [];
-    // let generatedSteps = 0;
     let cutoffIndex = 0;
     const generatedSteps: number[] = [...start];
-    const sortedConfig = config.cutoffConfig?.sort(
-        ({ cutoff: a }, { cutoff: b }) => a - b,
-    );
+
+    config.cutoffConfig?.sort(({ cutoff: a }, { cutoff: b }) => a - b);
 
     // Calculate the actual start index, ie, if a sequence has startValues of [0, 5, 10] for base-10
     // Then, the start is 10. But if the startValues are [0, 5], the start values is 0, not 5.
@@ -148,7 +149,7 @@ export function generateScale(config: ScaleConfig): Array<Number> {
         }
 
         generatedSteps.push(
-            ...genScale(
+            ...interpolateBetween(
                 generatedSteps[sequenceStartIndex],
                 base,
                 interpolator,
@@ -172,23 +173,26 @@ export function generateScale(config: ScaleConfig): Array<Number> {
         interpolator = lastConfig.interpolator || config.interpolator;
     }
 
-    // Calculates the remaining steps by
-    // Taking remaining steps from generated steps if config.steps was provided
-    // Else taking the first number from last values and subracting it from generatedStep's start index(i.e, where the next generation must start)
-    const remainingStep = config.endValues
-        ? (config.endValues[0] - generatedSteps[sequenceStartIndex]) / base
+    // Calculates the remaining steps by taking the difference between generate values last value and `endValue`s first value.
+    // If endValues are not provided steps are considered.
+    // NOTE: endValues takes precendece for calculating remaining steps.
+    const remainingSteps = config.endValues
+        ? Math.round(
+              (config.endValues[0] - generatedSteps[sequenceStartIndex]) / base,
+          )
         : config.steps
           ? config.steps - generatedSteps.length
           : 0;
 
-    if (remainingStep > 0) {
-        const _gen = genScale(
+    if (remainingSteps > 0) {
+        const _gen = interpolateBetween(
             generatedSteps[sequenceStartIndex],
             base,
             interpolator,
             end,
-            remainingStep,
+            remainingSteps,
         );
+        // If the generate values contains duplicates, [1, 2, 4] and generated is [4, 6, 8], then 4 from the generated value is ignored.
         if (config.endValues && _gen[_gen.length - 1] === config.endValues[0])
             generatedSteps.push(..._gen.slice(0, _gen.length - 1));
         else generatedSteps.push(..._gen);
@@ -197,14 +201,14 @@ export function generateScale(config: ScaleConfig): Array<Number> {
     return [...generatedSteps, ...(config.endValues ? config.endValues : [])];
 }
 
-function genScale(
+function interpolateBetween(
     start: number, // Exclusive
     base: number,
     interpolator: Interpolator,
     end?: number, // Inclusive
     steps?: number,
 ): Array<number> {
-    // Precedence given for missing values over steps.
+    // Values are interpolated between start and end values or steps.
     const maxValuesToBeFilled = end ? (end - start) / base : steps ? steps : 0;
     const interpolatedValues = Array.from(
         { length: maxValuesToBeFilled },
@@ -213,60 +217,6 @@ function genScale(
         },
     );
     return interpolatedValues;
-}
-
-/**
- * Generates a scale given the right configuration.
- * @param config Configuration on how to generate scales.
- *               Use `ScalePresets` if you don't want to make your own cuomst preset.
- * @returns an array of scales.
- */
-function _generateScale(config: ScaleConfig): Array<number> {
-    const start = config.startValues
-        ? config.startValues
-        : config.minLimit
-          ? [config.minLimit]
-          : [0];
-    const end = config.endValues;
-
-    if (!config.steps && !end)
-        throw Error(
-            "[Generate Error]: Either steps or end values must be specified",
-        );
-
-    // Calculate the actual start index, ie, if a sequence has startValues of [0, 5, 10] for base-10
-    // Then, the start is 10. But if the startValues are [0, 5], the start values is 0, not 5.
-    // By iterating backwards, we are hitting the last value in the sequence that is multiple of base.
-    // Eg: [0, 5, 10] -> We'll hit 10, which we can use as our starting value, compared to 0, which needs generation from 0..10, then from there, which is duplicated work.
-    let sequenceStartIndex = start.length - 1;
-    for (let i = start.length - 1; i >= 0 && start[i] % config.base != 0; i--)
-        sequenceStartIndex--;
-
-    // Precedence given for missing values over steps.
-    const maxValuesToBeFilled = end
-        ? Math.ceil((end[0] - start[sequenceStartIndex]) / config.base - 1)
-        : config.steps && config.steps - start.length;
-    // Just to make eslint happy. If end is not null this step won't execute.
-
-    if (!maxValuesToBeFilled)
-        throw new Error("[Generate Error]: Invalid steps");
-    let startIndex = 0;
-    for (let i = 0; i < start.length && start[i] % config.base == 0; i++)
-        startIndex++;
-
-    const interpolatedValues = Array.from(
-        { length: maxValuesToBeFilled },
-        (_, index) => {
-            const interpolatedValue = interpolate(
-                config.interpolator,
-                start[sequenceStartIndex],
-                config.base,
-                index + 1,
-            );
-            return interpolatedValue;
-        },
-    );
-    return [...start, ...interpolatedValues, ...(end ? end : [])];
 }
 
 function interpolate(

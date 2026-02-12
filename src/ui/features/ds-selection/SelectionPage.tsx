@@ -1,7 +1,11 @@
-import { h } from "preact";
+import Button from "../../components/Button";
 
 function SelectionPage() {
-    return <div>SelectionPage</div>;
+    return (
+        <div>
+            <Button>text</Button>
+        </div>
+    );
 }
 
 export default SelectionPage;
