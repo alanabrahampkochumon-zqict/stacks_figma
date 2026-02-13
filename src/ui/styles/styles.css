@@ -304,17 +304,21 @@
     --lh-7xl: var(--_p-64);
 
     /* Letter Spacing */
-    --fls-tight: -0.23;
-    --fls-normal: 0;
-    --fls-wide: 0.23;
-    --fls-wider: 0.41;
-    --fls-tighter: -0.41;
+    --ls-tight: -0.23;
+    --ls-normal: 0;
+    --ls-wide: 0.23;
+    --ls-wider: 0.41;
+    --ls-tighter: -0.41;
 
     /* Font Weight */
     --fw-normal: Regular;
     --fw-bold: Bold;
     --fw-light: Light;
     --fw-semibold: Medium;
+    --ff-primary:
+        var(--_p-satoshi) system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
 
     /* Spacing */
     --spacing-none: var(--_p-0);
@@ -345,4 +349,23 @@
     --rounding-3xl: var(--_p-32);
     --rounding-none: var(--_p-0);
     --rounding-full: var(--_p-1000);
+}
+
+*,
+*::after,
+*::before {
+    font-family: var(--ff-primary);
+}
+
+.base {
+    display: inline-flex;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-lg);
+
+    /* TODO: Refactor Font/Label/MD */
+    font-family: var(--ff-primary);
+    font-size: var(--fs-md);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-md); /* 100% */
+    letter-spacing: var(--ls-normal);
 }

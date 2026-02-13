@@ -8,7 +8,15 @@ async function watch() {
         target: "es2022",
         outfile: "dist/main.js",
         logLevel: "info",
+        // plugins: [postBuildHotReload],
     });
+
+    // const postBuildHotReload = {
+    //     name: "post-build-run",
+    //     setup(build) {
+    //         build.onEnd(updateManifest);
+    //     },
+    // };
 
     await context.watch();
     console.log("Watching main file...");

@@ -1,7 +1,16 @@
 /* Button.module.css */
+
 .base {
-    background-color: red;
-    color: white;
+    display: inline-flex;
+    padding: var(--spacing-xl);
+    gap: var(--spacing-lg);
+
+    /* TODO: Refactor Font/Label/MD */
+    font-family: var(--ff-primary);
+    font-size: var(--fs-md);
+    font-weight: var(--fw-medium);
+    line-height: var(--lh-md); /* 100% */
+    letter-spacing: var(--ls-normal);
 }
 
 .primary {
