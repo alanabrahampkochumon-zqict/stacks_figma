@@ -3,8 +3,8 @@
   "editorType": [
     "figma"
   ],
-  "id": "stacks",
-  "name": "Stacks Figma",
-  "main": "dist/main.js",
-  "ui": "dist/index.html"
+  "id": "com.plugins.stacks",
+  "name": "Stacks",
+  "main": "main.js",
+  "ui": "index.html"
 }
