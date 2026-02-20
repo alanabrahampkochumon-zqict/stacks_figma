@@ -13,4 +13,4 @@ figma.ui.onmessage = <K extends keyof FigmaEvents>(event: {
     eventManager.emit(event.type, event.data);
 };
 
-figma.showUI(__html__, { width: WINDOW_HEIGHT, height: WINDOW_WIDTH });
+figma.showUI(__html__, { width: WINDOW_WIDTH, height: WINDOW_HEIGHT });

@@ -1,0 +1,38 @@
+.container {
+    height: 100%;
+    width: 100%;
+    background:
+        linear-gradient(
+            158deg,
+            var(--_a-clr-neutral-900) 0.04%,
+            var(--_a-clr-neutral-950) 99.96%
+        ),
+        var(--colors-surface-inverse, #0c0d0e);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+}
+
+.logo {
+    width: 100%;
+    object-fit: cover;
+}
+
+.content {
+    display: flex;
+    padding: var(--spacing-5xl) var(--spacing-4xl);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-4xl);
+    background: linear-gradient(
+        153deg,
+        var(--colors-surface-primary, #fff),
+        var(--colors-surface-secondary, #f5f6f6)
+    );
+    border-radius: var(--rounding-3xl) 0 0 var(--rounding-3xl);
+}
