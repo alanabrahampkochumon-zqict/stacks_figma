@@ -8,6 +8,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@svgr/core": "^8.1.0",
     "class-variance-authority": "^0.7.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

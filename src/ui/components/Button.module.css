@@ -1,21 +1,48 @@
 /* Button.module.css */
 
 .base {
-    display: inline-flex;
-    padding: var(--spacing-xl);
+    display: flex;
+    min-height: var(--min-interactive-size);
+    padding: 0 var(--spacing-xl);
     gap: var(--spacing-lg);
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--rounding-lg);
+    border: none;
+    cursor: pointer;
+    transition: all ease-out 150ms;
 
     font-family: var(--ff-primary);
     font-size: var(--fs-md);
-    font-weight: var(--fw-medium);
+    font-weight: var(--fw-semibold); /* FIXME: Font weight not proper */
     line-height: var(--lh-md); /* 100% */
     letter-spacing: var(--ls-normal);
 }
 
+.base:disabled {
+    cursor: not-allowed;
+    background: var(--clr-surface-disabled);
+    color: var(--clr-content-disabled);
+    pointer-events: none;
+}
+
+.base:hover {
+    filter: brightness(1.05);
+}
+
 .primary {
+    background: var(--clr-surface-accent);
+    color: var(--clr-content-inverse);
 }
 
 .secondary {
+    background: var(--clr-surface-transparent);
+    color: var(--clr-content-accent);
+}
+
+.secondary:hover {
+    filter: brightness(1);
+    background-color: var(--clr-surface-accent-subtle);
 }
 
 .inverted {

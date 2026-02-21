@@ -36,3 +36,9 @@
     );
     border-radius: var(--rounding-3xl) 0 0 var(--rounding-3xl);
 }
+
+.button-container {
+    width: 100%;
+    display: grid;
+    gap: var(--spacing-sm);
+}

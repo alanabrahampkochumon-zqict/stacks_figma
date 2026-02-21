@@ -115,6 +115,7 @@
     --_p-28: 28px;
     --_p-32: 32px;
     --_p-40: 40px;
+    --_p-44: 44px;
     --_p-48: 48px;
     --_p-56: 56px;
     --_p-64: 64px;
@@ -213,7 +214,7 @@
 :root {
     /* Semantic Tokens */
     /* Surface Colors */
-    --clr-surface-primary: var(--_a-clr-neutral-white);
+    --clr-surface-primary: var(--_a-clr-white);
     --clr-surface-tertiary: var(--_a-clr-neutral-100);
     --clr-surface-secondary: var(--_a-clr-neutral-50);
     --clr-surface-accent: var(--_a-clr-primary-700);
@@ -238,6 +239,7 @@
     --clr-surface-accent-subtle-hover: var(--_a-clr-primary-100);
     --clr-surface-warning-hover: var(--_a-clr-warning-100);
     --clr-surface-information-hover: var(--_a-clr-secondary-100);
+    --clr-surface-transparent: var(--_a-clr-transparent);
 
     /* Content Colors */
     --clr-content-primary: var(--_a-clr-neutral-950);
@@ -245,7 +247,7 @@
     --clr-content-tertiary: var(--_a-clr-neutral-700);
     --clr-content-placeholder: var(--_a-clr-neutral-500);
     --clr-content-accent: var(--_a-clr-primary-700);
-    --clr-content-inverse: var(--_a-clr-neutral-white);
+    --clr-content-inverse: var(--_a-clr-white);
     --clr-content-disabled: var(--_a-clr-neutral-400);
     --clr-content-error: var(--_a-clr-error-800);
     --clr-content-success: var(--_a-clr-success-600);
@@ -264,7 +266,7 @@
     --clr-border-information: var(--_a-clr-secondary-500);
     --clr-border-disabled: var(--_a-clr-neutral-400);
     --clr-border-transparent: var(--_a-clr-transparent);
-    --clr-border-white: var(--_a-clr-neutral-white);
+    --clr-border-white: var(--_a-clr-white);
 
     /* Overlays */
     --clr-overlay-light-100: var(--_a-clr-white-alpha-100);
@@ -349,6 +351,8 @@
     --rounding-3xl: var(--_p-32);
     --rounding-none: var(--_p-0);
     --rounding-full: var(--_p-1000);
+
+    --min-interactive-size: var(--_p-44);
 }
 
 *,
@@ -364,11 +368,12 @@
     display: inline-flex;
     padding: var(--spacing-xl);
     gap: var(--spacing-lg);
+}
 
-    /* TODO: Refactor Font/Label/MD */
+.label-medium {
     font-family: var(--ff-primary);
     font-size: var(--fs-md);
-    font-weight: var(--fw-medium);
+    font-weight: var(--fw-semibold);
     line-height: var(--lh-md); /* 100% */
     letter-spacing: var(--ls-normal);
 }
