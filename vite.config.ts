@@ -5,6 +5,7 @@ import { resolve } from "path";
 import { defineConfig, PluginOption } from "vite";
 import { patchCssModules } from "vite-css-modules";
 import { viteSingleFile } from "vite-plugin-singlefile";
+import svgr from "vite-plugin-svgr";
 import tsConfig from "./tsconfig.json";
 
 async function rebuildMain(
@@ -69,6 +70,7 @@ export default defineConfig(({ command }) => {
             react(),
             viteSingleFile(),
             patchCssModules(),
+            svgr(),
             watchManifest(isProductionBuild),
         ],
         build: {
