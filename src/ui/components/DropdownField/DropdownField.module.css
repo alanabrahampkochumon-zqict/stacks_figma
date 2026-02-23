@@ -19,8 +19,48 @@
 
 .dropdown {
     border-radius: var(--rounding-xl);
-    overflow: hidden;
+    border-top-right-radius: var(--rounding-md);
+    overflow-y: scroll;
+    height: 10rem;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+    /* scrollbar-width: thin; */
+}
+
+.dropdown::-webkit-scrollbar {
+    position: absolute;
+    border-radius: 10px;
+    overflow: hidden;
+    visibility: hidden;
+    border-radius: 10px;
+    scrollbar-width: thin;
+}
+
+.dropdown::-webkit-scrollbar-button {
+    visibility: hidden;
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: var(--rounding-xl);
+    background-color: var(--clr-content-disabled);
+
+    transition: all ease-in-out 300ms; /* TODO: Fix animation */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--clr-content-tertiary);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--clr-surface-transparent);
+}
+
+::-webkit-scrollbar-track-piece {
+    background: var(--clr-surface-transparent);
+    position: absolute;
+    border-radius: 0 var(--rounding-xl) var(--rounding-xl) 0;
+    overflow: hidden;
+    padding-block: 0.5rem;
 }
 
 .list-item {

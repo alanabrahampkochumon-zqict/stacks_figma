@@ -1,6 +1,5 @@
 import { useState, type LiHTMLAttributes, type ReactNode } from "react";
 import Check from "../../../assets/icons/check.svg?react";
-import ChevronDown from "../../../assets/icons/chevron-down.svg?react";
 import { cn } from "../../../lib/utils";
 import styles from "./DropdownField.module.css";
 
@@ -18,25 +17,10 @@ function DropdownField(options?: string[]) {
                     Banana
                 </OptionListItem>
                 <OptionListItem value="apple">Cherry</OptionListItem>
-            </ul>
-        </div>
-    );
-
-    return (
-        <div className={styles.base}>
-            <select
-                className={styles.select}
-                id="fruits"
-                name="fruits"
-                onSelect={(evt) => setSelected(evt.target.value)}
-            >
-                <OptionListItem value="apple" disabled>
-                    Apple
-                </OptionListItem>
-                <OptionListItem value="apple">Banana</OptionListItem>
                 <OptionListItem value="apple">Cherry</OptionListItem>
-                <ChevronDown />
-            </select>
+                <OptionListItem value="apple">Cherry</OptionListItem>
+                <OptionListItem value="apple">Cherry</OptionListItem>
+            </ul>
         </div>
     );
 }
