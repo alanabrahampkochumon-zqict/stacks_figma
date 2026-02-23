@@ -17,16 +17,28 @@
     outline: none;
 }
 
+.dropdown {
+    border-radius: var(--rounding-xl);
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
+}
+
 .list-item {
-    padding: 0.75rem;
-    border: 1px solid var(--clr-border-primary);
+    padding: 1rem;
     background-color: var(--clr-surface-primary);
     color: var(--clr-content-primary);
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 2.75rem;
 
     transition:
         color var(--anim-ease-fast),
         background-color var(--anim-ease-fast);
+}
+
+.list-item:not(:last-child) {
+    border-bottom: 1px solid var(--clr-border-primary);
 }
 
 .list-item:hover {
@@ -34,7 +46,7 @@
     color: var(--clr-content-inverse);
 }
 
-.list-item:disabled {
+.list-item-disabled {
     background-color: var(--clr-surface-disabled);
     color: var(--clr-content-disabled);
     pointer-events: none;

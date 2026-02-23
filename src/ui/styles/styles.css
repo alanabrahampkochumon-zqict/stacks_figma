@@ -362,7 +362,7 @@
 *::after,
 *::before {
     font-family: var(--ff-primary);
-    box-sizing: borderbox;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }

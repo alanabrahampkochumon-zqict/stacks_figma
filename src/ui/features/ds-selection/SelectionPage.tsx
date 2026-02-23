@@ -12,9 +12,7 @@ function SelectionPage() {
                 <img className={styles.logo} src={illustration} alt="Logo" />
             </div>
             <div className={styles.content}>
-                <DropdownField options={["Design System 1", "Design System 2"]}>
-                    Dropdown Field
-                </DropdownField>
+                <DropdownField />
                 <div className={styles["button-container"]}>
                     <Button variant="primary">
                         <span>Get started</span>

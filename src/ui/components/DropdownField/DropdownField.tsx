@@ -1,10 +1,27 @@
-import { useState, type OptionHTMLAttributes, type ReactNode } from "react";
+import { useState, type LiHTMLAttributes, type ReactNode } from "react";
+import Check from "../../../assets/icons/check.svg?react";
 import ChevronDown from "../../../assets/icons/chevron-down.svg?react";
 import { cn } from "../../../lib/utils";
 import styles from "./DropdownField.module.css";
 
-function DropdownField(options: string[] = []) {
-    const [selected, setSelected] = useState("");
+function DropdownField(options?: string[]) {
+    const [selected, setSelected] = useState("apple");
+    return (
+        <div className={styles.base}>
+            <input list="browsers" name="browser" id="browser" />
+
+            <ul className={styles.dropdown}>
+                <OptionListItem value="apple" disabled>
+                    Apple
+                </OptionListItem>
+                <OptionListItem value="apple" selected>
+                    Banana
+                </OptionListItem>
+                <OptionListItem value="apple">Cherry</OptionListItem>
+            </ul>
+        </div>
+    );
+
     return (
         <div className={styles.base}>
             <select
@@ -28,23 +45,30 @@ type OptionListItemProps = {
     children: ReactNode;
     value: string | number;
     selected?: boolean;
-} & OptionHTMLAttributes<HTMLOptionElement>;
+    disabled?: boolean;
+} & LiHTMLAttributes<HTMLLIElement>;
 
 function OptionListItem({
     children,
     value,
     selected = false,
+    disabled = false,
     ...props
 }: OptionListItemProps) {
     return (
-        <option
-            className={cn(styles["list-item"], "label-medium")}
+        <li
+            className={cn(
+                styles["list-item"],
+                "label-medium",
+                disabled && styles["list-item-disabled"],
+            )}
             value={value}
-            selected={selected}
             {...props}
         >
             {children}
-        </option>
+            {/* {selected && <ChevronDown />}  TODO: Replace with check icon */}
+            {selected && <Check />}
+        </li>
     );
 }
 
