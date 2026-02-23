@@ -353,6 +353,9 @@
     --rounding-full: var(--_p-1000);
 
     --min-interactive-size: var(--_p-44);
+
+    --anim-ease-fast: 180ms ease-in-out;
+    --anim-ease-normal: 250ms ease-out;
 }
 
 *,
@@ -362,6 +365,15 @@
     box-sizing: borderbox;
     margin: 0;
     padding: 0;
+}
+
+select,
+::picker(select) {
+    appearance: base-select;
+}
+
+::checkmark {
+    display: none;
 }
 
 .base {

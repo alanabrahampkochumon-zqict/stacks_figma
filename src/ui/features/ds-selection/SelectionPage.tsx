@@ -1,6 +1,7 @@
 import ArrowRight from "../../../assets/icons/arrow-right.svg?react";
 import illustration from "../../../assets/illustration_start.png";
-import Button from "../../components/Button";
+import Button from "../../components/Button/Button";
+import DropdownField from "../../components/DropdownField/DropdownField";
 import styles from "./SelectionPage.module.css";
 
 function SelectionPage() {
@@ -11,18 +12,13 @@ function SelectionPage() {
                 <img className={styles.logo} src={illustration} alt="Logo" />
             </div>
             <div className={styles.content}>
-                <div>TODO: Textfield replace</div>
+                <DropdownField options={["Design System 1", "Design System 2"]}>
+                    Dropdown Field
+                </DropdownField>
                 <div className={styles["button-container"]}>
-                    <Button variant="primary" disabled>
+                    <Button variant="primary">
                         <span>Get started</span>
                         <ArrowRight />
-                        {/* <img
-                            src={ArrowRight}
-                            alt=""
-                            height={20}
-                            width={20}
-                            style={{ fill: "red" }}
-                        /> */}
                     </Button>
                     <Button variant="secondary">Create from scratch</Button>
                 </div>

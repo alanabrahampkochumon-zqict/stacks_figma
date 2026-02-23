@@ -1,0 +1,45 @@
+.base {
+    width: 100%;
+}
+
+.select {
+    padding: 0.75rem;
+    width: 100%;
+    border: none;
+
+    &::picker-icon {
+        display: none;
+    }
+}
+
+.select::picker {
+    border: none;
+    outline: none;
+}
+
+.list-item {
+    padding: 0.75rem;
+    border: 1px solid var(--clr-border-primary);
+    background-color: var(--clr-surface-primary);
+    color: var(--clr-content-primary);
+    display: block;
+
+    transition:
+        color var(--anim-ease-fast),
+        background-color var(--anim-ease-fast);
+}
+
+.list-item:hover {
+    background-color: var(--clr-surface-accent);
+    color: var(--clr-content-inverse);
+}
+
+.list-item:disabled {
+    background-color: var(--clr-surface-disabled);
+    color: var(--clr-content-disabled);
+    pointer-events: none;
+}
+
+.list-item:checked .list-item::after {
+    content: "hi";
+}
