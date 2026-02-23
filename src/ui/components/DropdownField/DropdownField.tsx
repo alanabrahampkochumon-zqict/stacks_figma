@@ -3,7 +3,11 @@ import Check from "../../../assets/icons/check.svg?react";
 import { cn } from "../../../lib/utils";
 import styles from "./DropdownField.module.css";
 
-function DropdownField(options?: string[]) {
+export type DropdownFieldProps = {
+    options?: string[];
+};
+
+function DropdownField({ options }: DropdownFieldProps) {
     const [selected, setSelected] = useState("apple");
     return (
         <div className={styles.base}>
