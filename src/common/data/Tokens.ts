@@ -37,7 +37,7 @@ export function validateToken(
         case "animation":
         // TODO: Implementation
     }
-    throw new Error(`${token} is not a valid ${tokenType}.`);
+    return false;
 }
 
 export type Levels = 1 | 2 | 3 | 4;
