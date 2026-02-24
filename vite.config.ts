@@ -66,6 +66,11 @@ export default defineConfig(({ command }) => {
     const isProductionBuild =
         command == "build" && !process.argv.includes("--watch");
     return {
+        resolve: {
+            alias: {
+                "@": resolve(__dirname, "./src"),
+            },
+        },
         plugins: [
             react(),
             viteSingleFile(),
