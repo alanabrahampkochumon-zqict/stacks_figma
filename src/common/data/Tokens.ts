@@ -60,22 +60,32 @@ export class TokenSet {
         level: Levels = 1,
         tokens: Token[] = [],
     ) {
-        if (tokens.length && type !== tokens[0].type)
+        this._validateToken(tokens, type);
+        this.name = name;
+        this.type = type;
+        this.level = level;
+        this.tokens = tokens;
+    }
+
+    addToken(token: Token) {
+        this._validateToken([token], this.type);
+        this.tokens.push(token);
+    }
+
+    private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
+        if (tokens.length && tokenType !== tokens[0].type)
             throw new Error(
-                `TokenSet type mismatched. Expected ${type}, where children were passed in as ${tokens[0].type}.`,
+                `TokenSet type mismatched. Expected ${tokenType}, where children were passed in as ${tokens[0].type}.`,
             );
 
         const validationResult = tokens.every(
             (token) =>
-                token.type === type && validateToken(token.value, token.type),
+                token.type === tokenType &&
+                validateToken(token.value, token.type),
         );
         if (!validationResult)
             throw new Error(
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
             );
-        this.name = name;
-        this.type = type;
-        this.level = level;
-        this.tokens = tokens;
     }
 }

@@ -39,6 +39,22 @@ describe("TokenSetTests", () => {
         expect(tokenSet.type).toBe(tokenType);
     });
 
+    test("TokenSet gets initialized with empty tokens", () => {
+        // Given a tokenset initialized with empty tokens
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, tokenType, level, tokens);
+
+        // Then, the object contains the correct name and empty tokens
+        expect(tokenSet.name).toBe(name);
+        expect(tokenSet.level).toBe(level);
+        expect(tokenSet.tokens).toBe(tokens);
+        expect(tokenSet.tokens.length).toBe(0);
+        expect(tokenSet.type).toBe(tokenType);
+    });
+
     test("TokenSet cannot be initialized with mixed token types", () => {
         // Given a tokenset trying to get initalized with mixed types
         const name = "TokenSet";
@@ -77,6 +93,38 @@ describe("TokenSetTests", () => {
         ];
         // Then, the initializer throws an error
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
+    });
+});
+
+describe("TokenAdd", () => {
+    test("valid token can be added", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const validToken: Token = { name: "50", value: 10, type: type };
+        tokenSet.addToken(validToken);
+
+        // Then, the token is added to the set
+        expect(tokenSet.tokens.at(0)).toBe(validToken);
+    });
+
+    test("valid token can be added", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const invalidToken: Token = { name: "50", value: 10, type: "string" };
+        // Then, an error is thrown
+        expect(() => tokenSet.addToken(invalidToken)).toThrow();
     });
 });
 
@@ -340,6 +388,7 @@ describe("TokenValidatorTests", () => {
             expected: false,
             type: "color",
         },
+        // TODO: Test other types like gradient and box-shadow
     ];
 
     test.each(testCases)("$name", ({ input, expected, type }) => {
