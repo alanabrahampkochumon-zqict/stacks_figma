@@ -1,42 +1,4 @@
-export type BasicTokenTypes = "number" | "string" | "boolean" | "color";
-export type ExtendedTokenTypes =
-    | BasicTokenTypes
-    | (
-          | "typography"
-          | "sizing"
-          | "spacing"
-          | "animation"
-          | "corner-radius"
-          | "box-shadow"
-          | "gradient"
-      );
-
-export type Levels = 1 | 2 | 3 | 4;
-
-export interface Token {
-    name: string;
-    value: any;
-    type: BasicTokenTypes;
-}
-
-export class TokenSet {
-    name: string;
-    type: ExtendedTokenTypes;
-    level: Levels;
-    tokens: Token[];
-
-    constructor(
-        name: string,
-        type: ExtendedTokenTypes = "number",
-        level: Levels = 1,
-        tokens: Token[] = [],
-    ) {
-        this.name = name;
-        this.type = type;
-        this.level = level;
-        this.tokens = tokens;
-    }
-}
+import type { Token, TokenSet } from "./Tokens";
 
 export class DesignSystem {
     name: string;
