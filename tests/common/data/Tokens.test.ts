@@ -174,6 +174,60 @@ describe("TokenRemove", () => {
     });
 });
 
+describe("TokenSorting", () => {
+    test("sort function sorts by token name by default", () => {
+        // Given a unsorted tokenset
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const tokens: Token[] = [
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 0, name: "size-0" },
+            { type: tokenType, value: 5, name: "size-50" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 0, name: "size-0" },
+            { type: tokenType, value: 5, name: "size-50" },
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+        ];
+        const tokenSet = new TokenSet(name, tokenType, level, tokens);
+
+        // When sort function is called on it
+        tokenSet.sort();
+
+        // Then, the tokens are sorted by name
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+
+    test("sort function sort by comparator if provided", () => {
+        // Given a unsorted tokenset
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const tokens: Token[] = [
+            { type: tokenType, value: 55, name: "size-100" },
+            { type: tokenType, value: 35, name: "size-150" },
+            { type: tokenType, value: 100, name: "size-0" },
+            { type: tokenType, value: 50, name: "size-50" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 35, name: "size-150" },
+            { type: tokenType, value: 50, name: "size-50" },
+            { type: tokenType, value: 55, name: "size-100" },
+            { type: tokenType, value: 100, name: "size-0" },
+        ];
+        const tokenSet = new TokenSet(name, tokenType, level, tokens);
+
+        // When sort function is called on it with a comparator
+        tokenSet.sort((a, b) => a.value - b.value);
+
+        // Then, the tokens are sorted by the comparator(here, value)
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+});
+
 describe("TokenValidatorTests", () => {
     const testCases: {
         name: string;

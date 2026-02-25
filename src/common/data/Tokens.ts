@@ -76,6 +76,16 @@ export class TokenSet {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
+    sort(
+        compareFn: (a: Token, b: Token) => number = (a, b) =>
+            a.name.localeCompare(b.name, undefined, {
+                numeric: true, // Treat numerics inside string as numbers
+                sensitivity: "base",
+            }),
+    ) {
+        this.tokens.sort(compareFn);
+    }
+
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
         if (tokens.length && tokenType !== tokens[0].type)
             throw new Error(
