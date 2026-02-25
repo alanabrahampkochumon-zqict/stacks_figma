@@ -5,7 +5,6 @@ import DropdownField from "../../components/DropdownField/DropdownField";
 import styles from "./SelectionPage.module.css";
 
 function SelectionPage() {
-    // TODO: Fix disabled state
     return (
         <div className={styles.container}>
             <div className={styles["logo-container"]}>
