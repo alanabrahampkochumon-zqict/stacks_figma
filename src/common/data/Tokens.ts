@@ -72,6 +72,10 @@ export class TokenSet {
         this.tokens.push(token);
     }
 
+    removeToken(token: Token) {
+        this.tokens = this.tokens.filter((t) => t !== token);
+    }
+
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
         if (tokens.length && tokenType !== tokens[0].type)
             throw new Error(
