@@ -42,11 +42,13 @@ export function validateToken(
 
 export type Levels = 1 | 2 | 3 | 4;
 
-export interface Token {
+export type Token = {
     name: string;
     value: any;
     type: BasicTokenTypes;
-}
+};
+
+export type TokenComparator = (a: Token, b: Token) => number;
 
 export class TokenSet {
     name: string;
@@ -67,9 +69,22 @@ export class TokenSet {
         this.tokens = tokens;
     }
 
-    addToken(token: Token) {
+    addToken(
+        token: Token,
+        {
+            sortToken,
+            compareFn,
+        }: {
+            sortToken: boolean;
+            compareFn?: TokenComparator;
+        } = { sortToken: false },
+    ) {
         this._validateToken([token], this.type);
         this.tokens.push(token);
+        if (sortToken) {
+            if (compareFn != undefined) this.sort(compareFn);
+            else this.sort();
+        }
     }
 
     removeToken(token: Token) {
@@ -77,7 +92,7 @@ export class TokenSet {
     }
 
     sort(
-        compareFn: (a: Token, b: Token) => number = (a, b) =>
+        compareFn: TokenComparator = (a, b) =>
             a.name.localeCompare(b.name, undefined, {
                 numeric: true, // Treat numerics inside string as numbers
                 sensitivity: "base",

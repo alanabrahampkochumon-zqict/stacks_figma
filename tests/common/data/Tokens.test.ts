@@ -126,6 +126,59 @@ describe("TokenAdd", () => {
         // Then, an error is thrown
         expect(() => tokenSet.addToken(invalidToken)).toThrow();
     });
+
+    test("token added and sorted when sort is turned on", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 0, name: "size-0" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 0, name: "size-0" },
+            { type: tokenType, value: 5, name: "size-50" },
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+        ];
+        const token: Token = { type: tokenType, value: 5, name: "size-50" };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+
+        // When a token is added with sorting on
+        tokenSet.addToken(token, { sortToken: true });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+
+    test("token added and sorted when sort is turned on and comparator is provided", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            { type: tokenType, value: 100, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 50, name: "size-0" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 0, name: "size-50" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 50, name: "size-0" },
+            { type: tokenType, value: 100, name: "size-100" },
+        ];
+        const token: Token = { type: tokenType, value: 0, name: "size-50" };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+
+        // When a token is added with sorting on
+        tokenSet.addToken(token, {
+            sortToken: true,
+            compareFn: (a, b) => a.value - b.value,
+        });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
 });
 
 describe("TokenRemove", () => {
