@@ -47,7 +47,7 @@ export type Levels = 1 | 2 | 3 | 4;
 export type Token = {
     name: string;
     value: any;
-    type: BasicTokenTypes;
+    type: ExtendedTokenTypes;
 };
 
 export type TokenComparator = (a: Token, b: Token) => number;
