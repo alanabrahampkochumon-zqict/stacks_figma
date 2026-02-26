@@ -80,7 +80,6 @@ export class TokenSet {
         // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
         this._validateToken([newToken], this.type ?? newToken.type);
         let tokenIndex = this.getTokenIndex(tokenName);
-
         if (tokenIndex !== -1) this.tokens[tokenIndex] = newToken;
         else
             switch (updatePolicy) {

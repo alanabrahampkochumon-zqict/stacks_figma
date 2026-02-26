@@ -579,3 +579,44 @@ describe("TokenSet Sorting Tests", () => {
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
     });
 });
+
+describe("TokenSet Find Tests", () => {
+    const tokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+    ];
+    const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
+
+    test("existing token when queried for index, returns correct index", () => {
+        // Given a token set
+        const expectedIndex = 0;
+
+        // When an index of existing token is queried
+        const index = tokenSet.getTokenIndex(tokens[expectedIndex].name);
+
+        // Then, it returns correct index
+        expect(index).toBe(expectedIndex);
+    });
+
+    test("non-existing token when queried for index, returns -1", () => {
+        // Given a token set
+
+        // When an index of non-existing token is queried
+        const index = tokenSet.getTokenIndex("random-token");
+
+        // Then, it returns -1
+        expect(index).toBe(-1);
+    });
+
+    test("token index when queried on empty token set, returns -1", () => {
+        // Given an empty token set
+        const emptyTokenSet = new TokenSet("empty", "string");
+
+        // When an index of non-existing token is queried
+        const index = emptyTokenSet.getTokenIndex("random-token");
+
+        // Then, it returns -1
+        expect(index).toBe(-1);
+    });
+});
