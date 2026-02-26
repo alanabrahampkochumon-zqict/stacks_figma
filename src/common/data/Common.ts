@@ -9,3 +9,6 @@ export const InsertConflictPolicy = {
     REPLACE: "replace",
     IGNORE: "ignore",
 } as const;
+
+export type InsertConflictPolicy =
+    (typeof InsertConflictPolicy)[keyof typeof InsertConflictPolicy];

@@ -1,4 +1,4 @@
-import { UpdatePolicy } from "./Common";
+import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type {
     ExtendedTokenTypes,
     Levels,
@@ -14,6 +14,7 @@ type TokenSetUpdateOptions = {
 };
 
 type TokenSetAddOptions = {
+    insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
@@ -43,13 +44,24 @@ export class TokenSet {
 
     addToken(
         token: Token,
-        { sortToken = false, compareFn }: TokenSetAddOptions = {},
+        {
+            insertPolicy = InsertConflictPolicy.IGNORE,
+            sortToken = false,
+            compareFn,
+        }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
-        this.tokens.push(token);
+        if (this.getTokenIndex(token.name) === -1) this.tokens.push(token);
+        else if (insertPolicy === InsertConflictPolicy.REPLACE)
+            this.updateToken(token.name, token);
+
         if (sortToken) {
             this.sort(compareFn);
         }
+    }
+
+    getTokenIndex(tokenName: string) {
+        return this.tokens.findIndex((t) => t.name === tokenName);
     }
 
     removeToken(token: Token) {
@@ -67,15 +79,13 @@ export class TokenSet {
     ) {
         // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
         this._validateToken([newToken], this.type ?? newToken.type);
-        let tokenIndex = this.tokens.findIndex((t) => t.name === tokenName);
-        console.log(tokenIndex);
-        console.log(updatePolicy);
-        if (tokenIndex > 0) this.tokens[tokenIndex] = newToken;
+        let tokenIndex = this.getTokenIndex(tokenName);
+
+        if (tokenIndex !== -1) this.tokens[tokenIndex] = newToken;
         else
             switch (updatePolicy) {
                 case UpdatePolicy.INSERT:
                     this.addToken(newToken);
-                    console.log(newToken, " was added.");
                     break;
                 case UpdatePolicy.IGNORE:
                     break;

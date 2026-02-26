@@ -1,6 +1,9 @@
 import { describe, expect, test } from "vitest";
 
-import { UpdatePolicy } from "../../../src/common/data/Common";
+import {
+    InsertConflictPolicy,
+    UpdatePolicy,
+} from "../../../src/common/data/Common";
 import { Token } from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
 
@@ -122,6 +125,24 @@ describe("TokenSet Add Tests", () => {
         const invalidToken: Token = { name: "50", value: 10, type: "string" };
         // Then, an error is thrown
         expect(() => tokenSet.addToken(invalidToken)).toThrow();
+    });
+
+    test("existing gets upserted when policy is set to replace", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [{ name: "50", value: 55, type: type }];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+        const validToken: Token = { name: "50", value: 10, type: type };
+
+        // When a token is added with same name and policy set to update
+        tokenSet.addToken(validToken, {
+            insertPolicy: InsertConflictPolicy.REPLACE,
+        });
+
+        // Then, then the token is updated
+        expect(tokenSet.tokens).toStrictEqual([validToken]);
     });
 
     test("token added and sorted when sort is turned on", () => {
