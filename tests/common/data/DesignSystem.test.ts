@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { DesignSystem } from "../../../src/common/data/DesignSystem";
-import { TokenSet, type Token } from "../../../src/common/data/Tokens";
+import { type Token } from "../../../src/common/data/Token";
+import { TokenSet } from "../../../src/common/data/TokenSet";
 
 describe("design system initialization test", () => {
     const tokenType1 = "number";
@@ -60,5 +61,5 @@ describe("design system add token tests", () => {
         { type: tokenType2, value: "bold", name: "bold" },
     ];
 
-    test("tokenset is added ")
+    test("tokenset is added ");
 });
