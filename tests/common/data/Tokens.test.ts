@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 
+import { UpdatePolicy } from "../../../src/common/data/Common";
 import {
     ExtendedTokenTypes,
     Token,
@@ -7,7 +8,7 @@ import {
     validateToken,
 } from "../../../src/common/data/Tokens";
 
-describe("TokenSetTests", () => {
+describe("TokenSet Intialization Tests", () => {
     test("TokenSet gets initialized with correct default values", () => {
         // Given a tokenset initialized with only name
         const name = "TokenSet";
@@ -96,7 +97,7 @@ describe("TokenSetTests", () => {
     });
 });
 
-describe("TokenAdd", () => {
+describe("TokenSet Add Tests", () => {
     test("valid token can be added", () => {
         // Given a empty token set
         const name = "TokenSet";
@@ -181,7 +182,161 @@ describe("TokenAdd", () => {
     });
 });
 
-describe("TokenRemove", () => {
+describe("TokenSet Update Tests", () => {
+    test("token gets added to a token set if the token set is empty and policy is set to insert", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const validToken: Token = { name: "50", value: 10, type: type };
+        tokenSet.updateToken(validToken.name, validToken, {
+            updatePolicy: UpdatePolicy.INSERT,
+        });
+
+        // Then, the token is added to the set
+        expect(tokenSet.tokens.at(0)).toBe(validToken);
+    });
+
+    test("token doesn't get added to a token set if the token set is empty and policy is set to ignore", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const validToken: Token = { name: "50", value: 10, type: type };
+        tokenSet.updateToken(validToken.name, validToken, {
+            updatePolicy: UpdatePolicy.IGNORE,
+        });
+
+        // Then, the token is added to the set
+        expect(tokenSet.tokens).toStrictEqual([]);
+    });
+
+    test("token gets added to a token set if the token set is non-empty and policy is set to insert", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [
+            { name: "25", value: 5, type: type },
+            { name: "75", value: 15, type: type },
+        ];
+        const expectedTokens: Token[] = [
+            { name: "25", value: 5, type: type },
+            { name: "75", value: 15, type: type },
+            { name: "50", value: 10, type: type },
+        ];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const validToken: Token = { name: "50", value: 10, type: type };
+        tokenSet.updateToken(validToken.name, validToken, {
+            updatePolicy: UpdatePolicy.INSERT,
+        });
+        console.log(tokenSet.tokens);
+        console.log(tokens);
+        console.log([...tokens, validToken]);
+        // Then, the token is added to the set
+        expect(tokenSet.tokens).toStrictEqual(expectedTokens);
+    });
+
+    test("token doesn't get added to a token set if the token set is non-empty and policy is set to ignore", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [
+            { name: "25", value: 5, type: type },
+            { name: "75", value: 15, type: type },
+        ];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const validToken: Token = { name: "50", value: 10, type: type };
+        tokenSet.updateToken(validToken.name, validToken, {
+            updatePolicy: UpdatePolicy.IGNORE,
+        });
+
+        // Then, the token is added to the set
+        expect(tokenSet.tokens).toStrictEqual(tokens);
+    });
+
+    test("valid token can be added", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const invalidToken: Token = { name: "50", value: 10, type: "string" };
+        // Then, an error is thrown
+        expect(() => tokenSet.addToken(invalidToken)).toThrow();
+    });
+
+    test("token added and sorted when sort is turned on", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 0, name: "size-0" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 0, name: "size-0" },
+            { type: tokenType, value: 5, name: "size-50" },
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+        ];
+        const token: Token = { type: tokenType, value: 5, name: "size-50" };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+
+        // When a token is added with sorting on
+        tokenSet.addToken(token, { sortToken: true });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+
+    test("token added and sorted when sort is turned on and comparator is provided", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            { type: tokenType, value: 100, name: "size-100" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 50, name: "size-0" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 0, name: "size-50" },
+            { type: tokenType, value: 15, name: "size-150" },
+            { type: tokenType, value: 50, name: "size-0" },
+            { type: tokenType, value: 100, name: "size-100" },
+        ];
+        const token: Token = { type: tokenType, value: 0, name: "size-50" };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+
+        // When a token is added with sorting on
+        tokenSet.addToken(token, {
+            sortToken: true,
+            compareFn: (a, b) => a.value - b.value,
+        });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+});
+
+describe("TokenSet Remove Tests", () => {
     test("removes a token that is present", () => {
         // Given a tokenset initialized tokens
         const name = "TokenSet";
@@ -227,7 +382,7 @@ describe("TokenRemove", () => {
     });
 });
 
-describe("TokenSorting", () => {
+describe("TokenSet Sorting Tests", () => {
     test("sort function sorts by token name by default", () => {
         // Given a unsorted tokenset
         const name = "TokenSet";
@@ -281,7 +436,7 @@ describe("TokenSorting", () => {
     });
 });
 
-describe("TokenValidatorTests", () => {
+describe("Token Validator Tests", () => {
     const testCases: {
         name: string;
         input: any;

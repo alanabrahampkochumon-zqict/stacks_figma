@@ -44,3 +44,21 @@ describe("design system initialization test", () => {
         expect(designSystem.tokenSets).toStrictEqual([]);
     });
 });
+
+describe("design system add token tests", () => {
+    const tokenType1 = "number";
+    const tokens1: Token[] = [
+        { type: tokenType1, value: 0, name: "size-0" },
+        { type: tokenType1, value: 15, name: "size-150" },
+        { type: tokenType1, value: 50, name: "size-350" },
+        { type: tokenType1, value: 100, name: "size-100" },
+    ];
+    const tokenType2 = "string";
+    const tokens2: Token[] = [
+        { type: tokenType2, value: "light", name: "light" },
+        { type: tokenType2, value: "regular", name: "regular" },
+        { type: tokenType2, value: "bold", name: "bold" },
+    ];
+
+    test("tokenset is added ")
+});

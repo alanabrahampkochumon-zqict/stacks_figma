@@ -1,3 +1,5 @@
+import { UpdatePolicy } from "./Common";
+
 export type BasicTokenTypes = "number" | "string" | "boolean" | "color";
 export type ExtendedTokenTypes =
     | BasicTokenTypes
@@ -89,6 +91,35 @@ export class TokenSet {
 
     removeToken(token: Token) {
         this.tokens = this.tokens.filter((t) => t !== token);
+    }
+
+    updateToken(
+        tokenName: string,
+        newToken: Token,
+        {
+            updatePolicy,
+            sortToken,
+            compareFn,
+        }: {
+            updatePolicy?: UpdatePolicy;
+            sortToken?: boolean;
+            compareFn?: TokenComparator;
+        } = { updatePolicy: UpdatePolicy.INSERT, sortToken: false },
+    ) {
+        // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
+        this._validateToken([newToken], this.type ?? newToken.type);
+        let tokenIndex = this.tokens.findIndex((t) => t.name === tokenName);
+
+        if (tokenIndex > 0) this.tokens[tokenIndex] = newToken;
+        else
+            switch (updatePolicy) {
+                case UpdatePolicy.INSERT:
+                    this.addToken(newToken);
+                    break;
+                case UpdatePolicy.IGNORE:
+                    break;
+            }
+        if (sortToken) compareFn ? this.sort(compareFn) : this.sort;
     }
 
     sort(
