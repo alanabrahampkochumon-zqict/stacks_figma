@@ -97,9 +97,9 @@ export class TokenSet {
         tokenName: string,
         newToken: Token,
         {
-            updatePolicy,
-            sortToken,
-            compareFn,
+            updatePolicy = UpdatePolicy.INSERT,
+            sortToken = false,
+            compareFn = undefined,
         }: {
             updatePolicy?: UpdatePolicy;
             sortToken?: boolean;
@@ -109,17 +109,21 @@ export class TokenSet {
         // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
         this._validateToken([newToken], this.type ?? newToken.type);
         let tokenIndex = this.tokens.findIndex((t) => t.name === tokenName);
-
+        console.log(tokenIndex);
+        console.log(updatePolicy);
         if (tokenIndex > 0) this.tokens[tokenIndex] = newToken;
         else
             switch (updatePolicy) {
                 case UpdatePolicy.INSERT:
                     this.addToken(newToken);
+                    console.log(newToken, " was added.");
                     break;
                 case UpdatePolicy.IGNORE:
                     break;
             }
-        if (sortToken) compareFn ? this.sort(compareFn) : this.sort;
+        if (sortToken)
+            if (compareFn) this.sort(compareFn);
+            else this.sort();
     }
 
     sort(
