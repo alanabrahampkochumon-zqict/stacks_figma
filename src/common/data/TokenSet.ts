@@ -1,57 +1,27 @@
 import { UpdatePolicy } from "./Common";
+import type {
+    ExtendedTokenTypes,
+    Levels,
+    Token,
+    TokenComparator,
+} from "./Token";
+import { validateToken } from "./Token";
 
-export type BasicTokenTypes = "number" | "string" | "boolean" | "color";
-export type ExtendedTokenTypes =
-    | BasicTokenTypes
-    | (
-          | "typography"
-          | "sizing"
-          | "spacing"
-          | "animation"
-          | "corner-radius"
-          | "box-shadow"
-          | "gradient"
-      );
-export function validateToken(
-    token: any,
-    tokenType: ExtendedTokenTypes,
-): boolean {
-    switch (tokenType) {
-        case "number":
-        case "sizing":
-        case "spacing":
-        case "corner-radius":
-            return typeof token === "number";
-        case "string":
-            return typeof token === "string";
-        case "boolean":
-            return typeof token === "boolean";
-        case "color":
-            return (
-                typeof token === "string" &&
-                !!token.match(/^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i)
-                    ?.length
-            );
-        case "gradient":
-        // TODO: Implementation
-        case "box-shadow":
-        // TODO: Implementation
-        case "animation":
-        // TODO: Implementation
-    }
-    return false;
-}
-
-export type Levels = 1 | 2 | 3 | 4;
-
-export type Token = {
-    name: string;
-    value: any;
-    type: ExtendedTokenTypes;
+type TokenSetUpdateOptions = {
+    updatePolicy?: UpdatePolicy;
+    sortToken?: boolean;
+    compareFn?: TokenComparator;
 };
 
-export type TokenComparator = (a: Token, b: Token) => number;
+type TokenSetAddOptions = {
+    sortToken?: boolean;
+    compareFn?: TokenComparator;
+};
 
+/**
+ * Class representing a single token. It contains the name, type, level (1-3) and the token collection.
+ * NOTE: All the token's type must match the parent token type.
+ */
 export class TokenSet {
     name: string;
     type: ExtendedTokenTypes;
@@ -73,19 +43,12 @@ export class TokenSet {
 
     addToken(
         token: Token,
-        {
-            sortToken,
-            compareFn,
-        }: {
-            sortToken: boolean;
-            compareFn?: TokenComparator;
-        } = { sortToken: false },
+        { sortToken = false, compareFn }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
         this.tokens.push(token);
         if (sortToken) {
-            if (compareFn != undefined) this.sort(compareFn);
-            else this.sort();
+            this.sort(compareFn);
         }
     }
 
@@ -100,11 +63,7 @@ export class TokenSet {
             updatePolicy = UpdatePolicy.INSERT,
             sortToken = false,
             compareFn = undefined,
-        }: {
-            updatePolicy?: UpdatePolicy;
-            sortToken?: boolean;
-            compareFn?: TokenComparator;
-        } = {},
+        }: TokenSetUpdateOptions = {},
     ) {
         // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
         this._validateToken([newToken], this.type ?? newToken.type);
