@@ -104,7 +104,7 @@ export class TokenSet {
             updatePolicy?: UpdatePolicy;
             sortToken?: boolean;
             compareFn?: TokenComparator;
-        } = { updatePolicy: UpdatePolicy.INSERT, sortToken: false },
+        } = {},
     ) {
         // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
         this._validateToken([newToken], this.type ?? newToken.type);
@@ -121,9 +121,7 @@ export class TokenSet {
                 case UpdatePolicy.IGNORE:
                     break;
             }
-        if (sortToken)
-            if (compareFn) this.sort(compareFn);
-            else this.sort();
+        if (sortToken) this.sort(compareFn);
     }
 
     sort(

@@ -374,13 +374,40 @@ describe("TokenSet Update Tests", () => {
         const token: Token = { type: tokenType, value: 5, name: "size-50" };
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
-        // When a token is updated(upserted)
+        // When a token is updated(upserted) and sorted
         tokenSet.updateToken(token.name, token, { sortToken: true });
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
     });
 
-    // TODO: Add more tests, update + sort, update + sort + comparator
+    test("token upserted and sorted when sort is turned on based on comparator", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 150, name: "size-150" },
+            { type: tokenType, value: 20, name: "size-0" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, value: 5, name: "size-50" },
+            { type: tokenType, value: 10, name: "size-100" },
+            { type: tokenType, value: 20, name: "size-0" },
+            { type: tokenType, value: 150, name: "size-150" },
+        ];
+        const token: Token = { type: tokenType, value: 5, name: "size-50" };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+
+        // When a token is updated(upserted) and sorted with comparator
+        tokenSet.updateToken(token.name, token, {
+            sortToken: true,
+            compareFn: (a, b) => a.value - b.value,
+        });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+
     // TODO: Update Tokenset to use dictionary instead of array
     // TODO: Hastoken and token size methods
     // TODO: Start designsystem tests + func
