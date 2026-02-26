@@ -620,3 +620,33 @@ describe("TokenSet Find Tests", () => {
         expect(index).toBe(-1);
     });
 });
+
+describe("TokenSet Length Tests", () => {
+    const tokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+    ];
+    const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
+
+    test("non-empty token set return size of the tokens", () => {
+        // Given a token set
+
+        // When the length is queried
+        const length = tokenSet.size();
+
+        // Then, it returns correct length
+        expect(length).toBe(tokens.length);
+    });
+
+    test("token index when queried on empty token set, returns -1", () => {
+        // Given an empty token set
+        const emptyTokenSet = new TokenSet("empty", "string");
+
+        // When the length is queried
+        const length = emptyTokenSet.size();
+
+        // Then, it returns 0
+        expect(length).toBe(0);
+    });
+});

@@ -60,6 +60,10 @@ export class TokenSet {
         }
     }
 
+    size() {
+        return this.tokens.length;
+    }
+
     getTokenIndex(tokenName: string) {
         return this.tokens.findIndex((t) => t.name === tokenName);
     }
