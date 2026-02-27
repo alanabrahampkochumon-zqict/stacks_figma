@@ -1,6 +1,18 @@
+import { InsertConflictPolicy } from "./Common";
 import type { Token } from "./Token";
 import { TokenSet } from "./TokenSet";
 
+// type DesignSystemUpdateOptions = {
+//     updatePolicy?: UpdatePolicy;
+//     sortToken?: boolean;
+//     // compareFn?: TokenSetComparator;
+// };
+
+type DesignSystemAddOptions = {
+    insertPolicy?: InsertConflictPolicy;
+    // sortToken?: boolean;
+    // compareFn?: TokenComparator;
+};
 export class DesignSystem {
     name: string;
     tokenSets: TokenSet[];
@@ -10,8 +22,17 @@ export class DesignSystem {
         this.tokenSets = tokenSets;
     }
 
-    addTokenSet(tokenSet: TokenSet) {
+    addTokenSet(
+        tokenSet: TokenSet,
+        {
+            insertPolicy = InsertConflictPolicy.IGNORE,
+        }: DesignSystemAddOptions = {},
+    ) {
         this.tokenSets.push(tokenSet);
+    }
+
+    getIndex(tokenSetName: string) {
+        return this.tokenSets.findIndex((ts) => ts.name === tokenSetName);
     }
 
     removeTokenSet(tokenSet: TokenSet) {
