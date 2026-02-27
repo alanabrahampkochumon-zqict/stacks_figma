@@ -7,6 +7,8 @@ import {
 import { Token } from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
 
+// TODO: Refactor testnames using [return/action] when [condition] format
+
 describe("TokenSet Intialization Tests", () => {
     test("TokenSet gets initialized with correct default values", () => {
         // Given a tokenset initialized with only name
@@ -447,10 +449,6 @@ describe("TokenSet Update Tests", () => {
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
     });
 
-    // TODO: Update Tokenset to use dictionary instead of array
-    // TODO: Hastoken and token size methods
-    // TODO: Start designsystem tests + func
-    // TODO: Update below test
     test("token added and sorted when sort is turned on and comparator is provided", () => {
         // Given a non-empty token set
         const name = "TokenSet";
@@ -621,7 +619,7 @@ describe("TokenSet Find Tests", () => {
     });
 });
 
-describe("TokenSet Length Tests", () => {
+describe("TokenSet Size Tests", () => {
     const tokens: Token[] = [
         { type: "sizing", value: 5, name: "size-50" },
         { type: "sizing", value: 10, name: "size-100" },
@@ -629,7 +627,7 @@ describe("TokenSet Length Tests", () => {
     ];
     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 
-    test("non-empty token set return size of the tokens", () => {
+    test("return correct size when set is non-empty", () => {
         // Given a token set
 
         // When the length is queried
@@ -639,7 +637,7 @@ describe("TokenSet Length Tests", () => {
         expect(length).toBe(tokens.length);
     });
 
-    test("token index when queried on empty token set, returns -1", () => {
+    test("returns 0 when set is empty", () => {
         // Given an empty token set
         const emptyTokenSet = new TokenSet("empty", "string");
 

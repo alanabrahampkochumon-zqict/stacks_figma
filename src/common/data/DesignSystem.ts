@@ -1,4 +1,5 @@
-import type { Token, TokenSet } from "./Tokens";
+import type { Token } from "./Token";
+import { TokenSet } from "./TokenSet";
 
 export class DesignSystem {
     name: string;
