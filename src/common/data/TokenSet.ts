@@ -42,6 +42,12 @@ export class TokenSet {
         this.tokens = tokens;
     }
 
+    /**
+     * Inserts token into the token set. Conflicts can be resolved by using `InsertConflictPolicy`.
+     * @param token token to be inserted into the tokenset.
+     * @param options optional options for insertion policy(IGNORE, REPLACE, MERGE not supported). Defaults to ignore.
+     *                and for sorting tokens, after insertions.
+     */
     addToken(
         token: Token,
         {

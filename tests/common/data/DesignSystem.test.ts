@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import { InsertConflictPolicy } from "../../../src/common/data/Common";
 import { DesignSystem } from "../../../src/common/data/DesignSystem";
 import { type Token } from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
@@ -8,8 +9,8 @@ function initializeTokens() {
     const tokens1: Token[] = [
         { type: tokenType1, value: 0, name: "size-0" },
         { type: tokenType1, value: 15, name: "size-150" },
-        { type: tokenType1, value: 50, name: "size-350" },
-        { type: tokenType1, value: 100, name: "size-100" },
+        { type: tokenType1, value: 50, name: "size-500" },
+        { type: tokenType1, value: 100, name: "size-1000" },
     ];
     const tokenType2 = "string";
     const tokens2: Token[] = [
@@ -17,11 +18,18 @@ function initializeTokens() {
         { type: tokenType2, value: "regular", name: "regular" },
         { type: tokenType2, value: "bold", name: "bold" },
     ];
+    const tokens3: Token[] = [
+        { type: tokenType1, value: 0, name: "size-0" },
+        { type: tokenType1, value: 10, name: "size-100" },
+        { type: tokenType1, value: 15, name: "size-150" },
+        { type: tokenType1, value: 35, name: "size-350" },
+    ];
     const tokenSet1 = new TokenSet("token-1", tokenType1, 1, tokens1);
-    const tokenSet2 = new TokenSet("token-1", tokenType2, 1, tokens2);
+    const tokenSet2 = new TokenSet("token-2", tokenType2, 1, tokens2);
+    const tokenSet3 = new TokenSet("token-1", tokenType1, 1, tokens3);
     const tokenSets = [tokenSet1, tokenSet2];
     const dsName = "Falcon";
-    return { dsName, tokenSets };
+    return { dsName, tokenSets, tokenSet3 };
 }
 
 describe("Design System Initialization", () => {
@@ -60,6 +68,32 @@ describe("Design System Add Token", () => {
 
         // Then it gets added to the design system
         expect(designSystem.tokenSets).toStrictEqual([tokenSet]);
+    });
+
+    test("tokenset with same name will not get added, when added to non-empty design system with conflict policy of ignore", () => {
+        // Given a empty design system
+        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, tokenSets);
+
+        // When tokens are added
+        designSystem.addTokenSet(tokenSet3);
+
+        // Then it gets added to the design system
+        expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
+    });
+
+    test("tokenset with same name gets replaced, when added to non-empty design system with conflict policy of replace", () => {
+        // Given a empty design system
+        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, tokenSets);
+
+        // When tokens are added
+        designSystem.addTokenSet(tokenSet3, {
+            insertPolicy: InsertConflictPolicy.REPLACE,
+        });
+
+        // Then it gets added to the design system
+        expect(designSystem.tokenSets).toStrictEqual([tokenSet3, tokenSets[1]]);
     });
 
     // test("tokenset is added ");

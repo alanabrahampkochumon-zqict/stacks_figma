@@ -8,6 +8,7 @@ export type UpdatePolicy = (typeof UpdatePolicy)[keyof typeof UpdatePolicy];
 export const InsertConflictPolicy = {
     REPLACE: "replace",
     IGNORE: "ignore",
+    MERGE: "merge",
 } as const;
 
 export type InsertConflictPolicy =
