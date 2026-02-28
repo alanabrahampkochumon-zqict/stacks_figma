@@ -1,4 +1,3 @@
-import { todo } from "node:test";
 import { InsertConflictPolicy } from "./Common";
 import type { Token } from "./Token";
 import { TokenSet } from "./TokenSet";
@@ -34,7 +33,7 @@ export class DesignSystem {
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.tokenSets[tokenIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
-            todo("Implementation"); // IGNORE. Do nothing.
+            this.tokenSets[tokenIndex].mergeTokenSet(tokenSet);
         else return;
     }
 

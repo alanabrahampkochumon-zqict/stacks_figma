@@ -24,12 +24,41 @@ function initializeTokens() {
         { type: tokenType1, value: 15, name: "size-150" },
         { type: tokenType1, value: 35, name: "size-350" },
     ];
+    const mergedToken: Token[] = [
+        { type: tokenType1, value: 0, name: "size-0" },
+        { type: tokenType1, value: 15, name: "size-150" },
+        { type: tokenType1, value: 50, name: "size-500" },
+        { type: tokenType1, value: 100, name: "size-1000" },
+        { type: tokenType1, value: 15, name: "size-150" },
+        { type: tokenType1, value: 35, name: "size-350" },
+    ];
+    const sortedMergedToken: Token[] = [
+        { type: tokenType1, value: 0, name: "size-0" },
+        { type: tokenType1, value: 10, name: "size-100" },
+        { type: tokenType1, value: 15, name: "size-150" },
+        { type: tokenType1, value: 35, name: "size-350" },
+        { type: tokenType1, value: 50, name: "size-500" },
+        { type: tokenType1, value: 100, name: "size-1000" },
+    ];
     const tokenSet1 = new TokenSet("token-1", tokenType1, 1, tokens1);
     const tokenSet2 = new TokenSet("token-2", tokenType2, 1, tokens2);
     const tokenSet3 = new TokenSet("token-1", tokenType1, 1, tokens3);
+    const mergedTokenSet = new TokenSet("token-1", tokenType1, 1, mergedToken);
+    const sortedMergedTokenSet = new TokenSet(
+        "token-1",
+        tokenType1,
+        1,
+        sortedMergedToken,
+    );
     const tokenSets = [tokenSet1, tokenSet2];
     const dsName = "Falcon";
-    return { dsName, tokenSets, tokenSet3 };
+    return {
+        dsName,
+        tokenSets,
+        tokenSet3,
+        mergedTokenSet,
+        sortedMergedTokenSet,
+    };
 }
 
 describe("Design System Initialization", () => {
@@ -82,21 +111,24 @@ describe("Design System Add Token", () => {
         expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
     });
 
-    test("tokenset with same name gets replaced, when added to non-empty design system with conflict policy of replace", () => {
+    test("tokenset with same name, level, and type gets gets merged, when added to non-empty design system with conflict policy of merge", () => {
         // Given a empty design system
-        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
-        const designSystem = new DesignSystem(dsName, tokenSets);
+        const {
+            dsName,
+            tokenSets: [tokenSet1],
+            tokenSet3,
+            mergedTokenSet,
+        } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, [tokenSet1]);
 
         // When tokens are added
         designSystem.addTokenSet(tokenSet3, {
-            insertPolicy: InsertConflictPolicy.REPLACE,
+            insertPolicy: InsertConflictPolicy.MERGE,
         });
-
+        console.log(designSystem.tokenSets);
         // Then it gets added to the design system
-        expect(designSystem.tokenSets).toStrictEqual([tokenSet3, tokenSets[1]]);
+        expect(designSystem.tokenSets).toStrictEqual(mergedTokenSet);
     });
-
-    // test("tokenset is added ");
 });
 
 describe("Design System Get TokenSet Index", () => {
