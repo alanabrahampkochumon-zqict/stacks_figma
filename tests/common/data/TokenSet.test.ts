@@ -648,3 +648,179 @@ describe("TokenSet Size Tests", () => {
         expect(length).toBe(0);
     });
 });
+
+function setUp() {
+    const originalTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+    ];
+    const cleanMergingTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 30, name: "size-300" },
+        { type: "sizing", value: 25, name: "size-250" },
+        { type: "sizing", value: 20, name: "size-200" },
+    ];
+    const cleanMergingResultTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+        { type: "sizing", value: 30, name: "size-300" },
+        { type: "sizing", value: 25, name: "size-250" },
+        { type: "sizing", value: 20, name: "size-200" },
+    ];
+    const conflictMergingTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 15, name: "size-100" },
+        { type: "sizing", value: 25, name: "size-150" },
+        { type: "sizing", value: 35, name: "size-200" },
+    ];
+    const conflictMergingReplaceResultTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 15, name: "size-100" },
+        { type: "sizing", value: 25, name: "size-150" },
+        { type: "sizing", value: 35, name: "size-200" },
+    ];
+    const conflictMergingIgnoreResultTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+        { type: "sizing", value: 35, name: "size-200" },
+    ];
+    const differentTokens: Token[] = [
+        { type: "spacing", value: 25, name: "spacing-250" },
+        { type: "spacing", value: 35, name: "spacing-350" },
+        { type: "spacing", value: 45, name: "spacing-450" },
+    ];
+    const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
+    const cleanMergingTokenSet = new TokenSet(
+        "ts",
+        "sizing",
+        2,
+        cleanMergingTokens,
+    );
+    const cleanMergingResultTokenSet = new TokenSet(
+        originalTokenSet.name,
+        originalTokenSet.type,
+        originalTokenSet.level,
+        cleanMergingResultTokens,
+    );
+    const conflictMergingTokenSet = new TokenSet(
+        "ts",
+        "sizing",
+        2,
+        conflictMergingTokens,
+    );
+    const differentTokenSet = new TokenSet(
+        "ts",
+        differentTokens[0].type,
+        1,
+        differentTokens,
+    );
+    const conflictMergingReplaceResultTokenSet = new TokenSet(
+        originalTokenSet.name,
+        originalTokenSet.type,
+        originalTokenSet.level,
+        conflictMergingReplaceResultTokens,
+    );
+    const conflictMergingIgnoreResultTokenSet = new TokenSet(
+        originalTokenSet.name,
+        originalTokenSet.type,
+        originalTokenSet.level,
+        conflictMergingIgnoreResultTokens,
+    );
+    return {
+        originalTokenSet,
+        cleanMergingTokenSet,
+        conflictMergingTokenSet,
+        differentTokenSet,
+        cleanMergingResultTokenSet,
+        conflictMergingReplaceResultTokenSet,
+        conflictMergingIgnoreResultTokenSet,
+    };
+}
+
+describe("TokenSet Merge Tests", () => {
+    test("throws error when tokensets don't have the same name", () => {
+        // When two tokenset of different names are merged
+        const { originalTokenSet, cleanMergingTokenSet } = setUp();
+        cleanMergingTokenSet.name = "bad name";
+
+        // Then, error is thrown
+        expect(() =>
+            originalTokenSet.mergeTokenSet(cleanMergingTokenSet),
+        ).toThrow();
+    });
+
+    test("throws error when tokensets don't have the same type", () => {
+        // When two tokenset of different types are merged
+        const { originalTokenSet, cleanMergingTokenSet } = setUp();
+        cleanMergingTokenSet.type = "color";
+
+        // Then, error is thrown
+        expect(() =>
+            originalTokenSet.mergeTokenSet(cleanMergingTokenSet),
+        ).toThrow();
+    });
+
+    test("throws error when tokensets don't have the same level", () => {
+        // When two tokenset of different levels are merged
+        const { originalTokenSet, cleanMergingTokenSet } = setUp();
+        cleanMergingTokenSet.level = 3;
+
+        // Then, error is thrown
+        expect(() =>
+            originalTokenSet.mergeTokenSet(cleanMergingTokenSet),
+        ).toThrow();
+    });
+
+    test("merged without duplicates when tokensets are of same name, type, and level", () => {
+        // When two tokenset are merged
+        const {
+            originalTokenSet,
+            cleanMergingTokenSet,
+            cleanMergingResultTokenSet,
+        } = setUp();
+        originalTokenSet.mergeTokenSet(cleanMergingTokenSet);
+
+        // Then, the token sets contains elements without duplicates
+        expect(originalTokenSet).toStrictEqual(cleanMergingResultTokenSet);
+    });
+
+    test("merged with conflicting elements replaced, policy set to replace", () => {
+        // When two tokenset are merged with insertion policy set to replace
+        const {
+            originalTokenSet,
+            conflictMergingTokenSet,
+            conflictMergingReplaceResultTokenSet,
+        } = setUp();
+
+        originalTokenSet.mergeTokenSet(conflictMergingTokenSet, {
+            insertPolicy: InsertConflictPolicy.REPLACE,
+        });
+
+        console.log(originalTokenSet);
+
+        // Then, the old token set's duplicate elements are replaced with new elements
+        expect(originalTokenSet).toStrictEqual(
+            conflictMergingReplaceResultTokenSet,
+        );
+    });
+
+    test("merged with conflicting elements ignored, policy set to ignore", () => {
+        // When two tokenset are merged
+        const {
+            originalTokenSet,
+            conflictMergingTokenSet,
+            conflictMergingIgnoreResultTokenSet,
+        } = setUp();
+        originalTokenSet.mergeTokenSet(conflictMergingTokenSet, {
+            insertPolicy: InsertConflictPolicy.IGNORE,
+        });
+
+        // Then, the old token set's duplicate elements persists
+        expect(originalTokenSet).toStrictEqual(
+            conflictMergingIgnoreResultTokenSet,
+        );
+    });
+});

@@ -19,6 +19,12 @@ type TokenSetAddOptions = {
     compareFn?: TokenComparator;
 };
 
+type TokenSetMergeOptions = {
+    insertPolicy?: InsertConflictPolicy;
+    sortToken?: boolean;
+    compareFn?: TokenComparator;
+};
+
 /**
  * Class representing a single token. It contains the name, type, level (1-3) and the token collection.
  * NOTE: All the token's type must match the parent token type.
@@ -66,18 +72,37 @@ export class TokenSet {
         }
     }
 
+    /**
+     * Returns the size of the current token set.
+     * @returns integer greater than 0
+     */
     size() {
         return this.tokens.length;
     }
 
+    /**
+     * Returns the index of the token in the tokenset.
+     * @param tokenName token name to get the index of.
+     * @returns number greater than 0, if the token is present else -1
+     */
     getTokenIndex(tokenName: string) {
         return this.tokens.findIndex((t) => t.name === tokenName);
     }
 
+    /**
+     * Removes token from a token set.
+     * @param token token to be removed from the tokenset.
+     */
     removeToken(token: Token) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
+    /**
+     * Updates the given token having `tokenName` with the newly provided token.
+     * @param tokenName Name of the token to be updated.
+     * @param newToken Token to be updated with.
+     * @param options Optional parameters like UpdatePolicy, whether to sort after insertion, soritng function can be provided.
+     */
     updateToken(
         tokenName: string,
         newToken: Token,
@@ -102,6 +127,10 @@ export class TokenSet {
         if (sortToken) this.sort(compareFn);
     }
 
+    /**
+     * Sorts the current token set.
+     * @param compareFn (Token, Token) => Number function, that determines the sort order. Defaults to alphanumeric sorting.
+     */
     sort(
         compareFn: TokenComparator = (a, b) =>
             a.name.localeCompare(b.name, undefined, {
@@ -110,6 +139,35 @@ export class TokenSet {
             }),
     ) {
         this.tokens.sort(compareFn);
+    }
+
+    /**
+     * Merges a token set with the current token set.
+     * For merge to work, both tokens must have same name, type and level, else it will throw an error.
+     * Common tokens will only get added once.
+     * @param tokenSet token set to be merged with the current token set.
+     * @param options optional options for insertion policy(IGNORE, REPLACE, MERGE not  supported). Defaults to IGNORE.
+     *                and for sorting tokens, after insertions.
+     */
+    mergeTokenSet(
+        tokenSet: TokenSet,
+        {
+            insertPolicy = InsertConflictPolicy.IGNORE,
+            sortToken = false,
+            compareFn,
+        }: TokenSetMergeOptions = {},
+    ) {
+        if (
+            this.name !== tokenSet.name ||
+            this.type !== tokenSet.type ||
+            this.level !== tokenSet.level
+        )
+            throw new Error(
+                `TokenSet mismatch while merging: {${this.name}, ${this.type}, ${this.level}} != ${tokenSet.name}, ${tokenSet.type}, ${tokenSet.level}`,
+            );
+        for (const token of tokenSet.tokens) {
+            this.addToken(token, { insertPolicy });
+        }
     }
 
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
