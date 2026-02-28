@@ -168,6 +168,7 @@ export class TokenSet {
         for (const token of tokenSet.tokens) {
             this.addToken(token, { insertPolicy });
         }
+        if (sortToken) this.sort(compareFn);
     }
 
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {

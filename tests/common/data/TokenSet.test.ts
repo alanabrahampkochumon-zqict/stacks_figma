@@ -658,16 +658,32 @@ function setUp() {
     const cleanMergingTokens: Token[] = [
         { type: "sizing", value: 5, name: "size-50" },
         { type: "sizing", value: 30, name: "size-300" },
-        { type: "sizing", value: 25, name: "size-250" },
-        { type: "sizing", value: 20, name: "size-200" },
+        { type: "sizing", value: 250, name: "size-250" },
+        { type: "sizing", value: 120, name: "size-200" },
     ];
     const cleanMergingResultTokens: Token[] = [
         { type: "sizing", value: 5, name: "size-50" },
         { type: "sizing", value: 10, name: "size-100" },
         { type: "sizing", value: 15, name: "size-150" },
         { type: "sizing", value: 30, name: "size-300" },
-        { type: "sizing", value: 25, name: "size-250" },
-        { type: "sizing", value: 20, name: "size-200" },
+        { type: "sizing", value: 250, name: "size-250" },
+        { type: "sizing", value: 120, name: "size-200" },
+    ];
+    const sortedMergingResultTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+        { type: "sizing", value: 120, name: "size-200" },
+        { type: "sizing", value: 250, name: "size-250" },
+        { type: "sizing", value: 30, name: "size-300" },
+    ];
+    const valueSortedMergingResultTokens: Token[] = [
+        { type: "sizing", value: 5, name: "size-50" },
+        { type: "sizing", value: 10, name: "size-100" },
+        { type: "sizing", value: 15, name: "size-150" },
+        { type: "sizing", value: 30, name: "size-300" },
+        { type: "sizing", value: 120, name: "size-200" },
+        { type: "sizing", value: 250, name: "size-250" },
     ];
     const conflictMergingTokens: Token[] = [
         { type: "sizing", value: 5, name: "size-50" },
@@ -729,6 +745,18 @@ function setUp() {
         originalTokenSet.level,
         conflictMergingIgnoreResultTokens,
     );
+    const sortedResultTokenSet = new TokenSet(
+        originalTokenSet.name,
+        originalTokenSet.type,
+        originalTokenSet.level,
+        sortedMergingResultTokens,
+    );
+    const valueSortedResultTokenSet = new TokenSet(
+        originalTokenSet.name,
+        originalTokenSet.type,
+        originalTokenSet.level,
+        valueSortedMergingResultTokens,
+    );
     return {
         originalTokenSet,
         cleanMergingTokenSet,
@@ -737,6 +765,8 @@ function setUp() {
         cleanMergingResultTokenSet,
         conflictMergingReplaceResultTokenSet,
         conflictMergingIgnoreResultTokenSet,
+        sortedResultTokenSet,
+        valueSortedResultTokenSet,
     };
 }
 
@@ -822,5 +852,33 @@ describe("TokenSet Merge Tests", () => {
         expect(originalTokenSet).toStrictEqual(
             conflictMergingIgnoreResultTokenSet,
         );
+    });
+
+    test("merged with sorting, when sort is turned on", () => {
+        // When two tokenset are merged with sorting on
+        const { originalTokenSet, cleanMergingTokenSet, sortedResultTokenSet } =
+            setUp();
+        originalTokenSet.mergeTokenSet(cleanMergingTokenSet, {
+            sortToken: true,
+        });
+
+        // Then, the token sets contains elements sorted by name
+        expect(originalTokenSet).toStrictEqual(sortedResultTokenSet);
+    });
+
+    test("merged with sorting by value, a sort function is provided", () => {
+        // When two tokenset are merged with sorting on and a function provided
+        const {
+            originalTokenSet,
+            cleanMergingTokenSet,
+            valueSortedResultTokenSet,
+        } = setUp();
+        originalTokenSet.mergeTokenSet(cleanMergingTokenSet, {
+            sortToken: true,
+            compareFn: (a, b) => a.value - b.value,
+        });
+
+        // Then, the token sets contains elements sorted by value.
+        expect(originalTokenSet).toStrictEqual(valueSortedResultTokenSet);
     });
 });
