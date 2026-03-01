@@ -1,5 +1,5 @@
 import { InsertConflictPolicy } from "./Common";
-import type { Token } from "./Token";
+import type { Token, TokenComparator } from "./Token";
 import { TokenSet } from "./TokenSet";
 
 // type DesignSystemUpdateOptions = {
@@ -10,8 +10,8 @@ import { TokenSet } from "./TokenSet";
 
 type DesignSystemAddOptions = {
     insertPolicy?: InsertConflictPolicy;
-    // sortToken?: boolean;
-    // compareFn?: TokenComparator;
+    sortToken?: boolean;
+    compareFn?: TokenComparator;
 };
 export class DesignSystem {
     name: string;
@@ -26,16 +26,21 @@ export class DesignSystem {
         tokenSet: TokenSet,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
+            sortToken = false,
+            compareFn,
         }: DesignSystemAddOptions = {},
     ) {
         const tokenIndex = this.getIndex(tokenSet.name);
-        if (tokenIndex === -1) return this.tokenSets.push(tokenSet);
-
-        if (insertPolicy === InsertConflictPolicy.REPLACE)
+        if (tokenIndex === -1) this.tokenSets.push(tokenSet);
+        else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.tokenSets[tokenIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
             this.tokenSets[tokenIndex].mergeTokenSet(tokenSet);
-        else return;
+        else
+            console.log(
+                "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",
+            );
+        if (sortToken) this.tokenSets[tokenIndex].sort(compareFn);
     }
 
     getIndex(tokenSetName: string) {
