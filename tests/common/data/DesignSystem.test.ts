@@ -29,7 +29,7 @@ function initializeTokens() {
         { type: tokenType1, value: 15, name: "size-150" },
         { type: tokenType1, value: 50, name: "size-500" },
         { type: tokenType1, value: 100, name: "size-1000" },
-        { type: tokenType1, value: 15, name: "size-150" },
+        { type: tokenType1, value: 10, name: "size-100" },
         { type: tokenType1, value: 35, name: "size-350" },
     ];
     const sortedMergedToken: Token[] = [
@@ -111,6 +111,7 @@ describe("Design System Add Token", () => {
         expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
     });
 
+    // FIXME:
     test("tokenset with same name, level, and type gets gets merged, when added to non-empty design system with conflict policy of merge", () => {
         // Given a empty design system
         const {
@@ -127,7 +128,7 @@ describe("Design System Add Token", () => {
         });
         console.log(designSystem.tokenSets);
         // Then it gets added to the design system
-        expect(designSystem.tokenSets).toStrictEqual(mergedTokenSet);
+        expect(designSystem.tokenSets).toStrictEqual([mergedTokenSet]);
     });
 });
 
