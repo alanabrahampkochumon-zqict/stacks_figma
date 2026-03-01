@@ -148,6 +148,7 @@ export class TokenSet {
      * @param tokenSet token set to be merged with the current token set.
      * @param options optional options for insertion policy(IGNORE, REPLACE, MERGE not  supported). Defaults to IGNORE.
      *                and for sorting tokens, after insertions.
+     * @throws error if tokens don't match level and type when merging on conflict.
      */
     mergeTokenSet(
         tokenSet: TokenSet,

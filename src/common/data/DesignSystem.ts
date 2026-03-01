@@ -22,6 +22,12 @@ export class DesignSystem {
         this.tokenSets = tokenSets;
     }
 
+    /**
+     * Adds a token set to a design system. If the tokenset already exist, the insertion policy is used to determine what to do with the duplicate.
+     * @param tokenSet The token set to be inserted.
+     * @param options Sets the insertion policy(Defaults to IGNORE), and sorting option.
+     * @throws error if tokens don't match level and type when merging on conflict.
+     */
     addTokenSet(
         tokenSet: TokenSet,
         {
@@ -43,12 +49,25 @@ export class DesignSystem {
         if (sortToken) this.tokenSets[tokenIndex].sort(compareFn);
     }
 
+    /**
+     * Returns the index of a token set if it exists else -1
+     * @param tokenSetName name of the token set to match for
+     * @returns -1 if not found else index of tokenset
+     */
     getIndex(tokenSetName: string) {
         return this.tokenSets.findIndex((ts) => ts.name === tokenSetName);
     }
 
+    /**
+     * Removes a tokenset if it exists
+     * @param tokenSet to be removed
+     */
     removeTokenSet(tokenSet: TokenSet) {
         this.tokenSets = this.tokenSets.filter((curTS) => curTS != tokenSet);
+    }
+
+    updateTokenSet(tokenSetName: string, newTokenSet, options: {} = {}) {
+        const tokenIndex = this.getIndex(tokenSetName);
     }
 
     addToken(token: Token, tokenSetName: string) {
