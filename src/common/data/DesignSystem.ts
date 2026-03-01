@@ -30,7 +30,8 @@ export class DesignSystem {
     ) {
         const tokenIndex = this.getIndex(tokenSet.name);
         if (tokenIndex === -1) return this.tokenSets.push(tokenSet);
-        else if (insertPolicy === InsertConflictPolicy.REPLACE)
+
+        if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.tokenSets[tokenIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
             this.tokenSets[tokenIndex].mergeTokenSet(tokenSet);

@@ -111,7 +111,45 @@ describe("Design System Add Token", () => {
         expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
     });
 
-    // FIXME:
+    test("throws error, when tokenset with different types are merged", () => {
+        const { dsName, tokenSets } = initializeTokens();
+        const newSet = new TokenSet(
+            tokenSets[0].name,
+            tokenSets[0].type,
+            4,
+            [],
+        );
+        const designSystem = new DesignSystem(dsName, tokenSets);
+
+        expect(() =>
+            designSystem.addTokenSet(newSet, {
+                insertPolicy: InsertConflictPolicy.MERGE,
+            }),
+        ).toThrow();
+    });
+
+    test("throws error, when tokenset with different levels are merged", () => {
+        const { dsName, tokenSets } = initializeTokens();
+        const token: Token = {
+            name: "invalid",
+            value: "#ffffff",
+            type: "color",
+        };
+        const newSet = new TokenSet(
+            tokenSets[0].name,
+            "color",
+            tokenSets[0].level,
+            [token],
+        );
+        const designSystem = new DesignSystem(dsName, tokenSets);
+
+        expect(() =>
+            designSystem.addTokenSet(newSet, {
+                insertPolicy: InsertConflictPolicy.MERGE,
+            }),
+        ).toThrow();
+    });
+
     test("tokenset with same name, level, and type gets gets merged, when added to non-empty design system with conflict policy of merge", () => {
         // Given a empty design system
         const {
