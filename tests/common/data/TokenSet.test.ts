@@ -357,11 +357,7 @@ describe("TokenSet Update Tests", () => {
             { type: tokenType, value: 15, name: "size-50" },
             { type: tokenType, value: 0, name: "size-0" },
         ];
-        const expectedTokens: Token[] = [
-            { type: tokenType, value: 10, name: "size-100" },
-            { type: tokenType, value: 55, name: "size-65" },
-            { type: tokenType, value: 0, name: "size-0" },
-        ];
+
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token is updated(upserted) with invalid values
@@ -655,6 +651,7 @@ function setUp() {
         { type: "sizing", value: 10, name: "size-100" },
         { type: "sizing", value: 15, name: "size-150" },
     ];
+
     const cleanMergingTokens: Token[] = [
         { type: "sizing", value: 5, name: "size-50" },
         { type: "sizing", value: 30, name: "size-300" },
@@ -708,7 +705,20 @@ function setUp() {
         { type: "spacing", value: 35, name: "spacing-350" },
         { type: "spacing", value: 45, name: "spacing-450" },
     ];
+
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
+    const originalTokenSetString = `
+    {
+        "name": "ts",
+        "type": "sizing",
+        "level": 2,
+        "tokens": [
+            { "type": "sizing", "value": 5, "name": "size-50" },
+            { "type": "sizing", "value": 10, "name": "size-100" },
+            { "type": "sizing", "value": 15, "name": "size-150" }
+        ]
+    }
+    `.replace(/\s/g, "");
     const cleanMergingTokenSet = new TokenSet(
         "ts",
         "sizing",
@@ -757,6 +767,7 @@ function setUp() {
         originalTokenSet.level,
         valueSortedMergingResultTokens,
     );
+
     return {
         originalTokenSet,
         cleanMergingTokenSet,
@@ -767,6 +778,7 @@ function setUp() {
         conflictMergingIgnoreResultTokenSet,
         sortedResultTokenSet,
         valueSortedResultTokenSet,
+        originalTokenSetString,
     };
 }
 
@@ -880,5 +892,18 @@ describe("TokenSet Merge Tests", () => {
 
         // Then, the token sets contains elements sorted by value.
         expect(originalTokenSet).toStrictEqual(valueSortedResultTokenSet);
+    });
+});
+
+describe("Token Set Serialization Tests", () => {
+    test("returns serialized output, when provided with correct tokens", () => {
+        // Given a token set
+        const { originalTokenSet, originalTokenSetString } = setUp();
+
+        // When serialized to JSON
+        const jsonString = originalTokenSet.toJsonString();
+
+        // Then the serialized string contains all the properties
+        expect(jsonString).toBe(originalTokenSetString);
     });
 });

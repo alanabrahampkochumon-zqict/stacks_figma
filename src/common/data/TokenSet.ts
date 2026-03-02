@@ -175,7 +175,7 @@ export class TokenSet {
     /**
      * Converts the current tokenset into a JSON string
      */
-    toJson(): string {
+    toJsonString(): string {
         return JSON.stringify({
             name: this.name,
             type: this.type,
