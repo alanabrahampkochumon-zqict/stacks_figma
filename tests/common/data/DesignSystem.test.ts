@@ -1,5 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { InsertConflictPolicy } from "../../../src/common/data/Common";
+import {
+    InsertConflictPolicy,
+    UpdatePolicy,
+} from "../../../src/common/data/Common";
 import { DesignSystem } from "../../../src/common/data/DesignSystem";
 import { type Token } from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
@@ -9,7 +12,13 @@ function initializeTokens() {
     const tokens1: Token[] = [
         { type: tokenType1, value: 0, name: "size-0" },
         { type: tokenType1, value: 150, name: "size-150" },
-        { type: tokenType1, value: 50, name: "size-500" },
+        { type: tokenType1, value: 50, name: "size-50" },
+        { type: tokenType1, value: 100, name: "size-1000" },
+    ];
+    const sortedTokens1: Token[] = [
+        { type: tokenType1, value: 0, name: "size-0" },
+        { type: tokenType1, value: 50, name: "size-50" },
+        { type: tokenType1, value: 150, name: "size-150" },
         { type: tokenType1, value: 100, name: "size-1000" },
     ];
     const tokenType2 = "string";
@@ -27,28 +36,34 @@ function initializeTokens() {
     const mergedToken: Token[] = [
         { type: tokenType1, value: 0, name: "size-0" },
         { type: tokenType1, value: 150, name: "size-150" },
-        { type: tokenType1, value: 50, name: "size-500" },
+        { type: tokenType1, value: 50, name: "size-50" },
         { type: tokenType1, value: 100, name: "size-1000" },
         { type: tokenType1, value: 1000, name: "size-100" },
         { type: tokenType1, value: 35, name: "size-350" },
     ];
     const sortedMergedToken: Token[] = [
         { type: tokenType1, value: 0, name: "size-0" },
+        { type: tokenType1, value: 50, name: "size-50" },
         { type: tokenType1, value: 1000, name: "size-100" },
         { type: tokenType1, value: 150, name: "size-150" },
         { type: tokenType1, value: 35, name: "size-350" },
-        { type: tokenType1, value: 50, name: "size-500" },
         { type: tokenType1, value: 100, name: "size-1000" },
     ];
     const sortedMergedTokenByValue: Token[] = [
         { type: tokenType1, value: 0, name: "size-0" },
         { type: tokenType1, value: 35, name: "size-350" },
-        { type: tokenType1, value: 50, name: "size-500" },
+        { type: tokenType1, value: 50, name: "size-50" },
         { type: tokenType1, value: 100, name: "size-1000" },
         { type: tokenType1, value: 150, name: "size-150" },
         { type: tokenType1, value: 1000, name: "size-100" },
     ];
     const tokenSet1 = new TokenSet("token-1", tokenType1, 1, tokens1);
+    const sortedTokenSet1 = new TokenSet(
+        "token-1",
+        tokenType1,
+        1,
+        sortedTokens1,
+    );
     const tokenSet2 = new TokenSet("token-2", tokenType2, 1, tokens2);
     const tokenSet3 = new TokenSet("token-1", tokenType1, 1, tokens3);
     const mergedTokenSet = new TokenSet("token-1", tokenType1, 1, mergedToken);
@@ -72,6 +87,7 @@ function initializeTokens() {
         dsName,
         tokenSets,
         tokenSet3,
+        sortedTokenSet1,
         mergedTokenSet,
         sortedMergedTokenSet,
         sortedByValueMergedTokenSet,
@@ -276,6 +292,119 @@ describe("Design System Remove TokenSet", () => {
 
         // Then, the tokensets are unaffected
         expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
+    });
+});
+
+describe("Design Sytem Update TokenSet", () => {
+    test("tokenset gets updated, when a existing tokenset name with new tokenset is passed in", () => {
+        // Given a non-empty token set
+        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, tokenSets);
+
+        // When tokenset is updated
+        designSystem.updateTokenSet(tokenSets[0].name, tokenSet3);
+
+        // Then, the tokenset is updated
+        expect(designSystem.tokenSets).toStrictEqual([tokenSet3, tokenSets[1]]);
+    });
+
+    test("tokenset gets inserted, when a new tokenset is passed in with update policy of INSERT", () => {
+        // Given a non-empty token set
+        const {
+            dsName,
+            tokenSets: [tokenSet1, tokenSet2],
+        } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, [tokenSet1]);
+
+        // When tokenset is updated with new token set
+        // and update policy of INSERT
+        designSystem.updateTokenSet(tokenSet2.name, tokenSet2, {
+            updatePolicy: UpdatePolicy.INSERT,
+        });
+
+        // Then, the tokenset is added(not updated)
+        expect(designSystem.tokenSets).toStrictEqual([tokenSet1, tokenSet2]);
+    });
+
+    test("tokenset does not get inserted, when a new tokenset is passed in with update policy of IGNORE", () => {
+        // Given a non-empty token set
+        const {
+            dsName,
+            tokenSets: [tokenSet1, tokenSet2],
+        } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, [tokenSet1]);
+
+        // When tokenset is updated with new token set
+        // and update policy of IGNORE
+        designSystem.updateTokenSet(tokenSet2.name, tokenSet2, {
+            updatePolicy: UpdatePolicy.IGNORE,
+        });
+
+        // Then, the tokenset is not added
+        expect(designSystem.tokenSets).toStrictEqual([tokenSet1]);
+    });
+
+    test("tokenset gets updated, when a existing tokenset is passed in with insert", () => {
+        // Given a non-empty token set
+        const { dsName, tokenSets } = initializeTokens();
+        const token1: Token = {
+            name: "test-3",
+            type: tokenSets[0].type,
+            value: 3,
+        };
+        const token2: Token = {
+            name: "test-1",
+            type: tokenSets[0].type,
+            value: 1,
+        };
+
+        const tokenSet = new TokenSet(
+            tokenSets[0].name,
+            tokenSets[0].type,
+            tokenSets[0].level,
+            [token1, token2],
+        );
+
+        const tokenSetSorted = new TokenSet(
+            tokenSets[0].name,
+            tokenSets[0].type,
+            tokenSets[0].level,
+            [token2, token1],
+        );
+
+        const designSystem = new DesignSystem(dsName, tokenSets);
+
+        // When tokenset is updated
+        designSystem.updateTokenSet(tokenSets[0].name, tokenSet);
+
+        // Then, the tokenset is updated
+        expect(designSystem.tokenSets).toStrictEqual([
+            tokenSetSorted,
+            tokenSets[1],
+        ]);
+    });
+
+    test("tokenset gets sorted, when a new token set in passed in with update policy of INSERT", () => {
+        // Given a non-empty token set
+        const {
+            dsName,
+            tokenSets: [tokenSet1, tokenSet2],
+            sortedTokenSet1,
+        } = initializeTokens();
+        const designSystem = new DesignSystem(dsName, [tokenSet2]);
+
+        // When tokenset is updated with new token set
+        // and update policy of INSERT and sorting is set to true
+        designSystem.updateTokenSet(tokenSet1.name, tokenSet1, {
+            updatePolicy: UpdatePolicy.INSERT,
+            sortToken: true,
+        });
+
+        // Then, the tokenset is added(not updated)
+        expect(designSystem.tokenSets).toStrictEqual([
+            tokenSet2,
+            sortedTokenSet1,
+        ]);
     });
 });
 

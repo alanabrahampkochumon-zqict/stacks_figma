@@ -1,4 +1,4 @@
-import { InsertConflictPolicy } from "./Common";
+import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { Token, TokenComparator } from "./Token";
 import { TokenSet } from "./TokenSet";
 
@@ -10,6 +10,12 @@ import { TokenSet } from "./TokenSet";
 
 type DesignSystemAddOptions = {
     insertPolicy?: InsertConflictPolicy;
+    sortToken?: boolean;
+    compareFn?: TokenComparator;
+};
+
+type TokenSetUpdateOptions = {
+    updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
@@ -36,17 +42,20 @@ export class DesignSystem {
             compareFn,
         }: DesignSystemAddOptions = {},
     ) {
-        const tokenIndex = this.getIndex(tokenSet.name);
-        if (tokenIndex === -1) this.tokenSets.push(tokenSet);
-        else if (insertPolicy === InsertConflictPolicy.REPLACE)
-            this.tokenSets[tokenIndex] = tokenSet;
+        let tokenSetIndex = this.getIndex(tokenSet.name);
+        console.log(tokenSetIndex);
+        if (tokenSetIndex === -1) {
+            this.tokenSets.push(tokenSet);
+            tokenSetIndex = this.tokenSets.length - 1;
+        } else if (insertPolicy === InsertConflictPolicy.REPLACE)
+            this.tokenSets[tokenSetIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
-            this.tokenSets[tokenIndex].mergeTokenSet(tokenSet);
+            this.tokenSets[tokenSetIndex].mergeTokenSet(tokenSet);
         else
-            console.log(
+            return console.log(
                 "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",
             );
-        if (sortToken) this.tokenSets[tokenIndex].sort(compareFn);
+        if (sortToken) this.tokenSets[tokenSetIndex].sort(compareFn);
     }
 
     /**
@@ -66,8 +75,26 @@ export class DesignSystem {
         this.tokenSets = this.tokenSets.filter((curTS) => curTS != tokenSet);
     }
 
-    updateTokenSet(tokenSetName: string, newTokenSet, options: {} = {}) {
-        const tokenIndex = this.getIndex(tokenSetName);
+    updateTokenSet(
+        tokenSetName: string,
+        newTokenSet: TokenSet,
+        {
+            updatePolicy = UpdatePolicy.IGNORE,
+            sortToken = false,
+            compareFn,
+        }: TokenSetUpdateOptions = {},
+    ) {
+        const tokenSetIndex = this.getIndex(tokenSetName);
+        console.log(tokenSetIndex);
+        if (tokenSetIndex !== -1) {
+            this.tokenSets[tokenSetIndex] = newTokenSet;
+            this.tokenSets[tokenSetIndex].sort(compareFn);
+        } else if (updatePolicy === UpdatePolicy.INSERT)
+            this.addTokenSet(newTokenSet, { sortToken, compareFn });
+        else
+            console.log(
+                "No matching token found! Update policy set to IGNORE. Aborting operation.",
+            );
     }
 
     addToken(token: Token, tokenSetName: string) {
