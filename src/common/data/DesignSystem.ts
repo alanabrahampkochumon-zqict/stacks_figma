@@ -75,6 +75,14 @@ export class DesignSystem {
         this.tokenSets = this.tokenSets.filter((curTS) => curTS != tokenSet);
     }
 
+    /**
+     * Updates a tokenset with the given token set, if it exists,
+     * else it gets inserted if UpdatePolicy is set to UpdatePolicy.INSERT,
+     * else nothing gets updated/inserted
+     * @param tokenSetName key used for updating tokenset
+     * @param newTokenSet tokenset to be updated with
+     * @param option update options: UpdatePolicy(Defaults to IGNORE), sortToken: Sorts the updated/inserted tokenset
+     */
     updateTokenSet(
         tokenSetName: string,
         newTokenSet: TokenSet,

@@ -172,6 +172,18 @@ export class TokenSet {
         if (sortToken) this.sort(compareFn);
     }
 
+    /**
+     * Converts the current tokenset into a JSON string
+     */
+    toJson(): string {
+        return JSON.stringify({
+            name: this.name,
+            type: this.type,
+            level: this.level,
+            tokens: this.tokens,
+        });
+    }
+
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
         if (tokens.length && tokenType !== tokens[0].type)
             throw new Error(
