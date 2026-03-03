@@ -46,7 +46,13 @@ export function validateToken(
     return false;
 }
 
-export type Levels = 1 | 2 | 3 | 4;
+export const validLevels = [1, 2, 3, 4] as const;
+
+export type Levels = (typeof validLevels)[number];
+
+export function isValidLevel(level: number): boolean {
+    return (validLevels as readonly number[]).includes(level);
+}
 
 export type Token = {
     name: string;

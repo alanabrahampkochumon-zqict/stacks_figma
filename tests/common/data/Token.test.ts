@@ -3,7 +3,9 @@ import type { ExtendedTokenTypes } from "../../../src/common/data/Token";
 import {
     extendedTokens,
     isValidExtendedToken,
+    isValidLevel,
     validateToken,
+    validLevels,
 } from "../../../src/common/data/Token";
 
 describe("TokenType Validator Tests", () => {
@@ -19,6 +21,23 @@ describe("TokenType Validator Tests", () => {
             // Given an invalid extended token
             // Then, validation returns true
             expect(isValidExtendedToken(token)).toStrictEqual(false);
+        },
+    );
+});
+
+describe("TokenLevel Validator Tests", () => {
+    test.each(validLevels)("return true, if level is %s", (level) => {
+        // Given a valid level
+        // Then, validation returns true
+        expect(isValidLevel(level)).toStrictEqual(true);
+    });
+
+    test.each([99, 0, 523, -999, 999, 100, 10])(
+        "return false, if token is %s (invalid)",
+        (level) => {
+            // Given an invalid level
+            // Then, validation returns true
+            expect(isValidLevel(level)).toStrictEqual(false);
         },
     );
 });
