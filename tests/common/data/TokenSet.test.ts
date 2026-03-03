@@ -4,13 +4,17 @@ import {
     InsertConflictPolicy,
     UpdatePolicy,
 } from "../../../src/common/data/Common";
-import { Token } from "../../../src/common/data/Token";
+import {
+    ExtendedTokenTypes,
+    Levels,
+    Token,
+} from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
 
 // TODO: Refactor testnames using [return/action] when [condition] format
 
 describe("TokenSet Intialization Tests", () => {
-    test("TokenSet gets initialized with correct default values", () => {
+    test("creates tokenset with default values, when initialized with only name", () => {
         // Given a tokenset initialized with only name
         const name = "TokenSet";
         const tokenSet = new TokenSet(name);
@@ -22,7 +26,7 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toBe("number");
     });
 
-    test("TokenSet gets initialized with passed in values", () => {
+    test("creates tokenset, when initialized with passed in values", () => {
         // Given a tokenset initialized with only name
         const name = "TokenSet";
         const tokenType = "number";
@@ -41,7 +45,7 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toBe(tokenType);
     });
 
-    test("TokenSet gets initialized with empty tokens", () => {
+    test("creates tokenset, when initialized with empty tokens", () => {
         // Given a tokenset initialized with empty tokens
         const name = "TokenSet";
         const tokenType = "number";
@@ -57,7 +61,7 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toBe(tokenType);
     });
 
-    test("TokenSet cannot be initialized with mixed token types", () => {
+    test("throws error, when initialized with mixed token types", () => {
         // Given a tokenset trying to get initalized with mixed types
         const name = "TokenSet";
         const tokenType = "number";
@@ -71,7 +75,7 @@ describe("TokenSet Intialization Tests", () => {
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
     });
 
-    test("TokenSet cannot be initialized with types different from the tokenSetType", () => {
+    test("throws error, when initialized with types different from the tokenSetType", () => {
         // Given a tokenset trying to get initalized with different token type that the  tokenType specified
         const name = "TokenSet";
         const tokenType = "number";
@@ -85,9 +89,45 @@ describe("TokenSet Intialization Tests", () => {
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
     });
 
-    test("TokenSet cannot be initialized with invalid token", () => {
+    test("throws error, when initialized with invalid token", () => {
         // Given a tokenset trying to get initalized with invalid token
         const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const tokens: Token[] = [
+            { type: tokenType, value: "#ffffff", name: "color-50" },
+        ];
+        // Then, the initializer throws an error
+        expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
+    });
+
+    test("throws error, when initialized with invalid level", () => {
+        // Given a tokenset trying to get initalized with invalid level
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 8 as Levels;
+        const tokens: Token[] = [
+            { type: tokenType, value: "#ffffff", name: "color-50" },
+        ];
+        // Then, the initializer throws an error
+        expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
+    });
+
+    test("throws error, when initialized with invalid type", () => {
+        // Given a tokenset trying to get initalized with invalid token type
+        const name = "TokenSet";
+        const tokenType = "invalid token type" as ExtendedTokenTypes;
+        const level = 1;
+        const tokens: Token[] = [
+            { type: tokenType, value: "#ffffff", name: "color-50" },
+        ];
+        // Then, the initializer throws an error
+        expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
+    });
+
+    test("throws error, when initialized with empty name", () => {
+        // Given a tokenset trying to get initalized with no name
+        const name = "";
         const tokenType = "number";
         const level = 1;
         const tokens: Token[] = [
