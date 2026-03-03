@@ -41,13 +41,20 @@ export class TokenSet {
     level: Levels;
     tokens: Token[];
 
+    /**
+     * Creates a token set with passed in parameters
+     * @param name name of the token set. Must be unique and not empty.
+     * @param type type of tokens, like color or animation. Check `ExtendedTokenTypes` for more details.
+     * Default: "number"
+     * @param level Level of the token set. 1, 2, 3, or 4. Default: 1.
+     * @param tokens Tokens to be added to token set initially. All the tokens passed in must match the passed in type and level.
+     */
     constructor(
         name: string,
         type: ExtendedTokenTypes = "number",
         level: Levels = 1,
         tokens: Token[] = [],
     ) {
-        // TODO: Add tests for these initialization validation
         if (!name) throw Error(`Name must be passed in for a tokenset`);
         if (!isValidLevel(level))
             throw Error(`Invalid level: Level must be in ${validLevels}`);

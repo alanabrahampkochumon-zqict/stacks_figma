@@ -11,8 +11,6 @@ import {
 } from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
 
-// TODO: Refactor testnames using [return/action] when [condition] format
-
 describe("TokenSet Intialization Tests", () => {
     test("creates tokenset with default values, when initialized with only name", () => {
         // Given a tokenset initialized with only name
@@ -138,6 +136,7 @@ describe("TokenSet Intialization Tests", () => {
     });
 });
 
+// TODO: Refactor testnames using [return/action] when [condition] format
 describe("TokenSet Add Tests", () => {
     test("valid token can be added", () => {
         // Given a empty token set

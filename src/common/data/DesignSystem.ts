@@ -2,11 +2,11 @@ import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { Token, TokenComparator } from "./Token";
 import { TokenSet } from "./TokenSet";
 
-// type DesignSystemUpdateOptions = {
-//     updatePolicy?: UpdatePolicy;
-//     sortToken?: boolean;
-//     // compareFn?: TokenSetComparator;
-// };
+type DesignSystemUpdateOptions = {
+    updatePolicy?: UpdatePolicy;
+    sortToken?: boolean;
+    compareFn?: TokenComparator;
+};
 
 type DesignSystemAddOptions = {
     insertPolicy?: InsertConflictPolicy;
@@ -14,11 +14,6 @@ type DesignSystemAddOptions = {
     compareFn?: TokenComparator;
 };
 
-type TokenSetUpdateOptions = {
-    updatePolicy?: UpdatePolicy;
-    sortToken?: boolean;
-    compareFn?: TokenComparator;
-};
 export class DesignSystem {
     name: string;
     tokenSets: TokenSet[];
@@ -90,7 +85,7 @@ export class DesignSystem {
             updatePolicy = UpdatePolicy.IGNORE,
             sortToken = false,
             compareFn,
-        }: TokenSetUpdateOptions = {},
+        }: DesignSystemUpdateOptions = {},
     ) {
         const tokenSetIndex = this.getIndex(tokenSetName);
         console.log(tokenSetIndex);
@@ -105,6 +100,17 @@ export class DesignSystem {
             );
     }
 
+    /**
+     * Get's a token set fromt the design system.
+     * Any mutations if applied to the tokenset will be applied to the design system.
+     * @param name the name of the token set to get return.
+     * @returns tokenset if it exists or undefined.
+     */
+    getTokenSet(name: string): TokenSet | undefined {
+        const index = this.getIndex(name);
+        return index === -1 ? undefined : this.tokenSets[index];
+    }
+
     addToken(token: Token, tokenSetName: string) {
         this.tokenSets
             .find((tokenSet) => tokenSet.name == tokenSetName)
@@ -116,6 +122,24 @@ export class DesignSystem {
             (tokenSet) => tokenSet.name == tokenSetName,
         );
         foundTokenSet?.tokens.filter((curToken) => curToken != token);
+    }
+
+    /**
+     * Updates the name of the tokenset in the design system.
+     * Direct mutation with tokensets is not recommended as it does not check for collisions.
+     * @param name the name used to reference the tokenset
+     * @param newName the new name to assign to.
+     * @throws error if new name is a duplicate name, or when a tokenset with given name does not exist.
+     */
+    updateTokenSetName(name: string, newName: string) {
+        const tokenSetIndex = this.getIndex(name);
+        if (tokenSetIndex === -1)
+            throw new Error(`TokenSet with ${name} doesn't exist.`);
+        if (this.tokenSets.some((tk) => tk.name === newName))
+            throw new Error(
+                `Name collision: TokenSet with ${newName} already exists`,
+            );
+        this.tokenSets[tokenSetIndex].name = newName;
     }
 
     // static toJson(ds: DesignSystem): string {

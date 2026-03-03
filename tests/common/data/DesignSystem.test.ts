@@ -434,3 +434,95 @@ describe("Design System Get TokenSet Index", () => {
         expect(index).toBe(-1);
     });
 });
+
+describe("Design System GetTokenSet", () => {
+    test("returns tokenset, when queried with existing name", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+
+        // When queried for a tokenset in the design system
+        const ts = ds.getTokenSet(tokenSets[0].name);
+
+        // Then, it returns the same token in the design system
+        expect(ts).toBe(ds.tokenSets[0]);
+    });
+
+    test("returns undefined, when queried with non-existing name", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+
+        // When queried for a non-existent tokenset
+        const ts = ds.getTokenSet("non-existent name");
+
+        // Then, it returns undefined
+        expect(ts).toBeUndefined();
+    });
+
+    test("returns undefined, when queried on empty design system", () => {
+        // Given a  empty design system
+        const ds = new DesignSystem("ds");
+
+        // When queried for a tokenset
+        const ts = ds.getTokenSet("non-existent name");
+
+        // Then, it returns undefined
+        expect(ts).toBeUndefined();
+    });
+
+    test("mutates design system, when tokenset is mutated", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+
+        // When queried for a tokenset in the design system
+        let ts = ds.getTokenSet(tokenSets[0].name);
+        // and mutated
+        ts!!.name = "Updated name";
+
+        // Then, it updates the design system
+        expect(ds.tokenSets[0]).toBe(ts);
+    });
+});
+
+describe("TokenSet Name Update", () => {
+    test("updates name, when given an existing token", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+        const newName = "updated name";
+
+        // When the name of the first token is mutated
+        ds.updateTokenSetName(tokenSets[0].name, newName);
+
+        // Then, the name is updated
+        expect(ds.tokenSets[0].name).toStrictEqual(newName);
+    });
+
+    test("throws error, when given a non-existing token", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+        const newName = "updated name";
+
+        // When updating with a non-existant name
+        // Then, it throws an error
+        expect(() => ds.updateTokenSetName("unknown name", newName)).toThrow();
+
+        // The design system is intact
+        expect(ds.tokenSets).toStrictEqual(tokenSets);
+    });
+
+    test("throws error, when the new name already exists", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+
+        // When updating with a colliding name
+        // Then, it throws an error
+        expect(() =>
+            ds.updateTokenSetName(tokenSets[0].name, tokenSets[1].name),
+        ).toThrow();
+    });
+});
