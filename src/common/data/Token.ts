@@ -1,15 +1,20 @@
-export type BasicTokenTypes = "number" | "string" | "boolean" | "color";
-export type ExtendedTokenTypes =
-    | BasicTokenTypes
-    | (
-          | "typography"
-          | "sizing"
-          | "spacing"
-          | "animation"
-          | "corner-radius"
-          | "box-shadow"
-          | "gradient"
-      );
+export const basicTokens = ["number", "string", "boolean", "color"] as const;
+export type BasicTokenTypes = (typeof basicTokens)[number];
+export const extendedTokens = [
+    ...basicTokens,
+    "typography",
+    "sizing",
+    "spacing",
+    "animation",
+    "corner-radius",
+    "box-shadow",
+    "gradient",
+] as const;
+export type ExtendedTokenTypes = (typeof extendedTokens)[number];
+
+export function isValidExtendedToken(token: string): boolean {
+    return (extendedTokens as readonly string[]).includes(token);
+}
 
 export function validateToken(
     token: any,

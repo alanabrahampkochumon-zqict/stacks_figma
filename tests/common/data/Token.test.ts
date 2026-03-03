@@ -1,6 +1,27 @@
 import { describe, expect, test } from "vitest";
 import type { ExtendedTokenTypes } from "../../../src/common/data/Token";
-import { validateToken } from "../../../src/common/data/Token";
+import {
+    extendedTokens,
+    isValidExtendedToken,
+    validateToken,
+} from "../../../src/common/data/Token";
+
+describe("TokenType Validator Tests", () => {
+    test.each(extendedTokens)("return true, if token is %s", (token) => {
+        // Given a valid extended token
+        // Then, validation returns true
+        expect(isValidExtendedToken(token)).toStrictEqual(true);
+    });
+
+    test.each(["token-1234", "invalid", "true"])(
+        "return false, if token is %s (invalid)",
+        (token) => {
+            // Given an invalid extended token
+            // Then, validation returns true
+            expect(isValidExtendedToken(token)).toStrictEqual(false);
+        },
+    );
+});
 
 describe("Token Validator Tests", () => {
     const testCases: {
