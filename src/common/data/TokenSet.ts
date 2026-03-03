@@ -184,6 +184,19 @@ export class TokenSet {
         });
     }
 
+    /**
+     * Converts a given string into TokenSet if valid.
+     * @param jsonString json string to be parsed
+     * @return TokenSet if the json string is valid else undefined
+     */
+    static toTokenSet(jsonString: string): TokenSet | undefined {
+        try {
+            return undefined;
+        } catch (error) {
+            return undefined;
+        }
+    }
+
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
         if (tokens.length && tokenType !== tokens[0].type)
             throw new Error(

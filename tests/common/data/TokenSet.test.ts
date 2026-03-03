@@ -719,6 +719,16 @@ function setUp() {
         ]
     }
     `.replace(/\s/g, "");
+    const emptyTokenSet = new TokenSet("empty", "animation", 4);
+    const emptyTokenSetString = `
+    {
+        "name": "empty",
+        "type": "animation",
+        "level": 4,
+        "tokens": []
+    }
+    `.replace(/\s/g, "");
+
     const cleanMergingTokenSet = new TokenSet(
         "ts",
         "sizing",
@@ -779,6 +789,8 @@ function setUp() {
         sortedResultTokenSet,
         valueSortedResultTokenSet,
         originalTokenSetString,
+        emptyTokenSet,
+        emptyTokenSetString,
     };
 }
 
@@ -895,7 +907,7 @@ describe("TokenSet Merge Tests", () => {
     });
 });
 
-describe("Token Set Serialization Tests", () => {
+describe("TokenSet Serialization Tests", () => {
     test("returns serialized output, when provided with correct tokens", () => {
         // Given a token set
         const { originalTokenSet, originalTokenSetString } = setUp();
@@ -904,6 +916,136 @@ describe("Token Set Serialization Tests", () => {
         const jsonString = originalTokenSet.toJsonString();
 
         // Then the serialized string contains all the properties
-        expect(jsonString).toBe(originalTokenSetString);
+        expect(jsonString).toStrictEqual(originalTokenSetString);
+    });
+
+    test("returns serialized output, when provided with correct tokens", () => {
+        // Given an empty token set
+        const { emptyTokenSetString, emptyTokenSet } = setUp();
+
+        // When serialized to JSON
+        const jsonString = emptyTokenSet.toJsonString();
+
+        // Then the serialized string contains all the properties
+        expect(jsonString).toStrictEqual(emptyTokenSetString);
+    });
+});
+
+describe("TokenSet Deserialization Tests", () => {
+    test("returns correct tokenset, when json string with name is passed in", () => {
+        // Given a json string with name only
+        const nameOnlyTokenJSON = `
+        {
+            "name": "test",
+        }
+        `;
+
+        // When converted to token set
+        const ts = TokenSet.toTokenSet(nameOnlyTokenJSON);
+
+        // Then a token set is created with the correct values
+        expect(ts).toBeDefined();
+        expect(ts?.name).toStrictEqual("test");
+        expect(ts?.type).toStrictEqual("number");
+        expect(ts?.level).toStrictEqual(1);
+        expect(ts?.tokens).toStrictEqual([]);
+    });
+
+    test("returns correct tokenset, when json string with name and type is passed in", () => {
+        // Given a json string with name and type
+        const nameAndTypeTokenJSON = `
+        {
+            "name": "test",
+            "type": "animation"
+        }
+        `;
+
+        // When converted to token set
+        const ts = TokenSet.toTokenSet(nameAndTypeTokenJSON);
+
+        // Then a token set is created with the correct values
+        expect(ts).toBeDefined();
+        expect(ts?.name).toStrictEqual("test");
+        expect(ts?.type).toStrictEqual("animation");
+        expect(ts?.level).toStrictEqual(1);
+        expect(ts?.tokens).toStrictEqual([]);
+    });
+
+    test("returns correct tokenset, when json string with name, type, and level is passed in", () => {
+        // Given a json string with name, type and level
+        const { emptyTokenSet, emptyTokenSetString } = setUp();
+
+        // When converted to token set
+        const ts = TokenSet.toTokenSet(emptyTokenSetString);
+
+        // Then a token set is created with the correct values
+        expect(ts).toBeDefined();
+        expect(ts).toStrictEqual(emptyTokenSet);
+    });
+
+    test("returns correct tokenset, when json string with name, type, level, and values is passed in", () => {
+        // Given a json string with name only
+        const { originalTokenSet, originalTokenSetString } = setUp();
+
+        // When converted to token set
+        const ts = TokenSet.toTokenSet(originalTokenSetString);
+
+        // Then a token set is created with the correct values
+        expect(ts).toBeDefined();
+        expect(ts).toStrictEqual(originalTokenSet);
+    });
+
+    test("throws error, when json string with no name is passed in", () => {
+        // Given a JSON string with level only
+        const levelOnlyTokenString = `
+        {
+            "level": 2
+        }
+        `;
+
+        // When converted to token set
+        // Then, it throws and error
+        expect(() => TokenSet.toTokenSet(levelOnlyTokenString)).toThrow();
+    });
+
+    test("throws error, when json string with invalid level is passed in", () => {
+        // Given a JSON string with invalid level
+        const invalidLevelTokenString = `
+        {
+            "name": "ts",
+            "level": 5
+        }
+        `;
+
+        // When converted to token set
+        // Then, it throws and error
+        expect(() => TokenSet.toTokenSet(invalidLevelTokenString)).toThrow();
+    });
+
+    test("throws error, when json string with invalid type is passed in", () => {
+        // Given a JSON string with invalid type
+        const invalidTypeTokenString = `
+        {
+            "name": "ts",
+            "type": "testing..."
+        }
+        `;
+
+        // When converted to token set
+        // Then, it throws and error
+        expect(() => TokenSet.toTokenSet(invalidTypeTokenString)).toThrow();
+    });
+
+    test("throws error, when malformed json string is passed in", () => {
+        // Given a JSON string with invalid type
+        const malformedTokenSetString = `
+        {
+            "abc": 1234
+        }
+        `;
+
+        // When converted to token set
+        // Then, it throws and error
+        expect(() => TokenSet.toTokenSet(malformedTokenSetString)).toThrow();
     });
 });
