@@ -936,7 +936,7 @@ describe("TokenSet Deserialization Tests", () => {
         // Given a json string with name only
         const nameOnlyTokenJSON = `
         {
-            "name": "test",
+            "name": "test"
         }
         `;
 

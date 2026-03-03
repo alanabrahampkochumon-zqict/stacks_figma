@@ -187,14 +187,12 @@ export class TokenSet {
     /**
      * Converts a given string into TokenSet if valid.
      * @param jsonString json string to be parsed
-     * @return TokenSet if the json string is valid else undefined
+     * @return TokenSet if the json string is valid
+     * @throws Error if a invalid string is passed in or if the values passed in not in the range, for example, 5 is passed for level which should be between 1..4
      */
-    static toTokenSet(jsonString: string): TokenSet | undefined {
-        try {
-            return undefined;
-        } catch (error) {
-            return undefined;
-        }
+    static toTokenSet(jsonString: string): TokenSet {
+        const data = JSON.parse(jsonString);
+        return new TokenSet(data?.name, data?.type, data?.level, data?.tokens);
     }
 
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
