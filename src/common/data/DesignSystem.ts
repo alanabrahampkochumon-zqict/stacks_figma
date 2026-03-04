@@ -153,13 +153,7 @@ export class DesignSystem {
         });
     }
 
-    static fromJson(jsonString: string): DesignSystem {
-        try {
-            const parsedData = JSON.parse(jsonString);
-            return new DesignSystem(parsedData.name, parsedData.tokens);
-        } catch (error) {
-            console.error("Failed to create design system from JSON", error);
-            return new DesignSystem("Untitled");
-        }
+    static fromJson(jsonString: string): DesignSystem | undefined {
+        return;
     }
 }

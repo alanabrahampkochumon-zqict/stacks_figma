@@ -1010,6 +1010,27 @@ describe("TokenSet Deserialization Tests", () => {
         expect(ts?.tokens).toStrictEqual([]);
     });
 
+    test("returns correct tokenset, when json string with additional properties are passed in", () => {
+        // Given a json string with additioanl properties
+        const nameAndTypeTokenJSON = `
+        {
+            "name": "test",
+            "type": "animation",
+            "add": "property"
+        }
+        `;
+
+        // When converted to token set
+        const ts = TokenSet.toTokenSet(nameAndTypeTokenJSON);
+
+        // Then a token set is created with the correct values
+        expect(ts).toBeDefined();
+        expect(ts?.name).toStrictEqual("test");
+        expect(ts?.type).toStrictEqual("animation");
+        expect(ts?.level).toStrictEqual(1);
+        expect(ts?.tokens).toStrictEqual([]);
+    });
+
     test("returns correct tokenset, when json string with name, type, and level is passed in", () => {
         // Given a json string with name, type and level
         const { emptyTokenSet, emptyTokenSetString } = setUp();
