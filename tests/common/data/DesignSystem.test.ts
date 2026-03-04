@@ -102,7 +102,7 @@ describe("Design System Initialization", () => {
 
         // Then, it is correct initialized with default values
         expect(designSystem.name).toBe(dsName);
-        expect(designSystem.tokenSets.length).toBe(0);
+        expect(designSystem.getTokenSets().length).toBe(0);
     });
 
     test("can be initialized with name and tokenset", () => {
@@ -112,7 +112,7 @@ describe("Design System Initialization", () => {
 
         // Then, the design system is initialized with those values
         expect(designSystem.name).toBe(dsName);
-        expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
+        expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
     });
 });
 
@@ -129,7 +129,7 @@ describe("Design System Add TokenSet", () => {
         designSystem.addTokenSet(tokenSet);
 
         // Then it gets added to the design system
-        expect(designSystem.tokenSets).toStrictEqual([tokenSet]);
+        expect(designSystem.getTokenSets()).toStrictEqual([tokenSet]);
     });
 
     test("tokenset with same name will not get added, when added to non-empty design system with conflict policy of ignore", () => {
@@ -141,7 +141,7 @@ describe("Design System Add TokenSet", () => {
         designSystem.addTokenSet(tokenSet3);
 
         // Then it gets added to the design system
-        expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
+        expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
     });
 
     test("throws error, when tokenset with different types are merged", () => {
@@ -206,7 +206,9 @@ describe("Design System Add TokenSet", () => {
         });
 
         // Then the merged tokens are sorted
-        expect(designSystem.tokenSets).toStrictEqual([sortedMergedTokenSet]);
+        expect(designSystem.getTokenSets()).toStrictEqual([
+            sortedMergedTokenSet,
+        ]);
     });
 
     test("sorts token with compare function, when inserted with sorted with a compare function", () => {
@@ -227,7 +229,7 @@ describe("Design System Add TokenSet", () => {
         });
 
         // Then the merged tokens are sorted
-        expect(designSystem.tokenSets).toStrictEqual([
+        expect(designSystem.getTokenSets()).toStrictEqual([
             sortedByValueMergedTokenSet,
         ]);
     });
@@ -247,7 +249,7 @@ describe("Design System Add TokenSet", () => {
             insertPolicy: InsertConflictPolicy.MERGE,
         });
         // Then it gets added to the design system
-        expect(designSystem.tokenSets).toStrictEqual([mergedTokenSet]);
+        expect(designSystem.getTokenSets()).toStrictEqual([mergedTokenSet]);
     });
 });
 
@@ -261,7 +263,7 @@ describe("Design System Remove TokenSet", () => {
         designSystem.removeTokenSet(tokenSets[0]);
 
         // Then, the tokenset is removed
-        expect(designSystem.tokenSets).toStrictEqual([tokenSets[1]]);
+        expect(designSystem.getTokenSets()).toStrictEqual([tokenSets[1]]);
     });
 
     test("do not remove tokenset, if partial token (matching name) is passed in", () => {
@@ -273,7 +275,7 @@ describe("Design System Remove TokenSet", () => {
         designSystem.removeTokenSet(tokenSet3);
 
         // Then, the tokensets are unaffected
-        expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
+        expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
     });
 
     test("do not remove tokenset, if non-existing is passed in", () => {
@@ -291,7 +293,7 @@ describe("Design System Remove TokenSet", () => {
         designSystem.removeTokenSet(nonExistingTokenSet);
 
         // Then, the tokensets are unaffected
-        expect(designSystem.tokenSets).toStrictEqual([...tokenSets]);
+        expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
     });
 });
 
@@ -305,7 +307,10 @@ describe("Design Sytem Update TokenSet", () => {
         designSystem.updateTokenSet(tokenSets[0].name, tokenSet3);
 
         // Then, the tokenset is updated
-        expect(designSystem.tokenSets).toStrictEqual([tokenSet3, tokenSets[1]]);
+        expect(designSystem.getTokenSets()).toStrictEqual([
+            tokenSet3,
+            tokenSets[1],
+        ]);
     });
 
     test("tokenset gets inserted, when a new tokenset is passed in with update policy of INSERT", () => {
@@ -323,7 +328,10 @@ describe("Design Sytem Update TokenSet", () => {
         });
 
         // Then, the tokenset is added(not updated)
-        expect(designSystem.tokenSets).toStrictEqual([tokenSet1, tokenSet2]);
+        expect(designSystem.getTokenSets()).toStrictEqual([
+            tokenSet1,
+            tokenSet2,
+        ]);
     });
 
     test("tokenset does not get inserted, when a new tokenset is passed in with update policy of IGNORE", () => {
@@ -341,7 +349,7 @@ describe("Design Sytem Update TokenSet", () => {
         });
 
         // Then, the tokenset is not added
-        expect(designSystem.tokenSets).toStrictEqual([tokenSet1]);
+        expect(designSystem.getTokenSets()).toStrictEqual([tokenSet1]);
     });
 
     test("tokenset gets updated, when a existing tokenset is passed in with insert", () => {
@@ -378,7 +386,7 @@ describe("Design Sytem Update TokenSet", () => {
         designSystem.updateTokenSet(tokenSets[0].name, tokenSet);
 
         // Then, the tokenset is updated
-        expect(designSystem.tokenSets).toStrictEqual([
+        expect(designSystem.getTokenSets()).toStrictEqual([
             tokenSetSorted,
             tokenSets[1],
         ]);
@@ -401,7 +409,7 @@ describe("Design Sytem Update TokenSet", () => {
         });
 
         // Then, the tokenset is added(not updated)
-        expect(designSystem.tokenSets).toStrictEqual([
+        expect(designSystem.getTokenSets()).toStrictEqual([
             tokenSet2,
             sortedTokenSet1,
         ]);
@@ -445,7 +453,7 @@ describe("Design System GetTokenSet", () => {
         const ts = ds.getTokenSet(tokenSets[0].name);
 
         // Then, it returns the same token in the design system
-        expect(ts).toBe(ds.tokenSets[0]);
+        expect(ts).toBe(ds.getTokenSets()[0]);
     });
 
     test("returns undefined, when queried with non-existing name", () => {
@@ -482,7 +490,7 @@ describe("Design System GetTokenSet", () => {
         ts!!.name = "Updated name";
 
         // Then, it updates the design system
-        expect(ds.tokenSets[0]).toBe(ts);
+        expect(ds.getTokenSets()[0]).toBe(ts);
     });
 });
 
@@ -497,7 +505,7 @@ describe("TokenSet Name Update", () => {
         ds.updateTokenSetName(tokenSets[0].name, newName);
 
         // Then, the name is updated
-        expect(ds.tokenSets[0].name).toStrictEqual(newName);
+        expect(ds.getTokenSets()[0].name).toStrictEqual(newName);
     });
 
     test("throws error, when given a non-existing token", () => {
@@ -511,7 +519,7 @@ describe("TokenSet Name Update", () => {
         expect(() => ds.updateTokenSetName("unknown name", newName)).toThrow();
 
         // The design system is intact
-        expect(ds.tokenSets).toStrictEqual(tokenSets);
+        expect(ds.getTokenSets()).toStrictEqual(tokenSets);
     });
 
     test("throws error, when the new name already exists", () => {
@@ -524,5 +532,29 @@ describe("TokenSet Name Update", () => {
         expect(() =>
             ds.updateTokenSetName(tokenSets[0].name, tokenSets[1].name),
         ).toThrow();
+    });
+});
+
+describe("Design System Get TokenSets", () => {
+    test("returns tokenset, if the design system is not empty", () => {
+        // Given a non empty design system
+        const { tokenSets } = initializeTokens();
+        const ds = new DesignSystem("ds", tokenSets);
+
+        // When the token sets are retrieved
+        const ts = ds.getTokenSets();
+
+        // Then, it contains all the tokensets
+        expect(ts).toStrictEqual(tokenSets);
+    });
+    test("returns [], if the design system is empty", () => {
+        // Given an empty design system
+        const ds = new DesignSystem("ds");
+
+        // When the token sets are retrieved
+        const ts = ds.getTokenSets();
+
+        // Then, it is an empty []
+        expect(ts).toStrictEqual([]);
     });
 });

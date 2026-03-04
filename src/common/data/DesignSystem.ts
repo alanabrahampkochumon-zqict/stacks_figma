@@ -16,11 +16,11 @@ type DesignSystemAddOptions = {
 
 export class DesignSystem {
     name: string;
-    tokenSets: TokenSet[];
+    private _tokenSets: TokenSet[];
 
     constructor(name: string, tokenSets: TokenSet[] = []) {
         this.name = name;
-        this.tokenSets = tokenSets;
+        this._tokenSets = tokenSets;
     }
 
     /**
@@ -40,17 +40,17 @@ export class DesignSystem {
         let tokenSetIndex = this.getIndex(tokenSet.name);
         console.log(tokenSetIndex);
         if (tokenSetIndex === -1) {
-            this.tokenSets.push(tokenSet);
-            tokenSetIndex = this.tokenSets.length - 1;
+            this._tokenSets.push(tokenSet);
+            tokenSetIndex = this._tokenSets.length - 1;
         } else if (insertPolicy === InsertConflictPolicy.REPLACE)
-            this.tokenSets[tokenSetIndex] = tokenSet;
+            this._tokenSets[tokenSetIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
-            this.tokenSets[tokenSetIndex].mergeTokenSet(tokenSet);
+            this._tokenSets[tokenSetIndex].mergeTokenSet(tokenSet);
         else
             return console.log(
                 "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",
             );
-        if (sortToken) this.tokenSets[tokenSetIndex].sort(compareFn);
+        if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
     }
 
     /**
@@ -59,7 +59,7 @@ export class DesignSystem {
      * @returns -1 if not found else index of tokenset
      */
     getIndex(tokenSetName: string) {
-        return this.tokenSets.findIndex((ts) => ts.name === tokenSetName);
+        return this._tokenSets.findIndex((ts) => ts.name === tokenSetName);
     }
 
     /**
@@ -67,7 +67,7 @@ export class DesignSystem {
      * @param tokenSet to be removed
      */
     removeTokenSet(tokenSet: TokenSet) {
-        this.tokenSets = this.tokenSets.filter((curTS) => curTS != tokenSet);
+        this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
     }
 
     /**
@@ -90,8 +90,8 @@ export class DesignSystem {
         const tokenSetIndex = this.getIndex(tokenSetName);
         console.log(tokenSetIndex);
         if (tokenSetIndex !== -1) {
-            this.tokenSets[tokenSetIndex] = newTokenSet;
-            this.tokenSets[tokenSetIndex].sort(compareFn);
+            this._tokenSets[tokenSetIndex] = newTokenSet;
+            this._tokenSets[tokenSetIndex].sort(compareFn);
         } else if (updatePolicy === UpdatePolicy.INSERT)
             this.addTokenSet(newTokenSet, { sortToken, compareFn });
         else
@@ -108,17 +108,17 @@ export class DesignSystem {
      */
     getTokenSet(name: string): TokenSet | undefined {
         const index = this.getIndex(name);
-        return index === -1 ? undefined : this.tokenSets[index];
+        return index === -1 ? undefined : this._tokenSets[index];
     }
 
     addToken(token: Token, tokenSetName: string) {
-        this.tokenSets
+        this._tokenSets
             .find((tokenSet) => tokenSet.name == tokenSetName)
             ?.tokens.push(token);
     }
 
     removeToken(token: Token, tokenSetName: string) {
-        const foundTokenSet = this.tokenSets.find(
+        const foundTokenSet = this._tokenSets.find(
             (tokenSet) => tokenSet.name == tokenSetName,
         );
         foundTokenSet?.tokens.filter((curToken) => curToken != token);
@@ -135,11 +135,15 @@ export class DesignSystem {
         const tokenSetIndex = this.getIndex(name);
         if (tokenSetIndex === -1)
             throw new Error(`TokenSet with ${name} doesn't exist.`);
-        if (this.tokenSets.some((tk) => tk.name === newName))
+        if (this._tokenSets.some((tk) => tk.name === newName))
             throw new Error(
                 `Name collision: TokenSet with ${newName} already exists`,
             );
-        this.tokenSets[tokenSetIndex].name = newName;
+        this._tokenSets[tokenSetIndex].name = newName;
+    }
+
+    getTokenSets(): TokenSet[] {
+        return this._tokenSets;
     }
 
     // static toJson(ds: DesignSystem): string {
