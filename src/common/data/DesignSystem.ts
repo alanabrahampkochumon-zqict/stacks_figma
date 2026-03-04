@@ -146,12 +146,12 @@ export class DesignSystem {
         return this._tokenSets;
     }
 
-    // static toJson(ds: DesignSystem): string {
-    //     return JSON.stringify({
-    //         name: ds.name,
-    //         tokens: ds.tokens,
-    //     });
-    // }
+    toJson(): string {
+        return JSON.stringify({
+            name: this.name,
+            tokenSets: this._tokenSets.map((tks) => tks.toJsonString()),
+        });
+    }
 
     // static fromJson(jsonString: string): DesignSystem {
     //     try {

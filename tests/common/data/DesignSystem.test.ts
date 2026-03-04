@@ -7,7 +7,7 @@ import { DesignSystem } from "../../../src/common/data/DesignSystem";
 import { type Token } from "../../../src/common/data/Token";
 import { TokenSet } from "../../../src/common/data/TokenSet";
 
-function initializeTokens() {
+function setUp() {
     const tokenType1 = "number";
     const tokens1: Token[] = [
         { type: tokenType1, value: 0, name: "size-0" },
@@ -83,6 +83,18 @@ function initializeTokens() {
 
     const tokenSets = [tokenSet1, tokenSet2];
     const dsName = "Falcon";
+
+    const designSystem = new DesignSystem(dsName, tokenSets);
+    const serializedDesignSystem = `
+        {
+            "name": "Falcon",
+            "tokenSets": [
+                "{\"name\":\"token-1\",\"type\":\"number\",\"level\":1,\"tokens\":[{\"type\":\"number\",\"value\":0,\"name\":\"size-0\"},{\"type\":\"number\",\"value\":150,\"name\":\"size-150\"},{\"type\":\"number\",\"value\":50,\"name\":\"size-50\"},{\"type\":\"number\",\"value\":100,\"name\":\"size-1000\"}]}",
+                "{\"name\":\"token-2\",\"type\":\"string\",\"level\":1,\"tokens\":[{\"type\":\"string\",\"value\":\"light\",\"name\":\"light\"},{\"type\":\"string\",\"value\":\"regular\",\"name\":\"regular\"},{\"type\":\"string\",\"value\":\"bold\",\"name\":\"bold\"}]}"
+            ]
+        }
+    `.replace(/\s/g, "");
+
     return {
         dsName,
         tokenSets,
@@ -91,13 +103,15 @@ function initializeTokens() {
         mergedTokenSet,
         sortedMergedTokenSet,
         sortedByValueMergedTokenSet,
+        serializedDesignSystem,
+        designSystem,
     };
 }
 
 describe("Design System Initialization", () => {
     test("can be initialized with name only", () => {
         // When a design system is initialized with name only
-        const { dsName } = initializeTokens();
+        const { dsName } = setUp();
         const designSystem = new DesignSystem(dsName);
 
         // Then, it is correct initialized with default values
@@ -107,7 +121,7 @@ describe("Design System Initialization", () => {
 
     test("can be initialized with name and tokenset", () => {
         // When a design system is initialized with name and tokenset
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // Then, the design system is initialized with those values
@@ -122,7 +136,7 @@ describe("Design System Add TokenSet", () => {
         const {
             dsName,
             tokenSets: [tokenSet],
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName);
 
         // When tokens are added
@@ -134,7 +148,7 @@ describe("Design System Add TokenSet", () => {
 
     test("tokenset with same name will not get added, when added to non-empty design system with conflict policy of ignore", () => {
         // Given a non-empty design system
-        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const { dsName, tokenSets, tokenSet3 } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When tokens are added
@@ -146,7 +160,7 @@ describe("Design System Add TokenSet", () => {
 
     test("throws error, when tokenset with different types are merged", () => {
         // Given a non-empty design system
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const newSet = new TokenSet(
             tokenSets[0].name,
             tokenSets[0].type,
@@ -166,7 +180,7 @@ describe("Design System Add TokenSet", () => {
 
     test("throws error, when tokenset with different levels are merged", () => {
         // Given a non-empty design system
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const token: Token = {
             name: "invalid",
             value: "#ffffff",
@@ -196,7 +210,7 @@ describe("Design System Add TokenSet", () => {
             tokenSets: [tokenSet1],
             tokenSet3,
             sortedMergedTokenSet,
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName, [tokenSet1]);
 
         // When tokens are added using merge policy and sorting set to true
@@ -218,7 +232,7 @@ describe("Design System Add TokenSet", () => {
             tokenSets: [tokenSet1],
             tokenSet3,
             sortedByValueMergedTokenSet,
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName, [tokenSet1]);
 
         // When tokens are added using merge policy and sorting set to true
@@ -241,7 +255,7 @@ describe("Design System Add TokenSet", () => {
             tokenSets: [tokenSet1],
             tokenSet3,
             mergedTokenSet,
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName, [tokenSet1]);
 
         // When tokens are added
@@ -256,7 +270,7 @@ describe("Design System Add TokenSet", () => {
 describe("Design System Remove TokenSet", () => {
     test("removes tokenset, if token exists in the set", () => {
         // Given a non-empty token set
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When a tokenset is removed
@@ -268,7 +282,7 @@ describe("Design System Remove TokenSet", () => {
 
     test("do not remove tokenset, if partial token (matching name) is passed in", () => {
         // Given a non-empty token set
-        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const { dsName, tokenSets, tokenSet3 } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When a partially matching tokenset is removed
@@ -286,7 +300,7 @@ describe("Design System Remove TokenSet", () => {
             4,
             [],
         );
-        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const { dsName, tokenSets, tokenSet3 } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When a non-existing tokenset is removed
@@ -300,7 +314,7 @@ describe("Design System Remove TokenSet", () => {
 describe("Design Sytem Update TokenSet", () => {
     test("tokenset gets updated, when a existing tokenset name with new tokenset is passed in", () => {
         // Given a non-empty token set
-        const { dsName, tokenSets, tokenSet3 } = initializeTokens();
+        const { dsName, tokenSets, tokenSet3 } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When tokenset is updated
@@ -318,7 +332,7 @@ describe("Design Sytem Update TokenSet", () => {
         const {
             dsName,
             tokenSets: [tokenSet1, tokenSet2],
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName, [tokenSet1]);
 
         // When tokenset is updated with new token set
@@ -339,7 +353,7 @@ describe("Design Sytem Update TokenSet", () => {
         const {
             dsName,
             tokenSets: [tokenSet1, tokenSet2],
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName, [tokenSet1]);
 
         // When tokenset is updated with new token set
@@ -354,7 +368,7 @@ describe("Design Sytem Update TokenSet", () => {
 
     test("tokenset gets updated, when a existing tokenset is passed in with insert", () => {
         // Given a non-empty token set
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const token1: Token = {
             name: "test-3",
             type: tokenSets[0].type,
@@ -398,7 +412,7 @@ describe("Design Sytem Update TokenSet", () => {
             dsName,
             tokenSets: [tokenSet1, tokenSet2],
             sortedTokenSet1,
-        } = initializeTokens();
+        } = setUp();
         const designSystem = new DesignSystem(dsName, [tokenSet2]);
 
         // When tokenset is updated with new token set
@@ -420,7 +434,7 @@ describe("Design System Get TokenSet Index", () => {
     test("returns correct index, when queried for existing token", () => {
         // Given a design system with non-empty tokensets
         const expectedIndex = 0;
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When queried for index of the tokenset
@@ -432,7 +446,7 @@ describe("Design System Get TokenSet Index", () => {
 
     test("returns -1, when queried for non-existing token", () => {
         // Given a design system with non-empty tokensets
-        const { dsName, tokenSets } = initializeTokens();
+        const { dsName, tokenSets } = setUp();
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When queried for index of the non-existing tokenset
@@ -446,7 +460,7 @@ describe("Design System Get TokenSet Index", () => {
 describe("Design System GetTokenSet", () => {
     test("returns tokenset, when queried with existing name", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
+        const { tokenSets } = setUp();
         const ds = new DesignSystem("ds", tokenSets);
 
         // When queried for a tokenset in the design system
@@ -458,7 +472,7 @@ describe("Design System GetTokenSet", () => {
 
     test("returns undefined, when queried with non-existing name", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
+        const { tokenSets } = setUp();
         const ds = new DesignSystem("ds", tokenSets);
 
         // When queried for a non-existent tokenset
@@ -481,7 +495,7 @@ describe("Design System GetTokenSet", () => {
 
     test("mutates design system, when tokenset is mutated", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
+        const { tokenSets } = setUp();
         const ds = new DesignSystem("ds", tokenSets);
 
         // When queried for a tokenset in the design system
@@ -497,7 +511,7 @@ describe("Design System GetTokenSet", () => {
 describe("TokenSet Name Update", () => {
     test("updates name, when given an existing token", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
+        const { tokenSets } = setUp();
         const ds = new DesignSystem("ds", tokenSets);
         const newName = "updated name";
 
@@ -510,7 +524,7 @@ describe("TokenSet Name Update", () => {
 
     test("throws error, when given a non-existing token", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
+        const { tokenSets } = setUp();
         const ds = new DesignSystem("ds", tokenSets);
         const newName = "updated name";
 
@@ -524,7 +538,7 @@ describe("TokenSet Name Update", () => {
 
     test("throws error, when the new name already exists", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
+        const { tokenSets } = setUp();
         const ds = new DesignSystem("ds", tokenSets);
 
         // When updating with a colliding name
@@ -538,11 +552,10 @@ describe("TokenSet Name Update", () => {
 describe("Design System Get TokenSets", () => {
     test("returns tokenset, if the design system is not empty", () => {
         // Given a non empty design system
-        const { tokenSets } = initializeTokens();
-        const ds = new DesignSystem("ds", tokenSets);
+        const { designSystem, tokenSets } = setUp();
 
         // When the token sets are retrieved
-        const ts = ds.getTokenSets();
+        const ts = designSystem.getTokenSets();
 
         // Then, it contains all the tokensets
         expect(ts).toStrictEqual(tokenSets);
@@ -558,3 +571,21 @@ describe("Design System Get TokenSets", () => {
         expect(ts).toStrictEqual([]);
     });
 });
+
+describe("Design System Serialization", () => {
+    test("returns serialized output, when provided with non-empty design system", () => {
+        // Given, a non-empty design system
+        const { designSystem, serializedDesignSystem } = setUp();
+
+        // When serialized
+        const serialized = designSystem.toJson();
+
+        // Then, it matches the serialized string
+        expect(serialized).toStrictEqual(serializedDesignSystem);
+    });
+
+    //TODO: Add test
+    test("returns serialized output, when provided with empty design system", () => {});
+});
+
+// TODO: Add deserialization
