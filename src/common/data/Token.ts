@@ -17,24 +17,27 @@ export function isValidExtendedToken(token: string): boolean {
 }
 
 export function validateToken(
-    token: any,
+    tokenValueByMode: Record<string, any>,
     tokenType: ExtendedTokenTypes,
 ): boolean {
+    const tokens = Object.values(tokenValueByMode);
+
     switch (tokenType) {
         case "number":
         case "sizing":
         case "spacing":
         case "corner-radius":
-            return typeof token === "number";
+            return tokens.every((token) => typeof token === "number");
         case "string":
-            return typeof token === "string";
+            return tokens.every((token) => typeof token === "string");
         case "boolean":
-            return typeof token === "boolean";
+            return tokens.every((token) => typeof token === "boolean");
         case "color":
-            return (
-                typeof token === "string" &&
-                !!token.match(/^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i)
-                    ?.length
+            return tokens.every(
+                (token) =>
+                    typeof token === "string" &&
+                    !!token.match(/^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i)
+                        ?.length,
             );
         case "gradient":
         // TODO: Implementation

@@ -52,31 +52,31 @@ describe("Token Validator Tests", () => {
         // Number validation
         {
             name: "number validation: floating point number",
-            input: 12.7,
+            input: { default: 12.7 },
             expected: true,
             type: "number",
         },
         {
             name: "number validation: integral number",
-            input: 5,
+            input: { default: 5 },
             expected: true,
             type: "number",
         },
         {
             name: "number validation: negative number",
-            input: -5,
+            input: { default: -5 },
             expected: true,
             type: "number",
         },
         {
             name: "number validation: string number",
-            input: "5",
+            input: { default: "5" },
             expected: false,
             type: "number",
         },
         {
             name: "number validation: string",
-            input: "fff",
+            input: { default: "fff" },
             expected: false,
             type: "number",
         },
@@ -84,19 +84,19 @@ describe("Token Validator Tests", () => {
         // String validation
         {
             name: "string validation: string",
-            input: "test",
+            input: { default: "test" },
             expected: true,
             type: "string",
         },
         {
             name: "string validation: char",
-            input: "t",
+            input: { default: "t" },
             expected: true,
             type: "string",
         },
         {
             name: "string validation: non-string",
-            input: 5,
+            input: { default: 5 },
             expected: false,
             type: "string",
         },
@@ -104,31 +104,31 @@ describe("Token Validator Tests", () => {
         // Sizing validation
         {
             name: "sizing validation: floating point number",
-            input: 12.7,
+            input: { default: 12.7 },
             expected: true,
             type: "sizing",
         },
         {
             name: "sizing validation: integral number",
-            input: 5,
+            input: { default: 5 },
             expected: true,
             type: "sizing",
         },
         {
             name: "sizing validation: negative number",
-            input: -5,
+            input: { default: -5 },
             expected: true,
             type: "sizing",
         },
         {
             name: "sizing validation: string number",
-            input: "5",
+            input: { default: "5" },
             expected: false,
             type: "sizing",
         },
         {
             name: "sizing validation: string",
-            input: "fff",
+            input: { default: "fff" },
             expected: false,
             type: "sizing",
         },
@@ -136,31 +136,31 @@ describe("Token Validator Tests", () => {
         // Spacing Validation
         {
             name: "spacing validation: floating point number",
-            input: 12.7,
+            input: { default: 12.7 },
             expected: true,
             type: "spacing",
         },
         {
             name: "spacing validation: integral number",
-            input: 5,
+            input: { default: 5 },
             expected: true,
             type: "spacing",
         },
         {
             name: "spacing validation: negative number",
-            input: -5,
+            input: { default: -5 },
             expected: true,
             type: "spacing",
         },
         {
             name: "spacing validation: string number",
-            input: "5",
+            input: { default: "5" },
             expected: false,
             type: "spacing",
         },
         {
             name: "spacing validation: string",
-            input: "fff",
+            input: { default: "fff" },
             expected: false,
             type: "spacing",
         },
@@ -168,31 +168,31 @@ describe("Token Validator Tests", () => {
         // Corner Radius validation
         {
             name: "corner radius validation: floating point number",
-            input: 12.7,
+            input: { default: 12.7 },
             expected: true,
             type: "corner-radius",
         },
         {
             name: "corner radius validation: integral number",
-            input: 5,
+            input: { default: 5 },
             expected: true,
             type: "corner-radius",
         },
         {
             name: "corner radius validation: negative number",
-            input: -5,
+            input: { default: -5 },
             expected: true,
             type: "corner-radius",
         },
         {
             name: "corner radius validation: string number",
-            input: "5",
+            input: { default: "5" },
             expected: false,
             type: "corner-radius",
         },
         {
             name: "corner radius validation: string",
-            input: "fff",
+            input: { default: "fff" },
             expected: false,
             type: "corner-radius",
         },
@@ -200,31 +200,31 @@ describe("Token Validator Tests", () => {
         // Boolean validation
         {
             name: "boolean validation: true",
-            input: true,
+            input: { default: true },
             expected: true,
             type: "boolean",
         },
         {
             name: "boolean validation: false",
-            input: false,
+            input: { default: false },
             expected: true,
             type: "boolean",
         },
         {
             name: "boolean validation: expression",
-            input: 7 > 5,
+            input: { default: 7 > 5 },
             expected: true,
             type: "boolean",
         },
         {
             name: "boolean validation: string boolean",
-            input: "true",
+            input: { default: "true" },
             expected: false,
             type: "boolean",
         },
         {
             name: "boolean validation: string",
-            input: "test",
+            input: { default: "test" },
             expected: false,
             type: "boolean",
         },
@@ -232,73 +232,73 @@ describe("Token Validator Tests", () => {
         // Color Validation
         {
             name: "color validation: #rgb (alpha only)",
-            input: "#fff",
+            input: { default: "#fff" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rrggbb (alpha only)",
-            input: "#ffffff",
+            input: { default: "#ffffff" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rgb (number only)",
-            input: "#123456",
+            input: { default: "#123456" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rrggbb (number only)",
-            input: "#123456",
+            input: { default: "#123456" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rgb (alpha numeric)",
-            input: "#3e3e3d",
+            input: { default: "#3e3e3d" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rrggbb (alpha numeric)",
-            input: "#3e3e3d",
+            input: { default: "#3e3e3d" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rgba",
-            input: "#1ef9",
+            input: { default: "#1ef9" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rrggbbaa",
-            input: "#1123fe99",
+            input: { default: "#1123fe99" },
             expected: true,
             type: "color",
         },
         {
             name: "color validation: #rrggbba",
-            input: "#1123fe9",
+            input: { default: "#1123fe9" },
             expected: false,
             type: "color",
         },
         {
             name: "color validation: #rgbaa",
-            input: "#112af",
+            input: { default: "#112af" },
             expected: false,
             type: "color",
         },
         {
             name: "color validation: rgba",
-            input: "1234",
+            input: { default: "1234" },
             expected: false,
             type: "color",
         },
         {
             name: "color validation: rrggbbaa",
-            input: "123456ff",
+            input: { default: "123456ff" },
             expected: false,
             type: "color",
         },
@@ -312,4 +312,35 @@ describe("Token Validator Tests", () => {
         // Then, it matches expected result
         expect(result).toBe(expected);
     });
+
+    const mutliModeTestCases: {
+        name: string;
+        input: any;
+        expected: boolean;
+        type: ExtendedTokenTypes;
+    }[] = [
+        {
+            name: "same type tokens",
+            input: { dark: "#fff", light: "#000" },
+            expected: true,
+            type: "color",
+        },
+        {
+            name: "different type tokens",
+            input: { dark: "#fff", light: "white-color" },
+            expected: false,
+            type: "color",
+        },
+    ];
+
+    test.each(mutliModeTestCases)(
+        "mutliple mode validation: $name",
+        ({ input, expected, type }) => {
+            // When, a specific input is validated as number
+            const result = validateToken(input, type);
+
+            // Then, it matches expected result
+            expect(result).toBe(expected);
+        },
+    );
 });

@@ -75,6 +75,11 @@ export class TokenSet {
         this.tokens = tokens;
     }
 
+    /**
+     * Adds a mode to the token set.
+     * @param mode mode to be added
+     * @returns `boolean`, whether or not the mode was added.
+     */
     addMode(mode: string): boolean {
         if (this.modes.has(mode)) return false;
         this.modes.add(mode);
@@ -237,7 +242,7 @@ export class TokenSet {
         const validationResult = tokens.every(
             (token) =>
                 token.type === tokenType &&
-                validateToken(token.value, token.type),
+                validateToken(token.valueByMode, token.type),
         );
         if (!validationResult)
             throw new Error(
