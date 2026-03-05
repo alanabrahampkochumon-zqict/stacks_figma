@@ -56,7 +56,7 @@ export function isValidLevel(level: number): boolean {
 
 export type Token = {
     name: string;
-    value: any;
+    valueByMode: Record<string, any>;
     type: ExtendedTokenTypes;
 };
 
