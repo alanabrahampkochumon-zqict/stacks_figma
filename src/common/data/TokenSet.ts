@@ -212,7 +212,7 @@ export class TokenSet {
      * @return TokenSet if the json string is valid
      * @throws Error if a invalid string is passed in or if the values passed in not in the range, for example, 5 is passed for level which should be between 1..4
      */
-    static toTokenSet(jsonString: string): TokenSet {
+    static fromJson(jsonString: string): TokenSet {
         const data = JSON.parse(jsonString);
         return new TokenSet(data?.name, data?.type, data?.level, data?.tokens);
     }

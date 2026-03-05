@@ -19,6 +19,8 @@ export class DesignSystem {
     private _tokenSets: TokenSet[];
 
     constructor(name: string, tokenSets: TokenSet[] = []) {
+        if (!name)
+            throw new Error("Design system needs a name to be initialized!");
         this.name = name;
         this._tokenSets = tokenSets;
     }
@@ -38,7 +40,6 @@ export class DesignSystem {
         }: DesignSystemAddOptions = {},
     ) {
         let tokenSetIndex = this.getIndex(tokenSet.name);
-        console.log(tokenSetIndex);
         if (tokenSetIndex === -1) {
             this._tokenSets.push(tokenSet);
             tokenSetIndex = this._tokenSets.length - 1;
@@ -47,7 +48,7 @@ export class DesignSystem {
         else if (insertPolicy === InsertConflictPolicy.MERGE)
             this._tokenSets[tokenSetIndex].mergeTokenSet(tokenSet);
         else
-            return console.log(
+            return console.warn(
                 "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",
             );
         if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
@@ -88,7 +89,6 @@ export class DesignSystem {
         }: DesignSystemUpdateOptions = {},
     ) {
         const tokenSetIndex = this.getIndex(tokenSetName);
-        console.log(tokenSetIndex);
         if (tokenSetIndex !== -1) {
             this._tokenSets[tokenSetIndex] = newTokenSet;
             this._tokenSets[tokenSetIndex].sort(compareFn);
@@ -154,6 +154,22 @@ export class DesignSystem {
     }
 
     static fromJson(jsonString: string): DesignSystem | undefined {
-        return;
+        const parsedData = JSON.parse(jsonString, (key, value) => {
+            if (key === "tokenSets") {
+                const tokenSets: TokenSet[] = [];
+                for (const tokenSetStr of value) {
+                    const tokenSet = TokenSet.fromJson(tokenSetStr);
+                    tokenSet && tokenSets.push(tokenSet);
+                }
+                return tokenSets;
+            }
+            return value;
+        });
+        const ds = new DesignSystem(
+            parsedData?.name,
+            parsedData?.tokenSets || [],
+        );
+        console.log(ds, "Design system");
+        return new DesignSystem(parsedData?.name, parsedData?.tokenSets || []);
     }
 }

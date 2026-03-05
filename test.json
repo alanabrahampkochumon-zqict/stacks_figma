@@ -1,7 +1,26 @@
 {
     "name": "Falcon",
     "tokenSets": [
-        "{\"name\":\"token-1\",\"type\":\"number\",\"level\":1,\"tokens\":[{\"type\":\"number\",\"value\":0,\"name\":\"size-0\"},{\"type\":\"number\",\"value\":150,\"name\":\"size-150\"},{\"type\":\"number\",\"value\":50,\"name\":\"size-50\"},{\"type\":\"number\",\"value\":100,\"name\":\"size-1000\"}]}",
-        "{\"name\":\"token-2\",\"type\":\"string\",\"level\":1,\"tokens\":[{\"type\":\"string\",\"value\":\"light\",\"name\":\"light\"},{\"type\":\"string\",\"value\":\"regular\",\"name\":\"regular\"},{\"type\":\"string\",\"value\":\"bold\",\"name\":\"bold\"}]}"
+        {
+            "name": "token-1",
+            "type": "number",
+            "level": 1,
+            "tokens": [
+                { "type": "number", "value": 0, "name": "size-0" },
+                { "type": "number", "value": 150, "name": "size-150" },
+                { "type": "number", "value": 50, "name": "size-50" },
+                { "type": "number", "value": 100, "name": "size-1000" }
+            ]
+        },
+        {
+            "name": "token-2",
+            "type": "string",
+            "level": 1,
+            "tokens": [
+                { "type": "string", "value": "light", "name": "light" },
+                { "type": "string", "value": "regular", "name": "regular" },
+                { "type": "string", "value": "bold", "name": "bold" }
+            ]
+        }
     ]
 }

@@ -892,8 +892,6 @@ describe("TokenSet Merge Tests", () => {
             insertPolicy: InsertConflictPolicy.REPLACE,
         });
 
-        console.log(originalTokenSet);
-
         // Then, the old token set's duplicate elements are replaced with new elements
         expect(originalTokenSet).toStrictEqual(
             conflictMergingReplaceResultTokenSet,
@@ -980,7 +978,7 @@ describe("TokenSet Deserialization Tests", () => {
         `;
 
         // When converted to token set
-        const ts = TokenSet.toTokenSet(nameOnlyTokenJSON);
+        const ts = TokenSet.fromJson(nameOnlyTokenJSON);
 
         // Then a token set is created with the correct values
         expect(ts).toBeDefined();
@@ -1000,7 +998,7 @@ describe("TokenSet Deserialization Tests", () => {
         `;
 
         // When converted to token set
-        const ts = TokenSet.toTokenSet(nameAndTypeTokenJSON);
+        const ts = TokenSet.fromJson(nameAndTypeTokenJSON);
 
         // Then a token set is created with the correct values
         expect(ts).toBeDefined();
@@ -1021,7 +1019,7 @@ describe("TokenSet Deserialization Tests", () => {
         `;
 
         // When converted to token set
-        const ts = TokenSet.toTokenSet(nameAndTypeTokenJSON);
+        const ts = TokenSet.fromJson(nameAndTypeTokenJSON);
 
         // Then a token set is created with the correct values
         expect(ts).toBeDefined();
@@ -1036,7 +1034,7 @@ describe("TokenSet Deserialization Tests", () => {
         const { emptyTokenSet, emptyTokenSetString } = setUp();
 
         // When converted to token set
-        const ts = TokenSet.toTokenSet(emptyTokenSetString);
+        const ts = TokenSet.fromJson(emptyTokenSetString);
 
         // Then a token set is created with the correct values
         expect(ts).toBeDefined();
@@ -1048,7 +1046,7 @@ describe("TokenSet Deserialization Tests", () => {
         const { originalTokenSet, originalTokenSetString } = setUp();
 
         // When converted to token set
-        const ts = TokenSet.toTokenSet(originalTokenSetString);
+        const ts = TokenSet.fromJson(originalTokenSetString);
 
         // Then a token set is created with the correct values
         expect(ts).toBeDefined();
@@ -1065,7 +1063,7 @@ describe("TokenSet Deserialization Tests", () => {
 
         // When converted to token set
         // Then, it throws and error
-        expect(() => TokenSet.toTokenSet(levelOnlyTokenString)).toThrow();
+        expect(() => TokenSet.fromJson(levelOnlyTokenString)).toThrow();
     });
 
     test("throws error, when json string with invalid level is passed in", () => {
@@ -1079,7 +1077,7 @@ describe("TokenSet Deserialization Tests", () => {
 
         // When converted to token set
         // Then, it throws and error
-        expect(() => TokenSet.toTokenSet(invalidLevelTokenString)).toThrow();
+        expect(() => TokenSet.fromJson(invalidLevelTokenString)).toThrow();
     });
 
     test("throws error, when json string with invalid type is passed in", () => {
@@ -1093,7 +1091,7 @@ describe("TokenSet Deserialization Tests", () => {
 
         // When converted to token set
         // Then, it throws and error
-        expect(() => TokenSet.toTokenSet(invalidTypeTokenString)).toThrow();
+        expect(() => TokenSet.fromJson(invalidTypeTokenString)).toThrow();
     });
 
     test("throws error, when malformed json string is passed in", () => {
@@ -1106,6 +1104,6 @@ describe("TokenSet Deserialization Tests", () => {
 
         // When converted to token set
         // Then, it throws and error
-        expect(() => TokenSet.toTokenSet(malformedTokenSetString)).toThrow();
+        expect(() => TokenSet.fromJson(malformedTokenSetString)).toThrow();
     });
 });
