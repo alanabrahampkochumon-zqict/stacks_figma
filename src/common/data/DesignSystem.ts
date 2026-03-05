@@ -142,10 +142,18 @@ export class DesignSystem {
         this._tokenSets[tokenSetIndex].name = newName;
     }
 
+    /**
+     * Accessor for tokensets.
+     * @returns tokensets that make up the design system
+     */
     getTokenSets(): TokenSet[] {
         return this._tokenSets;
     }
 
+    /**
+     * Parses the calling design system instance to a JSON string
+     * @returns Json string representation of the current design system
+     */
     toJson(): string {
         return JSON.stringify({
             name: this.name,
@@ -153,6 +161,12 @@ export class DesignSystem {
         });
     }
 
+    /**
+     * Parses a JSON string to a `DesignSystem`.
+     * @param jsonString jsonstring to be parsed
+     * @returns a `DesignSystem` instance created from the passed in string, if it is valid.
+     * @throws Error if the design system is invalid.
+     */
     static fromJson(jsonString: string): DesignSystem | undefined {
         const parsedData = JSON.parse(jsonString, (key, value) => {
             if (key === "tokenSets") {
