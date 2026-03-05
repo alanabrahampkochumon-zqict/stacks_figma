@@ -94,33 +94,7 @@ function setUp() {
             ]
         }
     `.replace(/\s/g, "");
-    const jsonString = `{
-        "name": "Falcon",
-        "tokenSets": [
-            {
-                "name": "token-1",
-                "type": "number",
-                "level": 1,
-                "tokens": [
-                    { "type": "number", "value": 0, "name": "size-0" },
-                    { "type": "number", "value": 150, "name": "size-150" },
-                    { "type": "number", "value": 50, "name": "size-50" },
-                    { "type": "number", "value": 100, "name": "size-1000" }
-                ]
-            },
-            {
-                "name": "token-2",
-                "type": "string",
-                "level": 1,
-                "tokens": [
-                    { "type": "string", "value": "light", "name": "light" },
-                    { "type": "string", "value": "regular", "name": "regular" },
-                    { "type": "string", "value": "bold", "name": "bold" }
-                ]
-            }
-        ]
-    }`;
-    console.log(jsonString);
+
     return {
         dsName,
         tokenSets,
@@ -131,7 +105,6 @@ function setUp() {
         sortedByValueMergedTokenSet,
         serializedDesignSystem,
         designSystem,
-        jsonString,
     };
 }
 
@@ -154,6 +127,14 @@ describe("Design System Initialization", () => {
         // Then, the design system is initialized with those values
         expect(designSystem.name).toBe(dsName);
         expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
+    });
+
+    test("throw error, when initialized with empty name", () => {
+        // When a design system is initialized emtpy name
+        const { tokenSets } = setUp();
+
+        // Then, it throws an error
+        expect(() => new DesignSystem("", tokenSets)).toThrow();
     });
 });
 
