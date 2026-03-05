@@ -19,7 +19,21 @@ function setUpTokens() {
         generateToken("color", undefined, colorTokenModes),
     );
 
-    return { numberTokenModes, numberTokens, colorTokenModes, colorTokens };
+    const numberTokenSet = new TokenSet(
+        "Number Color",
+        "number",
+        1,
+        numberTokens,
+        numberTokenModes,
+    );
+
+    return {
+        numberTokenModes,
+        numberTokens,
+        colorTokenModes,
+        colorTokens,
+        numberTokenSet,
+    };
 }
 
 describe("TokenSet Intialization Tests", () => {
@@ -44,8 +58,8 @@ describe("TokenSet Intialization Tests", () => {
             name,
             numberTokens[0].type,
             level,
-            numberTokenModes,
             numberTokens,
+            numberTokenModes,
         );
 
         // Then, the object contains the correct name and default values
@@ -188,6 +202,30 @@ describe("TokenSet Intialization Tests", () => {
                     numberTokenModes,
                 ),
         ).toThrow();
+    });
+});
+
+describe("TokenSet AddMode", () => {
+    test("adds mode, if the mode does not exist", () => {
+        // When a non-existing mode is add
+        const { numberTokenSet } = setUpTokens();
+        const newMode = "brightness";
+        const result = numberTokenSet.addMode(newMode);
+
+        // Then, it is added to the mode
+        expect(result).toBeTruthy();
+        expect(numberTokenSet.modes).toContain(newMode);
+    });
+
+    test("does not add mode, if the mode already exists exist", () => {
+        // When an existing mode is added
+        const { numberTokenSet } = setUpTokens();
+        const result = numberTokenSet.addMode(
+            numberTokenSet.modes.values().next().value || "",
+        );
+
+        // Then, it is not added to the mode
+        expect(result).toBeFalsy();
     });
 });
 

@@ -75,9 +75,10 @@ export class TokenSet {
         this.tokens = tokens;
     }
 
-    // TODO: Add test
-    addMode(mode: string) {
+    addMode(mode: string): boolean {
+        if (this.modes.has(mode)) return false;
         this.modes.add(mode);
+        return true;
     }
 
     /**
