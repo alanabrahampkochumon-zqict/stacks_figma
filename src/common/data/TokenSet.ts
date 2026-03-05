@@ -40,6 +40,7 @@ export class TokenSet {
     type: ExtendedTokenTypes;
     level: Levels;
     tokens: Token[];
+    modes: Set<string>;
 
     /**
      * Creates a token set with passed in parameters
@@ -47,6 +48,7 @@ export class TokenSet {
      * @param type type of tokens, like color or animation. Check `ExtendedTokenTypes` for more details.
      * Default: "number"
      * @param level Level of the token set. 1, 2, 3, or 4. Default: 1.
+     * @param mode that current token set supports
      * @param tokens Tokens to be added to token set initially. All the tokens passed in must match the passed in type and level.
      */
     constructor(
@@ -54,6 +56,7 @@ export class TokenSet {
         type: ExtendedTokenTypes = "number",
         level: Levels = 1,
         tokens: Token[] = [],
+        modes: string[] = ["default"],
     ) {
         if (!name) throw Error(`Name must be passed in for a tokenset`);
         if (!isValidLevel(level))
@@ -64,10 +67,17 @@ export class TokenSet {
             );
 
         this._validateToken(tokens, type);
+        this.modes = new Set();
+        modes.forEach((mode) => this.addMode(mode)); // TODO: Add mode base on token modes
         this.name = name;
         this.type = type;
         this.level = level;
         this.tokens = tokens;
+    }
+
+    // TODO: Add test
+    addMode(mode: string) {
+        this.modes.add(mode);
     }
 
     /**
