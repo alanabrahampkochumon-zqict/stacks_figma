@@ -1,17 +1,3 @@
-import { describe, expect, test } from "vitest";
-
-import { InsertConflictPolicy } from "../../../src/common/data/Common";
-import {
-    ExtendedTokenTypes,
-    Levels,
-    Token,
-} from "../../../src/common/data/Token";
-import { TokenSet } from "../../../src/common/data/TokenSet";
-import { generateToken } from "./utils/Generators";
-
-
-
-
 // describe("TokenSet Sorting Tests", () => {
 //     test("sort function sorts by token name by default", () => {
 //         // Given a unsorted tokenset
