@@ -1,11 +1,12 @@
 import react from "@vitejs/plugin-react";
 import esbuild from "esbuild";
 import { copyFile, glob } from "fs/promises";
-import { resolve } from "path";
+import path, { resolve } from "path";
 import { defineConfig, PluginOption } from "vite";
 import { patchCssModules } from "vite-css-modules";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import svgr from "vite-plugin-svgr";
+import tsConfigPaths from "vite-tsconfig-paths";
 import tsConfig from "./tsconfig.json";
 
 async function rebuildMain(
@@ -68,7 +69,7 @@ export default defineConfig(({ command }) => {
     return {
         resolve: {
             alias: {
-                "@": resolve(__dirname, "./src"),
+                "@src": path.resolve(__dirname, "./src"),
             },
         },
         plugins: [
@@ -77,6 +78,7 @@ export default defineConfig(({ command }) => {
             patchCssModules(),
             svgr(),
             watchManifest(isProductionBuild),
+            tsConfigPaths(),
         ],
         build: {
             target: "esnext",

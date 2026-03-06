@@ -23,8 +23,8 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         "paths": {
-            "@/*": ["./src/*"]
+            "@src/*": ["./src/*"]
         }
     },
-    "include": ["src/**/**.tsx", "src/**/**.ts"]
+    "include": ["src/**/**.tsx", "src/**/**.ts", "tests/**/*.ts"]
 }
