@@ -305,13 +305,16 @@ describe("Token Validator Tests", () => {
         // TODO: Test other types like gradient and box-shadow
     ];
 
-    test.each(testCases)("$name", ({ input, expected, type }) => {
-        // When, a specific input is validated as number
-        const result = validateToken(input, type);
+    test.each(testCases)(
+        "returns $expected, $name",
+        ({ input, expected, type }) => {
+            // When, a specific input is validated as number
+            const result = validateToken(input, type);
 
-        // Then, it matches expected result
-        expect(result).toBe(expected);
-    });
+            // Then, it matches expected result
+            expect(result).toBe(expected);
+        },
+    );
 
     const mutliModeTestCases: {
         name: string;
@@ -320,21 +323,27 @@ describe("Token Validator Tests", () => {
         type: ExtendedTokenTypes;
     }[] = [
         {
-            name: "same type tokens",
+            name: "tokens are of same type",
             input: { dark: "#fff", light: "#000" },
             expected: true,
             type: "color",
         },
         {
-            name: "different type tokens",
+            name: "tokens are of same type",
             input: { dark: "#fff", light: "white-color" },
             expected: false,
+            type: "color",
+        },
+        {
+            name: "there are no tokens",
+            input: {},
+            expected: true,
             type: "color",
         },
     ];
 
     test.each(mutliModeTestCases)(
-        "mutliple mode validation: $name",
+        "mutliple mode validation: return $expected, when $name",
         ({ input, expected, type }) => {
             // When, a specific input is validated as number
             const result = validateToken(input, type);

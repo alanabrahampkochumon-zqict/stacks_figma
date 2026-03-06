@@ -35,8 +35,8 @@ export function generateToken(
     return {
         name: name || faker.word.words(),
         type: type,
-        valueByMode: modes.map((mode) => {
-            return { [mode]: _generateTokenByType(type) };
-        }),
+        valueByMode: Object.fromEntries(
+            modes.map((mode) => [mode, _generateTokenByType(type)]),
+        ),
     };
 }

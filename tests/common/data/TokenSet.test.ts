@@ -10,17 +10,17 @@ import { generateToken } from "./utils/Generators";
 
 function setUpTokens() {
     const numberTokenModes = ["default"];
-    const numberTokens: Token[] = Array(10).fill(
-        generateToken("number", undefined, numberTokenModes),
-    );
+    const numberTokens: Token[] = Array(10)
+        .fill(0)
+        .map(() => generateToken("number", undefined, numberTokenModes));
 
     const colorTokenModes = ["dark", "light"];
-    const colorTokens = Array(10).fill(
-        generateToken("color", undefined, colorTokenModes),
-    );
+    const colorTokens = Array(10)
+        .fill(0)
+        .map(() => generateToken("color", undefined, colorTokenModes));
 
     const numberTokenSet = new TokenSet(
-        "Number Color",
+        "Number",
         "number",
         1,
         numberTokens,
@@ -67,7 +67,7 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.level).toStrictEqual(level);
         expect(tokenSet.tokens).toStrictEqual(numberTokens);
         expect(tokenSet.type).toStrictEqual(numberTokens[0].type);
-        expect(tokenSet.modes).toStrictEqual(numberTokenModes);
+        expect(Array.from(tokenSet.modes)).toStrictEqual(numberTokenModes);
     });
 
     test("creates tokenset, when initialized with empty tokens", () => {

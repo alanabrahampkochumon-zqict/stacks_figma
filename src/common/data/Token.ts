@@ -17,10 +17,11 @@ export function isValidExtendedToken(token: string): boolean {
 }
 
 export function validateToken(
-    tokenValueByMode: Record<string, any>,
+    tokenValuesByMode: Record<string, any>,
     tokenType: ExtendedTokenTypes,
 ): boolean {
-    const tokens = Object.values(tokenValueByMode);
+    if (!tokenValuesByMode) return false;
+    const tokens = Object.values(tokenValuesByMode);
 
     switch (tokenType) {
         case "number":
