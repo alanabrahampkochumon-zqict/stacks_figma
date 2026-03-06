@@ -48,7 +48,9 @@ export class TokenSet {
      * @param type type of tokens, like color or animation. Check `ExtendedTokenTypes` for more details.
      * Default: "number"
      * @param level Level of the token set. 1, 2, 3, or 4. Default: 1.
-     * @param mode that current token set supports
+     * @param modes that current token set supports.
+     *              If not passed in, then values from tokens[] are taken as mode.
+     *              If both are empty, then "default" mode is added.
      * @param tokens Tokens to be added to token set initially. All the tokens passed in must match the passed in type and level.
      */
     constructor(
@@ -56,7 +58,7 @@ export class TokenSet {
         type: ExtendedTokenTypes = "number",
         level: Levels = 1,
         tokens: Token[] = [],
-        modes: string[] = ["default"],
+        modes: string[] = [],
     ) {
         if (!name) throw Error(`Name must be passed in for a tokenset`);
         if (!isValidLevel(level))
@@ -68,11 +70,14 @@ export class TokenSet {
 
         this._validateToken(tokens, type);
         this.modes = new Set();
-        modes.forEach((mode) => this.addMode(mode)); // TODO: Add mode base on token modes
+        modes.forEach((mode) => this.addMode(mode));
         this.name = name;
         this.type = type;
         this.level = level;
-        this.tokens = tokens; // TODO: Automatically add token modes if they are not the current modes.
+        this.tokens = tokens;
+        this._addModeForToken(tokens);
+
+        if (modes.length < 1 && tokens.length < 1) this.modes.add("default");
     }
 
     /**
@@ -104,6 +109,8 @@ export class TokenSet {
         if (this.getTokenIndex(token.name) === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.updateToken(token.name, token);
+
+        this._addModeForToken([token]); // Add the modes if they don't exist yet
 
         if (sortToken) {
             this.sort(compareFn);
@@ -249,5 +256,14 @@ export class TokenSet {
             throw new Error(
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
             );
+    }
+
+    // Adds any mode that is missing from token
+    private _addModeForToken(tokens: Token[]) {
+        tokens.forEach((token) =>
+            Object.keys(token.valueByMode).forEach((mode) =>
+                this.modes.add(mode),
+            ),
+        );
     }
 }

@@ -45,7 +45,7 @@ function setUpTokens() {
 }
 
 describe("TokenSet Intialization Tests", () => {
-    test("creates tokenset with default valueByNames, when initialized with only name", () => {
+    test("creates tokenset with default values, when initialized with only name", () => {
         // Given a tokenset initialized with only name
         const name = "TokenSet";
         const tokenSet = new TokenSet(name);
@@ -55,10 +55,11 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.level).toStrictEqual(1);
         expect(tokenSet.tokens.length).toStrictEqual(0);
         expect(tokenSet.type).toStrictEqual("number");
+        expect(tokenSet.modes).contain("default");
     });
 
-    test("creates tokenset, when initialized with passed in valueByNames", () => {
-        // Given a tokenset initialized with only name
+    test("creates tokenset, when initialized with passed in values", () => {
+        // When a tokenset is initialized with default values
         const level = 1;
         const name = "TokenSet";
         const { numberTokens, numberTokenModes } = setUpTokens();
@@ -70,7 +71,7 @@ describe("TokenSet Intialization Tests", () => {
             numberTokenModes,
         );
 
-        // Then, the object contains the correct name and default valueByNames
+        // Then, the object contains the correct name and default values
         expect(tokenSet.name).toStrictEqual(name);
         expect(tokenSet.level).toStrictEqual(level);
         expect(tokenSet.tokens).toStrictEqual(numberTokens);
@@ -92,6 +93,27 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.tokens).toStrictEqual(tokens);
         expect(tokenSet.tokens.length).toStrictEqual(0);
         expect(tokenSet.type).toStrictEqual(tokenType);
+    });
+
+    test("creates modes automatically, when initialized by non empty tokens", () => {
+        // When a tokenset is initialized without specifying modes
+        const level = 1;
+        const name = "TokenSet";
+        const { colorTokens, colorTokenModes } = setUpTokens();
+        const tokenSet = new TokenSet(
+            name,
+            colorTokens[0].type,
+            level,
+            colorTokens,
+        );
+
+        // Then, the object contains the correct name and default valueByNames
+        expect(tokenSet.name).toStrictEqual(name);
+        expect(tokenSet.level).toStrictEqual(level);
+        expect(tokenSet.tokens).toStrictEqual(colorTokens);
+        expect(tokenSet.type).toStrictEqual(colorTokens[0].type);
+        // And, modes are taken from the added token
+        expect(Array.from(tokenSet.modes)).toStrictEqual(colorTokenModes);
     });
 
     test("throws error, when initialized with mixed token types", () => {
@@ -258,7 +280,7 @@ describe("TokenSet Add Tests", () => {
         expect(tokenSet.tokens.at(0)).toStrictEqual(validToken);
     });
 
-    test("throws error, when a token with mismatching type is passed in", () => {
+    test("modes gets added, when a valid token is passed in", () => {
         // Given a empty token set
         const name = "TokenSet";
         const type = "number";
@@ -267,13 +289,19 @@ describe("TokenSet Add Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const invalidToken: Token = {
+        const validToken: Token = {
             name: "50",
-            valueByMode: { default: 10 },
-            type: "string",
+            valueByMode: { default: 10, another: 25 },
+            type: type,
         };
-        // Then, an error is thrown
-        expect(() => tokenSet.addToken(invalidToken)).toThrow();
+        tokenSet.addToken(validToken);
+
+        // Then, the token is added to the set
+        expect(tokenSet.tokens.at(0)).toStrictEqual(validToken);
+
+        // And, modes are added from the added token
+        expect(tokenSet.modes).contain("default");
+        expect(tokenSet.modes).contain("another");
     });
 
     test("token gets upserted, when an existing token is passed in with insert policy of replace", () => {
@@ -398,6 +426,24 @@ describe("TokenSet Add Tests", () => {
         });
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+
+    test("throws error, when a token with mismatching type is passed in", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const invalidToken: Token = {
+            name: "50",
+            valueByMode: { default: 10 },
+            type: "string",
+        };
+        // Then, an error is thrown
+        expect(() => tokenSet.addToken(invalidToken)).toThrow();
     });
 });
 
