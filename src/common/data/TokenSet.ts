@@ -72,7 +72,7 @@ export class TokenSet {
         this.name = name;
         this.type = type;
         this.level = level;
-        this.tokens = tokens;
+        this.tokens = tokens; // TODO: Automatically add token modes if they are not the current modes.
     }
 
     /**

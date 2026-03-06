@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 
+import { InsertConflictPolicy } from "../../../src/common/data/Common";
 import {
     ExtendedTokenTypes,
     Levels,
@@ -13,6 +14,12 @@ function setUpTokens() {
     const numberTokens: Token[] = Array(10)
         .fill(0)
         .map(() => generateToken("number", undefined, numberTokenModes));
+    const sortedNumberToken = numberTokens.sort(
+        (t, u) =>
+            t &&
+            u &&
+            t.name.localeCompare(u.name, undefined, { numeric: true }),
+    );
 
     const colorTokenModes = ["dark", "light"];
     const colorTokens = Array(10)
@@ -33,23 +40,24 @@ function setUpTokens() {
         colorTokenModes,
         colorTokens,
         numberTokenSet,
+        sortedNumberToken,
     };
 }
 
 describe("TokenSet Intialization Tests", () => {
-    test("creates tokenset with default values, when initialized with only name", () => {
+    test("creates tokenset with default valueByNames, when initialized with only name", () => {
         // Given a tokenset initialized with only name
         const name = "TokenSet";
         const tokenSet = new TokenSet(name);
 
-        // Then, the object contains the correct name and default values
+        // Then, the object contains the correct name and default valueByNames
         expect(tokenSet.name).toStrictEqual(name);
         expect(tokenSet.level).toStrictEqual(1);
         expect(tokenSet.tokens.length).toStrictEqual(0);
         expect(tokenSet.type).toStrictEqual("number");
     });
 
-    test("creates tokenset, when initialized with passed in values", () => {
+    test("creates tokenset, when initialized with passed in valueByNames", () => {
         // Given a tokenset initialized with only name
         const level = 1;
         const name = "TokenSet";
@@ -62,7 +70,7 @@ describe("TokenSet Intialization Tests", () => {
             numberTokenModes,
         );
 
-        // Then, the object contains the correct name and default values
+        // Then, the object contains the correct name and default valueByNames
         expect(tokenSet.name).toStrictEqual(name);
         expect(tokenSet.level).toStrictEqual(level);
         expect(tokenSet.tokens).toStrictEqual(numberTokens);
@@ -205,7 +213,7 @@ describe("TokenSet Intialization Tests", () => {
     });
 });
 
-describe("TokenSet AddMode", () => {
+describe("TokenSet Add Mode", () => {
     test("adds mode, if the mode does not exist", () => {
         // When a non-existing mode is add
         const { numberTokenSet } = setUpTokens();
@@ -229,109 +237,169 @@ describe("TokenSet AddMode", () => {
     });
 });
 
-// // TODO: Refactor testnames using [return/action] when [condition] format
-// describe("TokenSet Add Tests", () => {
-//     test("valid token can be added", () => {
-//         // Given a empty token set
-//         const name = "TokenSet";
-//         const type = "number";
-//         const level = 1;
-//         const tokens: Token[] = [];
-//         const tokenSet = new TokenSet(name, type, level, tokens);
+describe("TokenSet Add Tests", () => {
+    test("token gets added, when a valid token is passed in", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
 
-//         // When a token is added
-//         const validToken: Token = { name: "50", value: 10, type: type };
-//         tokenSet.addToken(validToken);
+        // When a token is added
+        const validToken: Token = {
+            name: "50",
+            valueByMode: { default: 10 },
+            type: type,
+        };
+        tokenSet.addToken(validToken);
 
-//         // Then, the token is added to the set
-//         expect(tokenSet.tokens.at(0)).toBe(validToken);
-//     });
+        // Then, the token is added to the set
+        expect(tokenSet.tokens.at(0)).toStrictEqual(validToken);
+    });
 
-//     test("valid token can be added", () => {
-//         // Given a empty token set
-//         const name = "TokenSet";
-//         const type = "number";
-//         const level = 1;
-//         const tokens: Token[] = [];
-//         const tokenSet = new TokenSet(name, type, level, tokens);
+    test("throws error, when a token with mismatching type is passed in", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
 
-//         // When a token is added
-//         const invalidToken: Token = { name: "50", value: 10, type: "string" };
-//         // Then, an error is thrown
-//         expect(() => tokenSet.addToken(invalidToken)).toThrow();
-//     });
+        // When a token is added
+        const invalidToken: Token = {
+            name: "50",
+            valueByMode: { default: 10 },
+            type: "string",
+        };
+        // Then, an error is thrown
+        expect(() => tokenSet.addToken(invalidToken)).toThrow();
+    });
 
-//     test("existing gets upserted when policy is set to replace", () => {
-//         // Given a non-empty token set
-//         const name = "TokenSet";
-//         const type = "number";
-//         const level = 1;
-//         const tokens: Token[] = [{ name: "50", value: 55, type: type }];
-//         const tokenSet = new TokenSet(name, type, level, tokens);
-//         const validToken: Token = { name: "50", value: 10, type: type };
+    test("token gets upserted, when an existing token is passed in with insert policy of replace", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: Token[] = [
+            { name: "50", valueByMode: { default: 55 }, type: type },
+        ];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+        const validToken: Token = {
+            name: "50",
+            valueByMode: { default: 10 },
+            type: type,
+        };
 
-//         // When a token is added with same name and policy set to update
-//         tokenSet.addToken(validToken, {
-//             insertPolicy: InsertConflictPolicy.REPLACE,
-//         });
+        // When a token is added with same name and policy set to update
+        tokenSet.addToken(validToken, {
+            insertPolicy: InsertConflictPolicy.REPLACE,
+        });
 
-//         // Then, then the token is updated
-//         expect(tokenSet.tokens).toStrictEqual([validToken]);
-//     });
+        // Then, then the token is updated
+        expect(tokenSet.tokens).toStrictEqual([validToken]);
+    });
 
-//     test("token added and sorted when sort is turned on", () => {
-//         // Given a non-empty token set
-//         const name = "TokenSet";
-//         const tokenType = "number";
-//         const level = 1;
-//         const initialToken: Token[] = [
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 0, name: "size-0" },
-//         ];
-//         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 0, name: "size-0" },
-//             { type: tokenType, value: 5, name: "size-50" },
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//         ];
-//         const token: Token = { type: tokenType, value: 5, name: "size-50" };
-//         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+    test("token added and sorted, when sort is turned on", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            {
+                type: tokenType,
+                valueByMode: { default: 10 },
+                name: "size-100",
+            },
+            {
+                type: tokenType,
+                valueByMode: { default: 15 },
+                name: "size-150",
+            },
+            {
+                type: tokenType,
+                valueByMode: { default: 0 },
+                name: "size-0",
+            },
+        ];
 
-//         // When a token is added with sorting on
-//         tokenSet.addToken(token, { sortToken: true });
-//         // Then, the token is in sorted order
-//         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
-//     });
+        const sortedTokens: Token[] = [
+            {
+                type: tokenType,
+                valueByMode: { default: 0 },
+                name: "size-0",
+            },
+            {
+                type: tokenType,
+                valueByMode: { default: 5 },
+                name: "size-50",
+            },
+            {
+                type: tokenType,
+                valueByMode: { default: 10 },
+                name: "size-100",
+            },
+            {
+                type: tokenType,
+                valueByMode: { default: 15 },
+                name: "size-150",
+            },
+        ];
+        const token: Token = {
+            type: tokenType,
+            valueByMode: { default: 5 },
+            name: "size-50",
+        };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
-//     test("token added and sorted when sort is turned on and comparator is provided", () => {
-//         // Given a non-empty token set
-//         const name = "TokenSet";
-//         const tokenType = "number";
-//         const level = 1;
-//         const initialToken: Token[] = [
-//             { type: tokenType, value: 100, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 50, name: "size-0" },
-//         ];
-//         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 0, name: "size-50" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 50, name: "size-0" },
-//             { type: tokenType, value: 100, name: "size-100" },
-//         ];
-//         const token: Token = { type: tokenType, value: 0, name: "size-50" };
-//         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+        // When a token is added with sorting on
+        tokenSet.addToken(token, { sortToken: true });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
 
-//         // When a token is added with sorting on
-//         tokenSet.addToken(token, {
-//             sortToken: true,
-//             compareFn: (a, b) => a.value - b.value,
-//         });
-//         // Then, the token is in sorted order
-//         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
-//     });
-// });
+    test("token added and sorted, when sort is turned on and comparator is provided", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialToken: Token[] = [
+            {
+                type: tokenType,
+                valueByMode: { default: 100 },
+                name: "size-100",
+            },
+            { type: tokenType, valueByMode: { default: 15 }, name: "size-150" },
+            { type: tokenType, valueByMode: { default: 50 }, name: "size-0" },
+        ];
+        const sortedTokens: Token[] = [
+            { type: tokenType, valueByMode: { default: 0 }, name: "size-50" },
+            { type: tokenType, valueByMode: { default: 15 }, name: "size-150" },
+            { type: tokenType, valueByMode: { default: 50 }, name: "size-0" },
+            {
+                type: tokenType,
+                valueByMode: { default: 100 },
+                name: "size-100",
+            },
+        ];
+        const token: Token = {
+            type: tokenType,
+            valueByMode: { default: 0 },
+            name: "size-50",
+        };
+        const tokenSet = new TokenSet(name, tokenType, level, initialToken);
+
+        // When a token is added with sorting on
+        tokenSet.addToken(token, {
+            sortToken: true,
+            compareFn: (a, b) =>
+                Object.values(a.valueByMode).at(0) -
+                Object.values(b.valueByMode).at(0),
+        });
+        // Then, the token is in sorted order
+        expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+});
 
 // describe("TokenSet Update Tests", () => {
 //     test("token gets added to a token set if the token set is empty and policy is set to insert", () => {
@@ -343,7 +411,7 @@ describe("TokenSet AddMode", () => {
 //         const tokenSet = new TokenSet(name, type, level, tokens);
 
 //         // When a token is updated with policy set to insert
-//         const validToken: Token = { name: "50", value: 10, type: type };
+//         const validToken: Token = { name: "50", valueByName: 10, type: type };
 //         tokenSet.updateToken(validToken.name, validToken, {
 //             updatePolicy: UpdatePolicy.INSERT,
 //         });
@@ -361,7 +429,7 @@ describe("TokenSet AddMode", () => {
 //         const tokenSet = new TokenSet(name, type, level, tokens);
 
 //         // When a token is updated with policy set to ignore
-//         const validToken: Token = { name: "50", value: 10, type: type };
+//         const validToken: Token = { name: "50", valueByName: 10, type: type };
 //         tokenSet.updateToken(validToken.name, validToken, {
 //             updatePolicy: UpdatePolicy.IGNORE,
 //         });
@@ -376,18 +444,18 @@ describe("TokenSet AddMode", () => {
 //         const type = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { name: "25", value: 5, type: type },
-//             { name: "75", value: 15, type: type },
+//             { name: "25", valueByName: 5, type: type },
+//             { name: "75", valueByName: 15, type: type },
 //         ];
 //         const expectedTokens: Token[] = [
-//             { name: "25", value: 5, type: type },
-//             { name: "75", value: 15, type: type },
-//             { name: "50", value: 10, type: type },
+//             { name: "25", valueByName: 5, type: type },
+//             { name: "75", valueByName: 15, type: type },
+//             { name: "50", valueByName: 10, type: type },
 //         ];
 //         const tokenSet = new TokenSet(name, type, level, tokens);
 
 //         // When a token is updated with policy set to insert
-//         const validToken: Token = { name: "50", value: 10, type: type };
+//         const validToken: Token = { name: "50", valueByName: 10, type: type };
 //         tokenSet.updateToken(validToken.name, validToken, {
 //             updatePolicy: UpdatePolicy.INSERT,
 //         });
@@ -402,17 +470,17 @@ describe("TokenSet AddMode", () => {
 //         const type = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { name: "25", value: 5, type: type },
-//             { name: "75", value: 15, type: type },
+//             { name: "25", valueByName: 5, type: type },
+//             { name: "75", valueByName: 15, type: type },
 //         ];
 //         const expectedTokens: Token[] = [
-//             { name: "25", value: 5, type: type },
-//             { name: "75", value: 15, type: type },
+//             { name: "25", valueByName: 5, type: type },
+//             { name: "75", valueByName: 15, type: type },
 //         ];
 //         const tokenSet = new TokenSet(name, type, level, tokens);
 
 //         // When a token is updated with policy set to ignore
-//         const validToken: Token = { name: "50", value: 10, type: type };
+//         const validToken: Token = { name: "50", valueByName: 10, type: type };
 //         tokenSet.updateToken(validToken.name, validToken, {
 //             updatePolicy: UpdatePolicy.IGNORE,
 //         });
@@ -432,7 +500,7 @@ describe("TokenSet AddMode", () => {
 //         // When a token is updated(upserted)
 //         const differentToken: Token = {
 //             name: "50",
-//             value: 10,
+//             valueByName: 10,
 //             type: "spacing",
 //         };
 //         // Then, an error is thrown
@@ -447,16 +515,16 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
 //         ];
 //         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
 //         // When a token is updated(upserted)
 //         const differentToken: Token = {
 //             name: "50",
-//             value: 10,
+//             valueByName: 10,
 //             type: "spacing",
 //         };
 //         // Then, an error is thrown
@@ -474,7 +542,7 @@ describe("TokenSet AddMode", () => {
 //         const tokenSet = new TokenSet(name, type, level, tokens);
 
 //         // When a token is added
-//         const invalidToken: Token = { name: "50", value: 10, type: "string" };
+//         const invalidToken: Token = { name: "50", valueByName: 10, type: "string" };
 //         // Then, an error is thrown
 //         expect(() => tokenSet.addToken(invalidToken)).toThrow();
 //     });
@@ -485,17 +553,17 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-50" },
-//             { type: tokenType, value: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-50" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
 //         ];
 
 //         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
-//         // When a token is updated(upserted) with invalid values
+//         // When a token is updated(upserted) with invalid valueByNames
 //         const updatedToken: Token = {
 //             name: "size-65",
-//             value: "test",
+//             valueByName: "test",
 //             type: tokenType,
 //         };
 //         // Then, an error is thrown
@@ -508,17 +576,17 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const initialToken: Token[] = [
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
 //         ];
 //         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 0, name: "size-0" },
-//             { type: tokenType, value: 5, name: "size-50" },
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
 //         ];
-//         const token: Token = { type: tokenType, value: 5, name: "size-50" };
+//         const token: Token = { type: tokenType, valueByName: 5, name: "size-50" };
 //         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
 //         // When a token is updated(upserted) and sorted
@@ -533,23 +601,23 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const initialToken: Token[] = [
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 150, name: "size-150" },
-//             { type: tokenType, value: 20, name: "size-0" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 150, name: "size-150" },
+//             { type: tokenType, valueByName: 20, name: "size-0" },
 //         ];
 //         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 5, name: "size-50" },
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 20, name: "size-0" },
-//             { type: tokenType, value: 150, name: "size-150" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 20, name: "size-0" },
+//             { type: tokenType, valueByName: 150, name: "size-150" },
 //         ];
-//         const token: Token = { type: tokenType, value: 5, name: "size-50" };
+//         const token: Token = { type: tokenType, valueByName: 5, name: "size-50" };
 //         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
 //         // When a token is updated(upserted) and sorted with comparator
 //         tokenSet.updateToken(token.name, token, {
 //             sortToken: true,
-//             compareFn: (a, b) => a.value - b.value,
+//             compareFn: (a, b) => a.valueByName - b.valueByName,
 //         });
 //         // Then, the token is in sorted order
 //         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
@@ -561,12 +629,12 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const initialToken: Token[] = [];
-//         const token1: Token = { type: tokenType, value: 5, name: "size-50" };
-//         const token2: Token = { type: tokenType, value: 0, name: "size-0" };
+//         const token1: Token = { type: tokenType, valueByName: 5, name: "size-50" };
+//         const token2: Token = { type: tokenType, valueByName: 0, name: "size-0" };
 //         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 //         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 0, name: "size-0" },
-//             { type: tokenType, value: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
 //         ];
 
 //         // When a token is updated(upserted) and sorted
@@ -583,23 +651,23 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const initialToken: Token[] = [
-//             { type: tokenType, value: 100, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 50, name: "size-0" },
+//             { type: tokenType, valueByName: 100, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 50, name: "size-0" },
 //         ];
 //         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 0, name: "size-50" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 50, name: "size-0" },
-//             { type: tokenType, value: 100, name: "size-100" },
+//             { type: tokenType, valueByName: 0, name: "size-50" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 50, name: "size-0" },
+//             { type: tokenType, valueByName: 100, name: "size-100" },
 //         ];
-//         const token: Token = { type: tokenType, value: 0, name: "size-50" };
+//         const token: Token = { type: tokenType, valueByName: 0, name: "size-50" };
 //         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
 //         // When a token is added with sorting on
 //         tokenSet.addToken(token, {
 //             sortToken: true,
-//             compareFn: (a, b) => a.value - b.value,
+//             compareFn: (a, b) => a.valueByName - b.valueByName,
 //         });
 //         // Then, the token is in sorted order
 //         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
@@ -613,9 +681,9 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { type: tokenType, value: 5, name: "size-50" },
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
 //         ];
 //         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
@@ -635,14 +703,14 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { type: tokenType, value: 5, name: "size-50" },
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
 //         ];
 //         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
 //         // When a token in the set is removed
-//         tokenSet.removeToken({ type: tokenType, value: 4, name: "size-25" });
+//         tokenSet.removeToken({ type: tokenType, valueByName: 4, name: "size-25" });
 
 //         // Then, the object does not contain the removed token, but has the rest of the tokens
 //         expect(tokenSet.tokens).toHaveLength(3);
@@ -659,16 +727,16 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
-//             { type: tokenType, value: 0, name: "size-0" },
-//             { type: tokenType, value: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
 //         ];
 //         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 0, name: "size-0" },
-//             { type: tokenType, value: 5, name: "size-50" },
-//             { type: tokenType, value: 10, name: "size-100" },
-//             { type: tokenType, value: 15, name: "size-150" },
+//             { type: tokenType, valueByName: 0, name: "size-0" },
+//             { type: tokenType, valueByName: 5, name: "size-50" },
+//             { type: tokenType, valueByName: 10, name: "size-100" },
+//             { type: tokenType, valueByName: 15, name: "size-150" },
 //         ];
 //         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
@@ -685,32 +753,32 @@ describe("TokenSet AddMode", () => {
 //         const tokenType = "number";
 //         const level = 1;
 //         const tokens: Token[] = [
-//             { type: tokenType, value: 55, name: "size-100" },
-//             { type: tokenType, value: 35, name: "size-150" },
-//             { type: tokenType, value: 100, name: "size-0" },
-//             { type: tokenType, value: 50, name: "size-50" },
+//             { type: tokenType, valueByName: 55, name: "size-100" },
+//             { type: tokenType, valueByName: 35, name: "size-150" },
+//             { type: tokenType, valueByName: 100, name: "size-0" },
+//             { type: tokenType, valueByName: 50, name: "size-50" },
 //         ];
 //         const sortedTokens: Token[] = [
-//             { type: tokenType, value: 35, name: "size-150" },
-//             { type: tokenType, value: 50, name: "size-50" },
-//             { type: tokenType, value: 55, name: "size-100" },
-//             { type: tokenType, value: 100, name: "size-0" },
+//             { type: tokenType, valueByName: 35, name: "size-150" },
+//             { type: tokenType, valueByName: 50, name: "size-50" },
+//             { type: tokenType, valueByName: 55, name: "size-100" },
+//             { type: tokenType, valueByName: 100, name: "size-0" },
 //         ];
 //         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
 //         // When sort function is called on it with a comparator
-//         tokenSet.sort((a, b) => a.value - b.value);
+//         tokenSet.sort((a, b) => a.valueByName - b.valueByName);
 
-//         // Then, the tokens are sorted by the comparator(here, value)
+//         // Then, the tokens are sorted by the comparator(here, valueByName)
 //         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
 //     });
 // });
 
 // describe("TokenSet Find Tests", () => {
 //     const tokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
 //     ];
 //     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 
@@ -749,9 +817,9 @@ describe("TokenSet AddMode", () => {
 
 // describe("TokenSet Size Tests", () => {
 //     const tokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
 //     ];
 //     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 
@@ -779,63 +847,63 @@ describe("TokenSet AddMode", () => {
 
 // function setUp() {
 //     const originalTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
 //     ];
 
 //     const cleanMergingTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 30, name: "size-300" },
-//         { type: "sizing", value: 250, name: "size-250" },
-//         { type: "sizing", value: 120, name: "size-200" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 30, name: "size-300" },
+//         { type: "sizing", valueByName: 250, name: "size-250" },
+//         { type: "sizing", valueByName: 120, name: "size-200" },
 //     ];
 //     const cleanMergingResultTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
-//         { type: "sizing", value: 30, name: "size-300" },
-//         { type: "sizing", value: 250, name: "size-250" },
-//         { type: "sizing", value: 120, name: "size-200" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 30, name: "size-300" },
+//         { type: "sizing", valueByName: 250, name: "size-250" },
+//         { type: "sizing", valueByName: 120, name: "size-200" },
 //     ];
 //     const sortedMergingResultTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
-//         { type: "sizing", value: 120, name: "size-200" },
-//         { type: "sizing", value: 250, name: "size-250" },
-//         { type: "sizing", value: 30, name: "size-300" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 120, name: "size-200" },
+//         { type: "sizing", valueByName: 250, name: "size-250" },
+//         { type: "sizing", valueByName: 30, name: "size-300" },
 //     ];
-//     const valueSortedMergingResultTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
-//         { type: "sizing", value: 30, name: "size-300" },
-//         { type: "sizing", value: 120, name: "size-200" },
-//         { type: "sizing", value: 250, name: "size-250" },
+//     const valueByNameSortedMergingResultTokens: Token[] = [
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 30, name: "size-300" },
+//         { type: "sizing", valueByName: 120, name: "size-200" },
+//         { type: "sizing", valueByName: 250, name: "size-250" },
 //     ];
 //     const conflictMergingTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 15, name: "size-100" },
-//         { type: "sizing", value: 25, name: "size-150" },
-//         { type: "sizing", value: 35, name: "size-200" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 15, name: "size-100" },
+//         { type: "sizing", valueByName: 25, name: "size-150" },
+//         { type: "sizing", valueByName: 35, name: "size-200" },
 //     ];
 //     const conflictMergingReplaceResultTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 15, name: "size-100" },
-//         { type: "sizing", value: 25, name: "size-150" },
-//         { type: "sizing", value: 35, name: "size-200" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 15, name: "size-100" },
+//         { type: "sizing", valueByName: 25, name: "size-150" },
+//         { type: "sizing", valueByName: 35, name: "size-200" },
 //     ];
 //     const conflictMergingIgnoreResultTokens: Token[] = [
-//         { type: "sizing", value: 5, name: "size-50" },
-//         { type: "sizing", value: 10, name: "size-100" },
-//         { type: "sizing", value: 15, name: "size-150" },
-//         { type: "sizing", value: 35, name: "size-200" },
+//         { type: "sizing", valueByName: 5, name: "size-50" },
+//         { type: "sizing", valueByName: 10, name: "size-100" },
+//         { type: "sizing", valueByName: 15, name: "size-150" },
+//         { type: "sizing", valueByName: 35, name: "size-200" },
 //     ];
 //     const differentTokens: Token[] = [
-//         { type: "spacing", value: 25, name: "spacing-250" },
-//         { type: "spacing", value: 35, name: "spacing-350" },
-//         { type: "spacing", value: 45, name: "spacing-450" },
+//         { type: "spacing", valueByName: 25, name: "spacing-250" },
+//         { type: "spacing", valueByName: 35, name: "spacing-350" },
+//         { type: "spacing", valueByName: 45, name: "spacing-450" },
 //     ];
 
 //     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
@@ -845,9 +913,9 @@ describe("TokenSet AddMode", () => {
 //         "type": "sizing",
 //         "level": 2,
 //         "tokens": [
-//             { "type": "sizing", "value": 5, "name": "size-50" },
-//             { "type": "sizing", "value": 10, "name": "size-100" },
-//             { "type": "sizing", "value": 15, "name": "size-150" }
+//             { "type": "sizing", "valueByName": 5, "name": "size-50" },
+//             { "type": "sizing", "valueByName": 10, "name": "size-100" },
+//             { "type": "sizing", "valueByName": 15, "name": "size-150" }
 //         ]
 //     }
 //     `.replace(/\s/g, "");
@@ -903,11 +971,11 @@ describe("TokenSet AddMode", () => {
 //         originalTokenSet.level,
 //         sortedMergingResultTokens,
 //     );
-//     const valueSortedResultTokenSet = new TokenSet(
+//     const valueByNameSortedResultTokenSet = new TokenSet(
 //         originalTokenSet.name,
 //         originalTokenSet.type,
 //         originalTokenSet.level,
-//         valueSortedMergingResultTokens,
+//         valueByNameSortedMergingResultTokens,
 //     );
 
 //     return {
@@ -919,7 +987,7 @@ describe("TokenSet AddMode", () => {
 //         conflictMergingReplaceResultTokenSet,
 //         conflictMergingIgnoreResultTokenSet,
 //         sortedResultTokenSet,
-//         valueSortedResultTokenSet,
+//         valueByNameSortedResultTokenSet,
 //         originalTokenSetString,
 //         emptyTokenSet,
 //         emptyTokenSetString,
@@ -1020,20 +1088,20 @@ describe("TokenSet AddMode", () => {
 //         expect(originalTokenSet).toStrictEqual(sortedResultTokenSet);
 //     });
 
-//     test("merged with sorting by value, a sort function is provided", () => {
+//     test("merged with sorting by valueByName, a sort function is provided", () => {
 //         // When two tokenset are merged with sorting on and a function provided
 //         const {
 //             originalTokenSet,
 //             cleanMergingTokenSet,
-//             valueSortedResultTokenSet,
+//             valueByNameSortedResultTokenSet,
 //         } = setUp();
 //         originalTokenSet.mergeTokenSet(cleanMergingTokenSet, {
 //             sortToken: true,
-//             compareFn: (a, b) => a.value - b.value,
+//             compareFn: (a, b) => a.valueByName - b.valueByName,
 //         });
 
-//         // Then, the token sets contains elements sorted by value.
-//         expect(originalTokenSet).toStrictEqual(valueSortedResultTokenSet);
+//         // Then, the token sets contains elements sorted by valueByName.
+//         expect(originalTokenSet).toStrictEqual(valueByNameSortedResultTokenSet);
 //     });
 // });
 
@@ -1073,7 +1141,7 @@ describe("TokenSet AddMode", () => {
 //         // When converted to token set
 //         const ts = TokenSet.fromJson(nameOnlyTokenJSON);
 
-//         // Then a token set is created with the correct values
+//         // Then a token set is created with the correct valueByNames
 //         expect(ts).toBeDefined();
 //         expect(ts?.name).toStrictEqual("test");
 //         expect(ts?.type).toStrictEqual("number");
@@ -1093,7 +1161,7 @@ describe("TokenSet AddMode", () => {
 //         // When converted to token set
 //         const ts = TokenSet.fromJson(nameAndTypeTokenJSON);
 
-//         // Then a token set is created with the correct values
+//         // Then a token set is created with the correct valueByNames
 //         expect(ts).toBeDefined();
 //         expect(ts?.name).toStrictEqual("test");
 //         expect(ts?.type).toStrictEqual("animation");
@@ -1114,7 +1182,7 @@ describe("TokenSet AddMode", () => {
 //         // When converted to token set
 //         const ts = TokenSet.fromJson(nameAndTypeTokenJSON);
 
-//         // Then a token set is created with the correct values
+//         // Then a token set is created with the correct valueByNames
 //         expect(ts).toBeDefined();
 //         expect(ts?.name).toStrictEqual("test");
 //         expect(ts?.type).toStrictEqual("animation");
@@ -1129,19 +1197,19 @@ describe("TokenSet AddMode", () => {
 //         // When converted to token set
 //         const ts = TokenSet.fromJson(emptyTokenSetString);
 
-//         // Then a token set is created with the correct values
+//         // Then a token set is created with the correct valueByNames
 //         expect(ts).toBeDefined();
 //         expect(ts).toStrictEqual(emptyTokenSet);
 //     });
 
-//     test("returns correct tokenset, when json string with name, type, level, and values is passed in", () => {
+//     test("returns correct tokenset, when json string with name, type, level, and valueByNames is passed in", () => {
 //         // Given a json string with name only
 //         const { originalTokenSet, originalTokenSetString } = setUp();
 
 //         // When converted to token set
 //         const ts = TokenSet.fromJson(originalTokenSetString);
 
-//         // Then a token set is created with the correct values
+//         // Then a token set is created with the correct valueByNames
 //         expect(ts).toBeDefined();
 //         expect(ts).toStrictEqual(originalTokenSet);
 //     });
