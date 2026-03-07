@@ -1,30 +1,3 @@
-
-
-
-// describe("TokenSet Serialization Tests", () => {
-//     test("returns serialized output, when provided with correct tokenset", () => {
-//         // Given a token set
-//         const { originalTokenSet, originalTokenSetString } = setUp();
-
-//         // When serialized to JSON
-//         const jsonString = originalTokenSet.toJsonString();
-
-//         // Then the serialized string contains all the properties
-//         expect(jsonString).toStrictEqual(originalTokenSetString);
-//     });
-
-//     test("returns serialized output, when provided with correct tokenset", () => {
-//         // Given an empty token set
-//         const { emptyTokenSetString, emptyTokenSet } = setUp();
-
-//         // When serialized to JSON
-//         const jsonString = emptyTokenSet.toJsonString();
-
-//         // Then the serialized string contains all the properties
-//         expect(jsonString).toStrictEqual(emptyTokenSetString);
-//     });
-// });
-
 // describe("TokenSet Deserialization Tests", () => {
 //     test("returns correct tokenset, when json string with name is passed in", () => {
 //         // Given a json string with name only

@@ -226,6 +226,7 @@ export class TokenSet {
             type: this.type,
             level: this.level,
             tokens: this.tokens,
+            modes: this.modes,
         });
     }
 

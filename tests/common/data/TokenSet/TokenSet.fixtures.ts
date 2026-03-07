@@ -37,7 +37,7 @@ export default function setUpTokens() {
     };
 }
 
-export function setUp() {
+export function setUpTokenSet() {
     const originalTokens: Token[] = [
         { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
         { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
@@ -99,27 +99,10 @@ export function setUp() {
     ];
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
-    const originalTokenSetString = `
-    {
-        "name": "ts",
-        "type": "sizing",
-        "level": 2,
-        "tokens": [
-            { "type": "sizing", "valueByName": 5, "name": "size-50" },
-            { "type": "sizing", "valueByName": 10, "name": "size-100" },
-            { "type": "sizing", "valueByName": 15, "name": "size-150" }
-        ]
-    }
-    `.replace(/\s/g, "");
+    const originalTokenSetString = JSON.stringify(originalTokenSet);
+
     const emptyTokenSet = new TokenSet("empty", "animation", 4);
-    const emptyTokenSetString = `
-    {
-        "name": "empty",
-        "type": "animation",
-        "level": 4,
-        "tokens": []
-    }
-    `.replace(/\s/g, "");
+    const emptyTokenSetString = JSON.stringify(emptyTokenSet);
 
     const cleanMergingTokenSet = new TokenSet(
         "ts",
