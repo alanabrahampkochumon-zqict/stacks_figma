@@ -10,50 +10,6 @@ import { expect, test } from "vitest";
 
 
 
-// describe("Design System Remove TokenSet", () => {
-//     test("removes tokenset, if token exists in the set", () => {
-//         // Given a non-empty token set
-//         const { dsName, tokenSets } = setUp();
-//         const designSystem = new DesignSystem(dsName, tokenSets);
-
-//         // When a tokenset is removed
-//         designSystem.removeTokenSet(tokenSets[0]);
-
-//         // Then, the tokenset is removed
-//         expect(designSystem.getTokenSets()).toStrictEqual([tokenSets[1]]);
-//     });
-
-//     test("do not remove tokenset, if partial token (matching name) is passed in", () => {
-//         // Given a non-empty token set
-//         const { dsName, tokenSets, tokenSet3 } = setUp();
-//         const designSystem = new DesignSystem(dsName, tokenSets);
-
-//         // When a partially matching tokenset is removed
-//         designSystem.removeTokenSet(tokenSet3);
-
-//         // Then, the tokensets are unaffected
-//         expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
-//     });
-
-//     test("do not remove tokenset, if non-existing is passed in", () => {
-//         // Given a non-empty token set
-//         const nonExistingTokenSet = new TokenSet(
-//             "non-existing",
-//             "color",
-//             4,
-//             [],
-//         );
-//         const { dsName, tokenSets, tokenSet3 } = setUp();
-//         const designSystem = new DesignSystem(dsName, tokenSets);
-
-//         // When a non-existing tokenset is removed
-//         designSystem.removeTokenSet(nonExistingTokenSet);
-
-//         // Then, the tokensets are unaffected
-//         expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
-//     });
-// });
-
 // describe("Design Sytem Update TokenSet", () => {
 //     test("tokenset gets updated, when a existing tokenset name with new tokenset is passed in", () => {
 //         // Given a non-empty token set
