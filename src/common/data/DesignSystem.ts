@@ -179,11 +179,6 @@ export class DesignSystem {
             }
             return value;
         });
-        const ds = new DesignSystem(
-            parsedData?.name,
-            parsedData?.tokenSets || [],
-        );
-        console.log(ds, "Design system");
         return new DesignSystem(parsedData?.name, parsedData?.tokenSets || []);
     }
 }

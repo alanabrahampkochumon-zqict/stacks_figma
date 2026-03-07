@@ -251,7 +251,6 @@ export class TokenSet {
                 token.type === tokenType &&
                 validateToken(token.valueByMode, token.type),
         );
-        console.log(validationResult);
         if (!validationResult)
             throw new Error(
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
