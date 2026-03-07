@@ -1,6 +1,5 @@
-import { ExtendedTokenTypes, Token } from "../../../../src/common/data/Token";
-
 import { faker } from "@faker-js/faker";
+import type { ExtendedTokenTypes, Token } from "@src/common/data/Token";
 
 function _generateTokenByType(
     type: ExtendedTokenTypes,
