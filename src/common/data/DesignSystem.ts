@@ -157,7 +157,7 @@ export class DesignSystem {
     toJson(): string {
         return JSON.stringify({
             name: this.name,
-            tokenSets: this._tokenSets.map((tks) => tks.toJsonString()),
+            tokenSets: this._tokenSets,
         });
     }
 
