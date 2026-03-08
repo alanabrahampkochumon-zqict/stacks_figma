@@ -99,10 +99,16 @@ export function setUpTokenSet() {
     ];
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
-    const originalTokenSetString = JSON.stringify(originalTokenSet);
+    const originalTokenSetString = JSON.stringify(originalTokenSet).replace(
+        `"modes":{}`,
+        `"modes":["default"]`,
+    );
 
     const emptyTokenSet = new TokenSet("empty", "animation", 4);
-    const emptyTokenSetString = JSON.stringify(emptyTokenSet);
+    const emptyTokenSetString = JSON.stringify(emptyTokenSet).replace(
+        `"modes":{}`,
+        `"modes":["default"]`,
+    );
 
     const cleanMergingTokenSet = new TokenSet(
         "ts",

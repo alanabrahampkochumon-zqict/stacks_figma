@@ -168,17 +168,24 @@ export class DesignSystem {
      * @throws Error if the design system is invalid.
      */
     static fromJson(jsonString: string): DesignSystem | undefined {
-        const parsedData = JSON.parse(jsonString, (key, value) => {
-            if (key === "tokenSets") {
-                const tokenSets: TokenSet[] = [];
-                for (const tokenSetStr of value) {
-                    const tokenSet = TokenSet.fromJson(tokenSetStr);
-                    tokenSet && tokenSets.push(tokenSet);
-                }
-                return tokenSets;
-            }
-            return value;
-        });
-        return new DesignSystem(parsedData?.name, parsedData?.tokenSets || []);
+        const parsedData = JSON.parse(jsonString);
+        // const tokenSets = parsedData?.tokenSets.map((tokenSet) =>
+        //     TokenSet.fromJson(tokenSet),
+        // );
+        // console.log(tokenSets);
+        console.log(parsedData);
+        console.log(
+            parsedData?.tokenSets?.map(
+                (tks: any) =>
+                    new TokenSet(
+                        tks?.name,
+                        tks?.type,
+                        tks?.level,
+                        tks?.tokens,
+                        tks?.modes,
+                    ),
+            ),
+        );
+        return new DesignSystem(parsedData?.name, parsedData?.tokenSet || []);
     }
 }
