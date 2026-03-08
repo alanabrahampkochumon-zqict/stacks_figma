@@ -22,6 +22,28 @@ describe("TokenSet Deserialization Tests", () => {
         expect(ts?.tokens).toStrictEqual([]);
     });
 
+    test("returns tokenset with custom modes, when custom modes are passed in", () => {
+        // Given a json string with name only
+        const nameOnlyTokenJSON = `
+        {
+            "name": "test",
+            "modes": ["mode1", "mode2"]
+        }
+        `;
+
+        // When converted to token set
+        const ts = TokenSet.fromJson(nameOnlyTokenJSON);
+
+        // Then a token set is created with the correct valueByNames
+        expect(ts).toBeDefined();
+        expect(ts?.name).toStrictEqual("test");
+        expect(ts?.type).toStrictEqual("number");
+        expect(ts?.level).toStrictEqual(1);
+        expect(ts?.tokens).toStrictEqual([]);
+        expect(ts?.modes).contain("mode1");
+        expect(ts?.modes).contain("mode2");
+    });
+
     test("returns correct tokenset, when json string with name and type is passed in", () => {
         // Given a json string with name and type
         const nameAndTypeTokenJSON = `

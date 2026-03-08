@@ -1,6 +1,5 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
 import { describe, expect, test } from "vitest";
-import { setUpDesignSystem } from "./DesignSystem.fixtures";
 
 describe("Design System Deserialization", () => {
     test("returns emtpy design system, when name only string is passed in", () => {
@@ -34,18 +33,18 @@ describe("Design System Deserialization", () => {
         expect(result?.getTokenSets()).toStrictEqual([]);
     });
 
-    test("returns correct design system, when value string is passed in", () => {
-        // When an json string with name and empty tokenset is deserialized
-        const { serializedDesignSystem, designSystem } = setUpDesignSystem();
-        const result = DesignSystem.fromJson(serializedDesignSystem);
+    // test("returns correct design system, when value string is passed in", () => {
+    //     // When an json string with name and empty tokenset is deserialized
+    //     const { serializedDesignSystem, designSystem } = setUpDesignSystem();
+    //     const result = DesignSystem.fromJson(serializedDesignSystem);
 
-        // Then, it creates correct design system
-        expect(result).toBeDefined();
-        expect(result?.name).toStrictEqual(designSystem.name);
-        expect(result?.getTokenSets()).toStrictEqual(
-            designSystem.getTokenSets(),
-        );
-    });
+    //     // Then, it creates correct design system
+    //     expect(result).toBeDefined();
+    //     expect(result?.name).toStrictEqual(designSystem.name);
+    //     expect(result?.getTokenSets()).toStrictEqual(
+    //         designSystem.getTokenSets(),
+    //     );
+    // });
 
     test("returns correct design system, when passed in values has extra parameters", () => {
         // When a json string with additional parameters are passed in

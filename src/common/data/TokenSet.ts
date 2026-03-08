@@ -238,7 +238,13 @@ export class TokenSet {
      */
     static fromJson(jsonString: string): TokenSet {
         const data = JSON.parse(jsonString);
-        return new TokenSet(data?.name, data?.type, data?.level, data?.tokens);
+        return new TokenSet(
+            data?.name,
+            data?.type,
+            data?.level,
+            data?.tokens,
+            data?.modes,
+        );
     }
 
     private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
