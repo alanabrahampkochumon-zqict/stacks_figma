@@ -8,69 +8,6 @@ import { expect, test } from "vitest";
 // import { TokenSet } from "../../../src/common/data/TokenSet";
 
 
-// describe("TokenSet Name Update", () => {
-//     test("updates name, when given an existing token", () => {
-//         // Given a non empty design system
-//         const { tokenSets } = setUpDesignSystem();
-//         const ds = new DesignSystem("ds", tokenSets);
-//         const newName = "updated name";
-
-//         // When the name of the first token is mutated
-//         ds.updateTokenSetName(tokenSets[0].name, newName);
-
-//         // Then, the name is updated
-//         expect(ds.getTokenSets()[0].name).toStrictEqual(newName);
-//     });
-
-//     test("throws error, when given a non-existing token", () => {
-//         // Given a non empty design system
-//         const { tokenSets } = setUpDesignSystem();
-//         const ds = new DesignSystem("ds", tokenSets);
-//         const newName = "updated name";
-
-//         // When updating with a non-existant name
-//         // Then, it throws an error
-//         expect(() => ds.updateTokenSetName("unknown name", newName)).toThrow();
-
-//         // The design system is intact
-//         expect(ds.getTokenSets()).toStrictEqual(tokenSets);
-//     });
-
-//     test("throws error, when the new name already exists", () => {
-//         // Given a non empty design system
-//         const { tokenSets } = setUpDesignSystem();
-//         const ds = new DesignSystem("ds", tokenSets);
-
-//         // When updating with a colliding name
-//         // Then, it throws an error
-//         expect(() =>
-//             ds.updateTokenSetName(tokenSets[0].name, tokenSets[1].name),
-//         ).toThrow();
-//     });
-// });
-
-// describe("Design System Get TokenSets", () => {
-//     test("returns tokenset, if the design system is not empty", () => {
-//         // Given a non empty design system
-//         const { designSystem, tokenSets } = setUpDesignSystem();
-
-//         // When the token sets are retrieved
-//         const ts = designSystem.getTokenSets();
-
-//         // Then, it contains all the tokensets
-//         expect(ts).toStrictEqual(tokenSets);
-//     });
-//     test("returns [], if the design system is empty", () => {
-//         // Given an empty design system
-//         const ds = new DesignSystem("ds");
-
-//         // When the token sets are retrieved
-//         const ts = ds.getTokenSets();
-
-//         // Then, it is an empty []
-//         expect(ts).toStrictEqual([]);
-//     });
-// });
 
 // describe("Design System Serialization", () => {
 //     test("returns serialized output, when provided with non-empty design system", () => {
