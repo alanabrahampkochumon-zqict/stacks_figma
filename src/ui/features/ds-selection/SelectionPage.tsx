@@ -1,11 +1,13 @@
+import ArrowRight from "@src/assets/icons/arrow-right.svg?react";
+import illustration from "@src/assets/illustration_start.png";
 import allDesignSystemPresets from "@src/common/presets/AllPresets";
-import ArrowRight from "../../../assets/icons/arrow-right.svg?react";
-import illustration from "../../../assets/illustration_start.png";
-import Button from "../../components/Button/Button";
-import DropdownField from "../../components/DropdownField/DropdownField";
+import Button from "@src/ui/components/Button/Button";
+import DropdownField from "@src/ui/components/DropdownField/DropdownField";
+import { useState } from "react";
 import styles from "./SelectionPage.module.css";
 
 function SelectionPage() {
+    const [inputText, setInputText] = useState("");
     return (
         <div className={styles.container}>
             <div className={styles["logo-container"]}>
@@ -14,6 +16,8 @@ function SelectionPage() {
             <div className={styles.content}>
                 <DropdownField
                     options={allDesignSystemPresets.map((ds) => ds.name)}
+                    inputText={inputText}
+                    setInputText={setInputText}
                 />
                 <div className={styles["button-container"]}>
                     <Button variant="primary">

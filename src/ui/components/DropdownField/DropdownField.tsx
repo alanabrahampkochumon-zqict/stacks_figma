@@ -2,16 +2,21 @@ import Check from "@src/assets/icons/check.svg?react";
 import ChevronDown from "@src/assets/icons/chevron-down.svg?react";
 import Close from "@src/assets/icons/close.svg?react";
 import { cn } from "@src/lib/utils";
-import { useState, type LiHTMLAttributes, type ReactNode } from "react";
+import { type LiHTMLAttributes, type ReactNode } from "react";
 import styles from "./DropdownField.module.css";
 
 export type DropdownFieldProps = {
+    inputText: string;
+    setInputText: (value: string) => void;
     options?: string[];
 };
 
-function DropdownField({ options }: DropdownFieldProps) {
-    const [selected, setSelected] = useState((options && options[0]) || "");
-    const [inputText, setInputText] = useState("");
+function DropdownField({
+    options,
+    inputText,
+    setInputText,
+}: DropdownFieldProps) {
+    // const [selected, setSelected] = useState((options && options[0]) || "");
     // TODO: Fix font weight and font family
     return (
         <div className={styles.base}>
@@ -24,7 +29,7 @@ function DropdownField({ options }: DropdownFieldProps) {
                         list="design-system"
                         name="design-system"
                         id="design-system"
-                        placeholder={selected}
+                        placeholder={(options && options[0]) || "Design System"}
                         className="label-medium"
                         value={inputText}
                         onChange={(event) => setInputText(event.target.value)}
@@ -48,9 +53,8 @@ function DropdownField({ options }: DropdownFieldProps) {
                     ?.map((option) => (
                         <OptionListItem
                             value={option}
-                            selected={selected === option}
+                            selected={inputText === option}
                             onClick={() => {
-                                setSelected(option);
                                 setInputText(option);
                             }}
                         >
