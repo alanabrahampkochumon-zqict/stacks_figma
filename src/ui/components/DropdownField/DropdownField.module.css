@@ -1,20 +1,7 @@
+/* Base */
+
 .base {
     width: 100%;
-}
-
-.select {
-    padding: 0.75rem;
-    width: 100%;
-    border: none;
-
-    &::picker-icon {
-        display: none;
-    }
-}
-
-.select::picker {
-    border: none;
-    outline: none;
 }
 
 .dropdown {
@@ -24,6 +11,8 @@
     max-height: 10rem;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.12);
 }
+
+/* Scrollbar */
 
 .dropdown::-webkit-scrollbar {
     position: absolute;
@@ -62,10 +51,40 @@
     padding-block: 0.5rem;
 }
 
+/* Search Input */
+.column {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.search-input {
+    background-color: var(--clr-surface-primary);
+    border: var(--border-hairline) solid var(--clr-border-primary);
+    padding: var(--spacing-md) var(--spacing-xl);
+    display: flex;
+    gap: 0.5rem;
+    border-radius: var(--rounding-xl);
+
+    transition: border var(--anim-ease-fast);
+}
+
+.search-input > input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+}
+
+.search-input:has(input:focus-within) {
+    border-color: var(--clr-border-accent);
+}
+
+/* Option menu & Option item */
+
 .list-item {
     padding: 1rem;
     background-color: var(--clr-surface-primary);
-    color: var(--clr-content-primary);
+    color: var(--clr-content-tertiary);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -75,6 +94,12 @@
     transition:
         color var(--anim-ease-superfast),
         background-color var(--anim-ease-superfast);
+}
+
+.list-item-selected {
+    background-color: var(--clr-surface-primary);
+    color: var(--clr-content-primary);
+    font-weight: 500;
 }
 
 .list-item:not(:last-child) {
@@ -92,6 +117,10 @@
     pointer-events: none;
 }
 
-.list-item:checked .list-item::after {
-    content: "hi";
+.check-icon {
+    color: var(--clr-content-accent);
+}
+
+.list-item:hover .check-icon {
+    color: var(--clr-content-inverse);
 }

@@ -1,6 +1,7 @@
+import Check from "@src/assets/icons/check.svg?react";
+import ChevronDown from "@src/assets/icons/chevron-down.svg?react";
+import { cn } from "@src/lib/utils";
 import { useState, type LiHTMLAttributes, type ReactNode } from "react";
-import Check from "../../../assets/icons/check.svg?react";
-import { cn } from "../../../lib/utils";
 import styles from "./DropdownField.module.css";
 
 export type DropdownFieldProps = {
@@ -9,9 +10,25 @@ export type DropdownFieldProps = {
 
 function DropdownField({ options }: DropdownFieldProps) {
     const [selected, setSelected] = useState((options && options[0]) || "");
+    const [inputText, setInputText] = useState("");
+
     return (
         <div className={styles.base}>
-            <input list="browsers" name="browser" id="browser" />
+            <div className={styles.column}>
+                <label htmlFor="design-system" className="label-medium">
+                    Design System
+                </label>
+                <div className={styles["search-input"]}>
+                    <input
+                        list="design-system"
+                        name="design-system"
+                        id="design-system"
+                        placeholder={selected}
+                        className="label-medium"
+                    />
+                    <ChevronDown />
+                </div>
+            </div>
 
             <ul className={styles.dropdown}>
                 {options?.map((option) => (
@@ -51,13 +68,14 @@ function OptionListItem({
                 styles["list-item"],
                 "label-medium",
                 disabled && styles["list-item-disabled"],
+                selected && styles["list-item-selected"],
             )}
             value={value}
             {...props}
+            aria-disabled={disabled}
         >
             {children}
-            {/* {selected && <ChevronDown />}  TODO: Replace with check icon */}
-            {selected && <Check />}
+            {selected && <Check className={styles["check-icon"]} />}
         </li>
     );
 }
