@@ -1,5 +1,6 @@
 import Check from "@src/assets/icons/check.svg?react";
 import ChevronDown from "@src/assets/icons/chevron-down.svg?react";
+import Close from "@src/assets/icons/close.svg?react";
 import { cn } from "@src/lib/utils";
 import { useState, type LiHTMLAttributes, type ReactNode } from "react";
 import styles from "./DropdownField.module.css";
@@ -28,23 +29,34 @@ function DropdownField({ options }: DropdownFieldProps) {
                         value={inputText}
                         onChange={(event) => setInputText(event.target.value)}
                     />
-                    <ChevronDown />
+                    {/* TODO: Use animation for conditional rendering */}
+                    {inputText.length ? (
+                        <Close onClick={() => setInputText("")} />
+                    ) : (
+                        <ChevronDown />
+                    )}
                 </div>
             </div>
 
             <ul className={styles.dropdown}>
-                {options?.map((option) => (
-                    <OptionListItem
-                        value={option}
-                        selected={selected === option}
-                        onClick={() => setSelected(option)}
-                    >
-                        {option}
-                    </OptionListItem>
-                ))}
-                {/* <OptionListItem value="Option 1">Opt 1</OptionListItem>
-                <OptionListItem value="Option 1">Opt 1</OptionListItem>
-                <OptionListItem value="Option 1">Opt 1</OptionListItem> */}
+                {options
+                    ?.filter((option) =>
+                        option
+                            .toLowerCase()
+                            .startsWith(inputText.toLowerCase()),
+                    )
+                    ?.map((option) => (
+                        <OptionListItem
+                            value={option}
+                            selected={selected === option}
+                            onClick={() => {
+                                setSelected(option);
+                                setInputText(option);
+                            }}
+                        >
+                            {option}
+                        </OptionListItem>
+                    ))}
             </ul>
         </div>
     );
