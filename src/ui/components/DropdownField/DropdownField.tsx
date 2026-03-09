@@ -14,16 +14,9 @@ function DropdownField({ options }: DropdownFieldProps) {
             <input list="browsers" name="browser" id="browser" />
 
             <ul className={styles.dropdown}>
-                <OptionListItem value="apple" disabled>
-                    Apple
-                </OptionListItem>
-                <OptionListItem value="apple" selected>
-                    Banana
-                </OptionListItem>
-                <OptionListItem value="apple">Cherry</OptionListItem>
-                <OptionListItem value="apple">Cherry</OptionListItem>
-                <OptionListItem value="apple">Cherry</OptionListItem>
-                <OptionListItem value="apple">Cherry</OptionListItem>
+                {options?.map((option) => (
+                    <OptionListItem value={option}>{option}</OptionListItem>
+                ))}
             </ul>
         </div>
     );

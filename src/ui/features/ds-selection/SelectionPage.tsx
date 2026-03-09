@@ -1,3 +1,4 @@
+import allDesignSystemPresets from "@src/common/presets/AllPresets";
 import ArrowRight from "../../../assets/icons/arrow-right.svg?react";
 import illustration from "../../../assets/illustration_start.png";
 import Button from "../../components/Button/Button";
@@ -11,7 +12,9 @@ function SelectionPage() {
                 <img className={styles.logo} src={illustration} alt="Logo" />
             </div>
             <div className={styles.content}>
-                <DropdownField />
+                <DropdownField
+                    options={allDesignSystemPresets.map((ds) => ds.name)}
+                />
                 <div className={styles["button-container"]}>
                     <Button variant="primary">
                         <span>Get started</span>
