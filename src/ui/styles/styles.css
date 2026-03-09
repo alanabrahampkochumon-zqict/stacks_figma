@@ -354,6 +354,7 @@
 
     --min-interactive-size: var(--_p-44);
 
+    --anim-ease-superfast: 80ms ease-out;
     --anim-ease-fast: 180ms ease-in-out;
     --anim-ease-normal: 250ms ease-out;
 }

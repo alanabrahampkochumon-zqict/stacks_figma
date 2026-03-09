@@ -8,15 +8,24 @@ export type DropdownFieldProps = {
 };
 
 function DropdownField({ options }: DropdownFieldProps) {
-    const [selected, setSelected] = useState("apple");
+    const [selected, setSelected] = useState((options && options[0]) || "");
     return (
         <div className={styles.base}>
             <input list="browsers" name="browser" id="browser" />
 
             <ul className={styles.dropdown}>
                 {options?.map((option) => (
-                    <OptionListItem value={option}>{option}</OptionListItem>
+                    <OptionListItem
+                        value={option}
+                        selected={selected === option}
+                        onClick={() => setSelected(option)}
+                    >
+                        {option}
+                    </OptionListItem>
                 ))}
+                {/* <OptionListItem value="Option 1">Opt 1</OptionListItem>
+                <OptionListItem value="Option 1">Opt 1</OptionListItem>
+                <OptionListItem value="Option 1">Opt 1</OptionListItem> */}
             </ul>
         </div>
     );
