@@ -84,10 +84,12 @@ export function setUpDesignSystem() {
     const dsName = "Falcon";
 
     const designSystem = new DesignSystem(dsName, tokenSets);
-    const serializedDesignSystem = JSON.stringify(designSystem).replace(
-        "_tokenSet",
-        "tokenSet",
-    );
+    const serializedDesignSystem = JSON.stringify({
+        name: designSystem.name,
+        tokenSets: designSystem.getTokenSets().map((it) => JSON.stringify(it)),
+    })
+        .replace(/\\"modes\\":{}/g, `\\"modes\\":[\\"default\\"]`)
+        .replace("_tokenSet", "tokenSet");
 
     return {
         dsName,
