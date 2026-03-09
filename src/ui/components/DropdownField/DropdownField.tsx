@@ -11,7 +11,7 @@ export type DropdownFieldProps = {
 function DropdownField({ options }: DropdownFieldProps) {
     const [selected, setSelected] = useState((options && options[0]) || "");
     const [inputText, setInputText] = useState("");
-
+    // TODO: Fix font weight and font family
     return (
         <div className={styles.base}>
             <div className={styles.column}>
@@ -25,6 +25,8 @@ function DropdownField({ options }: DropdownFieldProps) {
                         id="design-system"
                         placeholder={selected}
                         className="label-medium"
+                        value={inputText}
+                        onChange={(event) => setInputText(event.target.value)}
                     />
                     <ChevronDown />
                 </div>
