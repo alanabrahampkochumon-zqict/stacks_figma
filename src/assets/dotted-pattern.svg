@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="808"
+    height="610"
+    viewBox="0 0 808 610"
+    fill="none">
+    <rect width="800"
+        height="600"
+        transform="translate(4)"
+        fill="white" />
+    <rect width="800"
+        height="600"
+        transform="translate(4)"
+        fill="url(#pattern0_2245_38191)" />
+    <pattern id="pattern0_2245_38191"
+        patternUnits="userSpaceOnUse"
+        patternTransform="matrix(7.2 0 0 7.2 0 0)"
+        preserveAspectRatio="none"
+        viewBox="0 0 24 24"
+        width="1"
+        height="1">
+        <g
+            id="pattern0_2245_38191_inner">
+            <circle cx="2"
+                cy="2"
+                r="2"
+                fill="#E4E7E9" />
+        </g>
+    </pattern>
+</svg>

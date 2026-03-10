@@ -1,0 +1,24 @@
+.base {
+    display: flex;
+    padding: var(--spacing-sm);
+    align-items: center;
+    gap: var(--spacing-none);
+    border-radius: var(--rounding-lg);
+    background: var(--clr-surface-secondary);
+    box-shadow: var(--shadow-inner-sm);
+}
+
+.option-item {
+    padding: var(--spacing-md) var(--spacing-lg);
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--rounding-md);
+    color: var(--clr-content-tertiary);
+    cursor: pointer;
+}
+
+.option-item-selected {
+    border-radius: var(--sizing-border-radius-md, 8px);
+    background: var(--colors-surface-primary, #fff);
+    box-shadow: var(--shadow-sm);
+}
