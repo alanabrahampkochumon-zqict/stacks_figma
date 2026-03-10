@@ -1,2 +1,13 @@
 .base {
 }
+
+.dropdown {
+    color: var(--clr-content-primary);
+    background-color: var(--clr-surface-transparent);
+    border: none;
+    outline: none;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0;
+    align-items: center;
+}
