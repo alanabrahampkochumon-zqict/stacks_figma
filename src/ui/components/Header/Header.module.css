@@ -1,0 +1,9 @@
+.base {
+    width: 100%;
+    display: inline-flex;
+    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xs)
+        var(--spacing-xl);
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
