@@ -1,10 +1,8 @@
-.base {
-    width: 100%;
+.root {
     position: relative;
 }
 
 .trigger {
-    border: 1px solid green;
 }
 
 /* Option Dropdown */
@@ -41,7 +39,7 @@
     /* FIXME: Scrollbar background being transparent */
 }
 
-.base:has(.trigger:focus-within) > .dropdown {
+.root:has(.trigger:focus-within) > .dropdown {
     visibility: visible;
     translate: 0 0;
     opacity: 1;

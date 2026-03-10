@@ -17,7 +17,7 @@ function DropdownField({
     // const [selected, setSelected] = useState((options && options[0]) || "");
     // TODO: Fix font weight and font family
     return (
-        <OptionList.Root>
+        <OptionList.Root className={styles.base}>
             <div className={styles.column}>
                 <label htmlFor="design-system" className="label-medium">
                     Design System

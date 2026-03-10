@@ -1,7 +1,6 @@
 import ChevronDown from "@src/assets/icons/chevron-down.svg?react";
-import { cn } from "@src/lib/utils";
 import type { HTMLAttributes } from "react";
-import styles from "./Dropdown.module.css";
+import { OptionList } from "../OptionList/OptionList";
 
 type DropdownProps = {
     options: string[];
@@ -17,12 +16,17 @@ function Dropdown({
     ...props
 }: DropdownProps) {
     return (
-        <div className={cn(styles.base, className)} {...props}>
-            <div>
-                {currentOption}
+        <OptionList.Root style={{ border: "1px solid red" }}>
+            <OptionList.Trigger>
+                Typogprahy
                 <ChevronDown />
-            </div>
-        </div>
+            </OptionList.Trigger>
+            <OptionList.Options
+                options={options}
+                onSelectionChange={onOptionChange}
+                selection={currentOption}
+            />
+        </OptionList.Root>
     );
 }
 

@@ -5,18 +5,26 @@ import styles from "./OptionList.module.css";
 
 type RootProps = {
     children: ReactNode;
-};
+} & HTMLAttributes<HTMLDivElement>;
 
-function Root({ children }: RootProps) {
-    return <div className={styles.base}>{children}</div>;
+function Root({ children, className, ...props }: RootProps) {
+    return (
+        <div className={cn(styles.root, className)} {...props}>
+            {children}
+        </div>
+    );
 }
 
 type TriggerProps = {
     children: ReactNode;
-};
+} & HTMLAttributes<HTMLDivElement>;
 
-function Trigger({ children }: TriggerProps) {
-    return <div className={styles.trigger}>{children}</div>;
+function Trigger({ children, ...props }: TriggerProps) {
+    return (
+        <div className={styles.trigger} {...props}>
+            {children}
+        </div>
+    );
 }
 
 type OptionsProps = {
