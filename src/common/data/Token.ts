@@ -62,6 +62,7 @@ export type Token = {
     name: string;
     valueByMode: Record<string, any>;
     type: ExtendedTokenTypes;
+    entityType: "token";
 };
 
 export type TokenComparator = (a: Token, b: Token) => number;

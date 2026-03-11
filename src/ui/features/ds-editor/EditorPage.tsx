@@ -1,5 +1,6 @@
 import DottedPattern from "@src/assets/dotted-pattern.svg?react";
 import Breadcrumb from "@src/ui/components/Breadcrumps/Breadcrumb";
+import ComponentTree from "@src/ui/components/ComponentTree/ComponentTree";
 import Header from "@src/ui/components/Header/Header";
 import styles from "./EditorPage.module.css";
 styles;
@@ -21,6 +22,7 @@ function EditorPage() {
                 paths={samplePaths}
                 onPathClick={(path) => console.log(path)}
             />
+            <ComponentTree />
         </div>
     );
 }
