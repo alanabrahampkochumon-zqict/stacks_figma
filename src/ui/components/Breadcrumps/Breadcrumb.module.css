@@ -8,8 +8,19 @@
 }
 
 .path {
-    color: var(--clr-content-placeholder);
+    color: var(--clr-content-tertiary);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
+
+    transition: color var(--anim-ease-superfast);
+}
+
+.path:hover {
+    color: var(--clr-content-placeholder);
+}
+
+.path-active {
+    color: var(--clr-content-secondary);
+    text-decoration: underline;
 }

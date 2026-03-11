@@ -24,7 +24,11 @@ function Breadcrumb({
                 {paths.map((path, index) => (
                     <li
                         onClick={() => onPathClick(path)}
-                        className={cn("label-small", styles.path)}
+                        className={cn(
+                            "label-small",
+                            styles.path,
+                            index === paths.length - 1 && styles["path-active"],
+                        )}
                     >
                         {path}
                         {index < paths.length - 1 && (
