@@ -24,7 +24,10 @@ function Header() {
                 selected={selected}
                 onSelectChange={setSelected}
             />
-            <IconButton className={styles["menu-button"]}>
+            <IconButton
+                className={styles["menu-button"]}
+                aria-description="menu"
+            >
                 <MenuIcon />
             </IconButton>
         </header>

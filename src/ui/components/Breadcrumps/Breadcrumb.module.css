@@ -1,0 +1,15 @@
+.nav {
+}
+
+.base {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-none);
+}
+
+.path {
+    color: var(--clr-content-placeholder);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}

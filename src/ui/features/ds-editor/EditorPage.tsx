@@ -1,9 +1,11 @@
 import DottedPattern from "@src/assets/dotted-pattern.svg?react";
+import Breadcrumb from "@src/ui/components/Breadcrumps/Breadcrumb";
 import Header from "@src/ui/components/Header/Header";
 import styles from "./EditorPage.module.css";
 styles;
 
 function EditorPage() {
+    const samplePaths = ["primitives", "typography"];
     return (
         <div>
             <DottedPattern
@@ -15,6 +17,10 @@ function EditorPage() {
                 }}
             />
             <Header />
+            <Breadcrumb
+                paths={samplePaths}
+                onPathClick={(path) => console.log(path)}
+            />
         </div>
     );
 }
