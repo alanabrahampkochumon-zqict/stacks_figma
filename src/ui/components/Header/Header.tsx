@@ -1,5 +1,7 @@
+import MenuIcon from "@src/assets/icons/menu.svg?react";
 import { useState } from "react";
 import Dropdown from "../Dropdown/Dropdown";
+import IconButton from "../IconButton/IconButton";
 import OptionSelector from "../OptionSelector/OptionSelector";
 import styles from "./Header.module.css";
 
@@ -22,7 +24,9 @@ function Header() {
                 selected={selected}
                 onSelectChange={setSelected}
             />
-            <p>TODO:ICONBUTTON</p>
+            <IconButton className={styles["menu-button"]}>
+                <MenuIcon />
+            </IconButton>
         </header>
     );
 }

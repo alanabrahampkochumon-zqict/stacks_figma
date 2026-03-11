@@ -21,7 +21,7 @@ function Dropdown({
         <OptionList.Root {...props}>
             <OptionList.Trigger>
                 <button className={cn(styles.dropdown, "heading-h6")}>
-                    Typogprahy
+                    {currentOption}
                     <ChevronDown />
                 </button>
             </OptionList.Trigger>

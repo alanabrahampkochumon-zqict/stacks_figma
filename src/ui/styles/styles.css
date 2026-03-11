@@ -381,6 +381,32 @@ select,
     display: none;
 }
 
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    transition: all var(--anim-ease-superfast);
+}
+
+button:focus-visible,
+button:focus-within,
+button:focus {
+    outline: none;
+}
+
+button:hover {
+    filter: brightness(1.1);
+}
+
+button:active {
+    filter: brightness(0.97);
+}
+
+button:focus-visible {
+    outline: 1px solid var(--clr-border-accent);
+}
+
 .base {
     display: inline-flex;
     padding: var(--spacing-xl);

@@ -1,9 +1,18 @@
 .base {
     width: 100%;
-    display: inline-flex;
+    display: grid;
     padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xs)
         var(--spacing-xl);
     gap: 1rem;
     justify-content: space-between;
     align-items: center;
+    grid-template-columns: repeat(3, 1fr);
 }
+
+.menu-button {
+    justify-self: end;
+}
+/* 
+.base > * {
+    border: 2px solid lime;
+} */

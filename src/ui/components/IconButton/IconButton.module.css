@@ -1,0 +1,18 @@
+.base {
+    width: 44px;
+    height: 44px;
+    padding: var(--spacing-sm, 6px);
+    aspect-ratio: 1/1;
+    border-radius: var(--rounding-lg);
+    background: var(--clr-surface-primary);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.base:hover {
+    translate: 0 -1px;
+}
+
+.base:active {
+    translate: 0 1px;
+}

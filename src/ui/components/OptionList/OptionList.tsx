@@ -34,6 +34,7 @@ type OptionsProps = {
     filter?: (option: string) => boolean;
 } & HTMLAttributes<HTMLUListElement>;
 
+// TODO: Scrolling one line option name
 function Options({
     options,
     selection,

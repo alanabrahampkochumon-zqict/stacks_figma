@@ -1,11 +1,12 @@
 .base {
-    display: flex;
+    display: inline-flex;
     padding: var(--spacing-sm);
     align-items: center;
     gap: var(--spacing-none);
     border-radius: var(--rounding-lg);
     background: var(--clr-surface-secondary);
     box-shadow: var(--shadow-inner-sm);
+    justify-self: center;
 }
 
 .option-item {
