@@ -1,0 +1,11 @@
+.base {
+}
+
+.group-icon {
+    transform: rotate(0deg);
+    transition: transform var(--anim-ease-fast);
+}
+
+.group-icon-expanded {
+    transform: rotate(90deg);
+}

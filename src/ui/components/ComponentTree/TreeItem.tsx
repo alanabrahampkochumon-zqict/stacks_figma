@@ -1,5 +1,5 @@
 import ChevronRight from "@src/assets/icons/chevron-right.svg?react";
-import type { Group } from "@src/common/data/Group";
+import { Group } from "@src/common/data/Group";
 import type { Token } from "@src/common/data/Token";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes } from "react";
@@ -12,7 +12,7 @@ type TreeItemProps = {
 function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
     let content = <></>;
     console.log(item);
-    if (item.entityType === "group") {
+    if (item instanceof Group) {
         console.log(item);
         content = (
             <>
@@ -34,7 +34,7 @@ function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
         }
 
     return (
-        <li {...props} className={cn(styles.base, className)}>
+        <li {...props} className={cn(styles.base, "label-small", className)}>
             {content}
         </li>
     );
