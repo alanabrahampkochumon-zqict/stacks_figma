@@ -419,9 +419,6 @@
     --shadow-sm: 0 2px 5px 0 rgba(0, 0, 0, 0.06);
 }
 
-:root {
-}
-
 *,
 *::after,
 *::before {
@@ -490,14 +487,6 @@ ol {
     font-family: var(--ff-primary);
     font-size: var(--fs-md);
     font-weight: var(--fw-normal);
-    line-height: var(--lh-md); /* 100% */
-    letter-spacing: var(--ls-normal);
-}
-
-.label-medium-em {
-    font-family: var(--ff-primary);
-    font-size: var(--fs-md);
-    font-weight: var(--fw-semibold);
     line-height: var(--lh-md); /* 100% */
     letter-spacing: var(--ls-normal);
 }

@@ -65,4 +65,17 @@ export type Token = {
     entityType: "token";
 };
 
+export function createToken(
+    name: string,
+    valueByMode: Record<string, any>,
+    type: ExtendedTokenTypes,
+): Token {
+    return {
+        name,
+        valueByMode,
+        type,
+        entityType: "token",
+    };
+}
+
 export type TokenComparator = (a: Token, b: Token) => number;

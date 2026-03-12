@@ -1,4 +1,14 @@
 .base {
+    display: flex;
+    padding: var(--spacing-md) var(--spacing-xs) var(--spacing-md)
+        var(--spacing-2xs);
+    align-items: center;
+    gap: var(--spacing-sm);
+    align-self: stretch;
+    border: 2px solid yellow;
+    border-radius: var(--rounding-none);
+    border-bottom: var(--border-hairline) solid var(--clor-border-primary);
+    color: var(--clr-content-tertiary);
 }
 
 .group-icon {

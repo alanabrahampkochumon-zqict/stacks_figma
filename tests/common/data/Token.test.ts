@@ -1,12 +1,13 @@
-import { describe, expect, test } from "vitest";
-import type { ExtendedTokenTypes } from "../../../src/common/data/Token";
+import type { ExtendedTokenTypes } from "@src/common/data/Token";
 import {
+    createToken,
     extendedTokens,
     isValidExtendedToken,
     isValidLevel,
     validateToken,
     validLevels,
-} from "../../../src/common/data/Token";
+} from "@src/common/data/Token";
+import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
     test.each(extendedTokens)("return true, if token is %s", (token) => {
@@ -40,6 +41,21 @@ describe("TokenLevel Validator Tests", () => {
             expect(isValidLevel(level)).toStrictEqual(false);
         },
     );
+
+    test("return valid token with token type, when using createToken", () => {
+        // When a token is created with createToken
+        const tokenName = "token";
+        const tokenValue = { default: "#fff", dark: "#000" };
+        const tokenType = "color";
+
+        const token = createToken(tokenName, tokenValue, tokenType);
+
+        // Then, a valid token is returned
+        expect(token.name).toStrictEqual(tokenName);
+        expect(token.valueByMode).toStrictEqual(tokenValue);
+        expect(token.type).toStrictEqual(tokenType);
+        expect(token.entityType).toStrictEqual("token");
+    });
 });
 
 describe("Token Validator Tests", () => {

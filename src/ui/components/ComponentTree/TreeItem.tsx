@@ -11,9 +11,7 @@ type TreeItemProps = {
 
 function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
     let content = <></>;
-    console.log(item);
     if (item instanceof Group) {
-        console.log(item);
         content = (
             <>
                 <ChevronRight
