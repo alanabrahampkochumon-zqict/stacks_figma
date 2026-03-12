@@ -70,6 +70,7 @@ export function createToken(
     valueByMode: Record<string, any>,
     type: ExtendedTokenTypes,
 ): Token {
+    //TODO: Add token validation
     return {
         name,
         valueByMode,
