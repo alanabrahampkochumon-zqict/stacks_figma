@@ -1,4 +1,9 @@
-import type { ExtendedTokenTypes, Levels, Token } from "@src/common/data/Token";
+import {
+    createToken,
+    type ExtendedTokenTypes,
+    type Levels,
+    type Token,
+} from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import setUpTokens from "./TokenSet.fixtures";
@@ -124,11 +129,7 @@ describe("TokenSet Intialization Tests", () => {
         const tokenType = "number";
         const level = 1;
         const tokens: Token[] = [
-            {
-                type: tokenType,
-                valueByMode: { default: "#ffffff" },
-                name: "color-50",
-            },
+            createToken("color-50", { default: "#ffffff" }, tokenType),
         ];
         // Then, the initializer throws an error
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();

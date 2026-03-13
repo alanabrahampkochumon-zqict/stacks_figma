@@ -1,12 +1,11 @@
-import type { Token } from "@src/common/data/Token";
+import { createToken, type Token } from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-
 describe("TokenSet Find Tests", () => {
     const tokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-150" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 10 }, "sizing"),
+        createToken("size-150", { default: 15 }, "sizing"),
     ];
     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 

@@ -1,4 +1,4 @@
-import type { Token } from "@src/common/data/Token";
+import { createToken, type Token } from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 
@@ -9,16 +9,16 @@ describe("TokenSet Sorting Tests", () => {
         const tokenType = "number";
         const level = 1;
         const tokens: Token[] = [
-            { type: tokenType, valueByMode: { default: 10 }, name: "size-100" },
-            { type: tokenType, valueByMode: { default: 15 }, name: "size-150" },
-            { type: tokenType, valueByMode: { default: 0 }, name: "size-0" },
-            { type: tokenType, valueByMode: { default: 5 }, name: "size-50" },
+            createToken("size-100", { default: 10 }, tokenType),
+            createToken("size-150", { default: 15 }, tokenType),
+            createToken("size-0", { default: 0 }, tokenType),
+            createToken("size-50", { default: 5 }, tokenType),
         ];
         const sortedTokens: Token[] = [
-            { type: tokenType, valueByMode: { default: 0 }, name: "size-0" },
-            { type: tokenType, valueByMode: { default: 5 }, name: "size-50" },
-            { type: tokenType, valueByMode: { default: 10 }, name: "size-100" },
-            { type: tokenType, valueByMode: { default: 15 }, name: "size-150" },
+            createToken("size-0", { default: 0 }, tokenType),
+            createToken("size-50", { default: 5 }, tokenType),
+            createToken("size-100", { default: 10 }, tokenType),
+            createToken("size-150", { default: 15 }, tokenType),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
@@ -35,16 +35,16 @@ describe("TokenSet Sorting Tests", () => {
         const tokenType = "number";
         const level = 1;
         const tokens: Token[] = [
-            { type: tokenType, valueByMode: { default: 55 }, name: "size-100" },
-            { type: tokenType, valueByMode: { default: 35 }, name: "size-150" },
-            { type: tokenType, valueByMode: { default: 100 }, name: "size-0" },
-            { type: tokenType, valueByMode: { default: 50 }, name: "size-50" },
+            createToken("size-100", { default: 55 }, tokenType),
+            createToken("size-150", { default: 35 }, tokenType),
+            createToken("size-0", { default: 100 }, tokenType),
+            createToken("size-50", { default: 50 }, tokenType),
         ];
         const sortedTokens: Token[] = [
-            { type: tokenType, valueByMode: { default: 35 }, name: "size-150" },
-            { type: tokenType, valueByMode: { default: 50 }, name: "size-50" },
-            { type: tokenType, valueByMode: { default: 55 }, name: "size-100" },
-            { type: tokenType, valueByMode: { default: 100 }, name: "size-0" },
+            createToken("size-150", { default: 35 }, tokenType),
+            createToken("size-50", { default: 50 }, tokenType),
+            createToken("size-100", { default: 55 }, tokenType),
+            createToken("size-0", { default: 100 }, tokenType),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 

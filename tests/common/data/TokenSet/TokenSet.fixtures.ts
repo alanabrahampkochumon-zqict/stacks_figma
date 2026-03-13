@@ -1,4 +1,4 @@
-import type { Token } from "@src/common/data/Token";
+import { createToken, type Token } from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { generateToken } from "../utils/Generators";
 
@@ -39,63 +39,63 @@ export default function setUpTokens() {
 
 export function setUpTokenSet() {
     const originalTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-150" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 10 }, "sizing"),
+        createToken("size-150", { default: 15 }, "sizing"),
     ];
 
     const cleanMergingTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 30 }, name: "size-300" },
-        { type: "sizing", valueByMode: { default: 250 }, name: "size-250" },
-        { type: "sizing", valueByMode: { default: 120 }, name: "size-200" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-300", { default: 30 }, "sizing"),
+        createToken("size-250", { default: 250 }, "sizing"),
+        createToken("size-200", { default: 120 }, "sizing"),
     ];
     const cleanMergingResultTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-150" },
-        { type: "sizing", valueByMode: { default: 30 }, name: "size-300" },
-        { type: "sizing", valueByMode: { default: 250 }, name: "size-250" },
-        { type: "sizing", valueByMode: { default: 120 }, name: "size-200" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 10 }, "sizing"),
+        createToken("size-150", { default: 15 }, "sizing"),
+        createToken("size-300", { default: 30 }, "sizing"),
+        createToken("size-250", { default: 250 }, "sizing"),
+        createToken("size-200", { default: 120 }, "sizing"),
     ];
     const sortedMergingResultTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-150" },
-        { type: "sizing", valueByMode: { default: 120 }, name: "size-200" },
-        { type: "sizing", valueByMode: { default: 250 }, name: "size-250" },
-        { type: "sizing", valueByMode: { default: 30 }, name: "size-300" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 10 }, "sizing"),
+        createToken("size-150", { default: 15 }, "sizing"),
+        createToken("size-200", { default: 120 }, "sizing"),
+        createToken("size-250", { default: 250 }, "sizing"),
+        createToken("size-300", { default: 30 }, "sizing"),
     ];
     const valueByNameSortedMergingResultTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-150" },
-        { type: "sizing", valueByMode: { default: 30 }, name: "size-300" },
-        { type: "sizing", valueByMode: { default: 120 }, name: "size-200" },
-        { type: "sizing", valueByMode: { default: 250 }, name: "size-250" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 10 }, "sizing"),
+        createToken("size-150", { default: 15 }, "sizing"),
+        createToken("size-300", { default: 30 }, "sizing"),
+        createToken("size-200", { default: 120 }, "sizing"),
+        createToken("size-250", { default: 250 }, "sizing"),
     ];
     const conflictMergingTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 25 }, name: "size-150" },
-        { type: "sizing", valueByMode: { default: 35 }, name: "size-200" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 15 }, "sizing"),
+        createToken("size-150", { default: 25 }, "sizing"),
+        createToken("size-200", { default: 35 }, "sizing"),
     ];
     const conflictMergingReplaceResultTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 25 }, name: "size-150" },
-        { type: "sizing", valueByMode: { default: 35 }, name: "size-200" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 15 }, "sizing"),
+        createToken("size-150", { default: 25 }, "sizing"),
+        createToken("size-200", { default: 35 }, "sizing"),
     ];
     const conflictMergingIgnoreResultTokens: Token[] = [
-        { type: "sizing", valueByMode: { default: 5 }, name: "size-50" },
-        { type: "sizing", valueByMode: { default: 10 }, name: "size-100" },
-        { type: "sizing", valueByMode: { default: 15 }, name: "size-150" },
-        { type: "sizing", valueByMode: { default: 35 }, name: "size-200" },
+        createToken("size-50", { default: 5 }, "sizing"),
+        createToken("size-100", { default: 10 }, "sizing"),
+        createToken("size-150", { default: 15 }, "sizing"),
+        createToken("size-200", { default: 35 }, "sizing"),
     ];
     const differentTokens: Token[] = [
-        { type: "spacing", valueByMode: { default: 25 }, name: "spacing-250" },
-        { type: "spacing", valueByMode: { default: 35 }, name: "spacing-350" },
-        { type: "spacing", valueByMode: { default: 45 }, name: "spacing-450" },
+        createToken("spacing-250", { default: 25 }, "spacing"),
+        createToken("spacing-350", { default: 35 }, "spacing"),
+        createToken("spacing-450", { default: 45 }, "spacing"),
     ];
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);

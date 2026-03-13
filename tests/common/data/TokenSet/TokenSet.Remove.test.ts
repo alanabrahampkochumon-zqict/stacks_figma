@@ -1,4 +1,4 @@
-import type { Token } from "@src/common/data/Token";
+import { createToken, type Token } from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 
@@ -9,9 +9,9 @@ describe("TokenSet Remove Tests", () => {
         const tokenType = "number";
         const level = 1;
         const tokens: Token[] = [
-            { type: tokenType, valueByMode: { default: 5 }, name: "size-50" },
-            { type: tokenType, valueByMode: { default: 10 }, name: "size-100" },
-            { type: tokenType, valueByMode: { default: 15 }, name: "size-150" },
+            createToken("size-50", { default: 5 }, tokenType),
+            createToken("size-100", { default: 10 }, tokenType),
+            createToken("size-150", { default: 15 }, tokenType),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
@@ -31,18 +31,14 @@ describe("TokenSet Remove Tests", () => {
         const tokenType = "number";
         const level = 1;
         const tokens: Token[] = [
-            { type: tokenType, valueByMode: { default: 5 }, name: "size-50" },
-            { type: tokenType, valueByMode: { default: 10 }, name: "size-100" },
-            { type: tokenType, valueByMode: { default: 15 }, name: "size-150" },
+            createToken("size-50", { default: 5 }, tokenType),
+            createToken("size-100", { default: 10 }, tokenType),
+            createToken("size-150", { default: 15 }, tokenType),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token in the set is removed
-        tokenSet.removeToken({
-            type: tokenType,
-            valueByMode: { default: 4 },
-            name: "size-25",
-        });
+        tokenSet.removeToken(createToken("size-25", { default: 4 }, tokenType));
 
         // Then, the object does not contain the removed token, but has the rest of the tokens
         expect(tokenSet.tokens).toHaveLength(3);

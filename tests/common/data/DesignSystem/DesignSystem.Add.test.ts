@@ -1,6 +1,6 @@
 import { InsertConflictPolicy } from "@src/common/data/Common";
 import { DesignSystem } from "@src/common/data/DesignSystem";
-import type { Token } from "@src/common/data/Token";
+import { createToken, type Token } from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { setUpDesignSystem } from "./DesignSystem.fixtures";
@@ -56,11 +56,11 @@ describe("Design System Add TokenSet", () => {
     test("throws error, when tokenset with different levels are merged", () => {
         // Given a non-empty design system
         const { dsName, tokenSets } = setUpDesignSystem();
-        const token: Token = {
-            name: "invalid",
-            valueByMode: { default: "#ffffff" },
-            type: "color",
-        };
+        const token: Token = createToken(
+            "invalid",
+            { default: "#ffffff" },
+            "color",
+        );
         const newSet = new TokenSet(
             tokenSets[0].name,
             "color",
