@@ -1,5 +1,5 @@
 import ChevronRight from "@src/assets/icons/chevron-right.svg?react";
-import { Group } from "@src/common/data/Group";
+import type { Group } from "@src/common/data/Group";
 import type { Token } from "@src/common/data/Token";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes } from "react";
@@ -11,7 +11,7 @@ type TreeItemProps = {
 
 function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
     let content = <></>;
-    if (item instanceof Group) {
+    if (item.entityType === "group") {
         content = (
             <>
                 <ChevronRight

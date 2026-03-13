@@ -65,6 +65,13 @@ export type Token = {
     entityType: "token";
 };
 
+/**
+ * Creates a token with the given parameters.
+ * @param name Name of the token.
+ * @param valueByMode key-value pair of mode and value eg, {default: "#fff", dark: "#222"}.
+ * @param type type of token. See `TokenType` and `ExtendedTokenType`.
+ * @returns a token object.
+ */
 export function createToken(
     name: string,
     valueByMode: Record<string, any>,
