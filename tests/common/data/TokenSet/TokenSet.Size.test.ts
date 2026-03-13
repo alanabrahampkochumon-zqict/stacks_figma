@@ -10,7 +10,7 @@ describe("TokenSet Size Tests", () => {
     ];
     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 
-    test("return correct size, when set is non-empty", () => {
+    test("returns correct size, when set is non-empty", () => {
         // Given a token set
 
         // When the length is queried

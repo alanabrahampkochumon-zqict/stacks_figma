@@ -77,7 +77,10 @@ export function createToken(
     valueByMode: Record<string, any>,
     type: ExtendedTokenTypes,
 ): Token {
-    //TODO: Add token validation
+    if (!name || !name.length) throw new Error("Tokens must have a name");
+    if (!valueByMode || !Object.values(valueByMode).length)
+        throw new Error("Token must have atleast one value");
+    if (!isValidExtendedToken(type)) throw new Error("Invalid token");
     return {
         name,
         valueByMode,

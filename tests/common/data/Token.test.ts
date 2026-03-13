@@ -10,14 +10,14 @@ import {
 import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
-    test.each(extendedTokens)("return true, if token is %s", (token) => {
+    test.each(extendedTokens)("returns true, if token is %s", (token) => {
         // Given a valid extended token
         // Then, validation returns true
         expect(isValidExtendedToken(token)).toStrictEqual(true);
     });
 
     test.each(["token-1234", "invalid", "true"])(
-        "return false, if token is %s (invalid)",
+        "returns false, if token is %s (invalid)",
         (token) => {
             // Given an invalid extended token
             // Then, validation returns true
@@ -27,22 +27,24 @@ describe("TokenType Validator Tests", () => {
 });
 
 describe("TokenLevel Validator Tests", () => {
-    test.each(validLevels)("return true, if level is %s", (level) => {
+    test.each(validLevels)("returns true, if level is %s", (level) => {
         // Given a valid level
         // Then, validation returns true
         expect(isValidLevel(level)).toStrictEqual(true);
     });
 
     test.each([99, 0, 523, -999, 999, 100, 10])(
-        "return false, if token is %s (invalid)",
+        "returns false, if token is %s (invalid)",
         (level) => {
             // Given an invalid level
             // Then, validation returns true
             expect(isValidLevel(level)).toStrictEqual(false);
         },
     );
+});
 
-    test("return valid token with token type, when using createToken", () => {
+describe("Token Initialization Tests", () => {
+    test("returns valid token with token type, when using createToken", () => {
         // When a token is created with createToken
         const tokenName = "token";
         const tokenValue = { default: "#fff", dark: "#000" };
@@ -55,6 +57,36 @@ describe("TokenLevel Validator Tests", () => {
         expect(token.valueByMode).toStrictEqual(tokenValue);
         expect(token.type).toStrictEqual(tokenType);
         expect(token.entityType).toStrictEqual("token");
+    });
+
+    test("throws error, when passed in empty name", () => {
+        // When a token is created with empty value
+        const tokenName = "";
+        const tokenValue = { default: "#fff", dark: "#000" };
+        const tokenType = "color";
+
+        // Then, an error is thrown
+        expect(() => createToken(tokenName, tokenValue, tokenType)).toThrow();
+    });
+
+    test("throws error, when passed in empty value", () => {
+        // When a token is created with empty value
+        const tokenName = "token name";
+        const tokenValue = {};
+        const tokenType = "color";
+
+        // Then, an error is thrown
+        expect(() => createToken(tokenName, tokenValue, tokenType)).toThrow();
+    });
+
+    test("throws error, when passed in invalid type", () => {
+        // When a token is created with invalid type
+        const tokenName = "token name";
+        const tokenValue = { default: "#fff", dark: "#000" };
+        const tokenType = "invalid token type" as ExtendedTokenTypes;
+
+        // Then, an error is thrown
+        expect(() => createToken(tokenName, tokenValue, tokenType)).toThrow();
     });
 });
 
