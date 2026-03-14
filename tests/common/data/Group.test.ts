@@ -2,29 +2,24 @@ import { createGroup } from "@src/common/data/Group";
 import { describe, expect, test } from "vitest";
 
 describe("Group Initialization", () => {
-    test("creates group, when a created with name only", () => {
-        // When, a group is created with name
-        const name = "Group";
-        const group = createGroup(name);
+    test("creates group, without any parameter", () => {
+        // When, a group is created without parameters
+        const group = createGroup();
 
-        // Then, a group object is returned with name and default value for expanded
-        expect(group.name).toStrictEqual(name);
+        // Then, a group object is returned with expanded as false and an entityType of group
         expect(group.expanded).toBeFalsy();
+        expect(group.entityType).toStrictEqual("group");
     });
-    test("creates group, when created with name and expanded", () => {
-        // When, a group is created with name and expanded to true
-        const name = "Group";
-        const group = createGroup(name, true);
 
-        // Then, a group object is returned with name and expanded as true
-        expect(group.name).toStrictEqual(name);
-        expect(group.expanded).toBeTruthy();
-    });
-    test("throws error, when created with empty string", () => {
-        // When, a group is created with empty name
-        const name = "";
+    test.each([true, false])(
+        "creates group, with expanded as %s",
+        (expanded: boolean) => {
+            // When, a group is created expanded value
+            const group = createGroup(expanded);
 
-        // Then, it throws an error
-        expect(() => createGroup(name)).toThrow();
-    });
+            // Then, a group object with correct expanded value is returned
+            expect(group.expanded).toBe(expanded);
+            expect(group.entityType).toStrictEqual("group");
+        },
+    );
 });

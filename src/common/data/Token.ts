@@ -59,30 +59,25 @@ export function isValidLevel(level: number): boolean {
 }
 
 export type Token = {
-    name: string;
     valueByMode: Record<string, any>;
     type: ExtendedTokenTypes;
     entityType: "token";
 };
 
 /**
- * Creates a token with the given parameters.
- * @param name Name of the token.
+ * Creates a @see Token with the given parameters.
  * @param valueByMode key-value pair of mode and value eg, {default: "#fff", dark: "#222"}.
  * @param type type of token. See `TokenType` and `ExtendedTokenType`.
  * @returns a token object.
  */
 export function createToken(
-    name: string,
     valueByMode: Record<string, any>,
     type: ExtendedTokenTypes,
 ): Token {
-    if (!name || !name.length) throw new Error("Tokens must have a name");
     if (!valueByMode || !Object.values(valueByMode).length)
         throw new Error("Token must have atleast one value");
     if (!isValidExtendedToken(type)) throw new Error("Invalid token");
     return {
-        name,
         valueByMode,
         type,
         entityType: "token",

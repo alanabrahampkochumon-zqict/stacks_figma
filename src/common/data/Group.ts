@@ -1,16 +1,26 @@
+/**
+ * Type encapsulating a Group or Folder for structuring tokens.
+ * <p>Note: It is not recommended to create groups as standalone objects.
+ * Use {@link TokenNode} and {@link createTokenNode}.</p>
+ *
+ * @export
+ * @typedef {Object} Group
+ * @property {boolean} expanded - Whether the group is expanded or collapsed.
+ * @property {"group"} entityType - Internal discriminator used to identify this as a group.
+ * @readonly
+ */
 export type Group = {
-    name: string;
     expanded: boolean;
     entityType: "group";
 };
 
 /**
- * Creates a group from the given parameters.
- * @param name of the group
- * @param expanded whether the group is expanded or not
- * @returns a `Group` object.
+ * Creates a {@link Group} from the passed in parameters.
+ *
+ * @export
+ * @param {boolean} [expanded=false] - Initial expansion state.
+ * @returns {Group} A new Group object
  */
-export function createGroup(name: string, expanded: boolean = false): Group {
-    if (!name.length) throw new Error("Name must not be empty");
-    return { name, expanded, entityType: "group" };
+export function createGroup(expanded: boolean = false): Group {
+    return { expanded, entityType: "group" };
 }
