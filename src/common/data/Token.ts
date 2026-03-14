@@ -58,6 +58,18 @@ export function isValidLevel(level: number): boolean {
     return (validLevels as readonly number[]).includes(level);
 }
 
+/**
+ * Type encapsulating a Design System Token.
+ * <p>Note: It is not recommended to create tokens as standalone objects.
+ * Use {@link TokenNode} and {@link createTokenNode}.</p>
+ *
+ * @export
+ * @typedef {Object} Token
+ * @property {Record<string, any>} valueByMode - A key value pair of modes and value associated with that mode. Example: {dark: "#111", light: "eee"}
+ * @property {ExtendedTokenTypes} type - Type of token. For details see {@link ExtendedTokenTypes}
+ * @property {"token"} entityType - Internal discriminator used to identify this as a token.
+ * @readonly
+ */
 export type Token = {
     valueByMode: Record<string, any>;
     type: ExtendedTokenTypes;
