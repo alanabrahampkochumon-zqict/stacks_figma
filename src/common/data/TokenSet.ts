@@ -12,6 +12,7 @@ import {
     validateToken,
     validLevels,
 } from "./Token";
+import type { TokenNode } from "./TokenNode";
 
 type TokenSetUpdateOptions = {
     updatePolicy?: UpdatePolicy;
@@ -32,33 +33,42 @@ type TokenSetMergeOptions = {
 };
 
 /**
- * Class representing a single token. It contains the name, type, level (1-3) and the token collection.
+ * Class representing a single token.
+ * It contains the name, type, level (1-3) and the token collection.
  * NOTE: All the token's type must match the parent token type.
+ */
+/**
+ * Class representation of a set of tokens.
+ *
+ * @property name The name of the token set.
+ *                Must be unique.
+ * @property type The type of tokens included in the token set.
+ *                Must match the type of tokens added and should be a type of @see ExtendedTokenTypes
+ * @property level The level of the token set.
+ *                 Can only be from 1 - 4 inclusive.
+ * @property tokens List of tokens ( @see TokenNode ) that makes up tokenset.
  */
 export class TokenSet {
     name: string;
     type: ExtendedTokenTypes;
     level: Levels;
-    tokens: Token[];
-    modes: Set<string>;
+    tokens: TokenNode[];
 
     /**
      * Creates a token set with passed in parameters
-     * @param name name of the token set. Must be unique and not empty.
+     * @param name The name of the token set.<p>Note: Must be unique and not empty. </p>
      * @param type type of tokens, like color or animation. Check `ExtendedTokenTypes` for more details.
-     * Default: "number"
-     * @param level Level of the token set. 1, 2, 3, or 4. Default: 1.
-     * @param modes that current token set supports.
-     *              If not passed in, then values from tokens[] are taken as mode.
-     *              If both are empty, then "default" mode is added.
-     * @param tokens Tokens to be added to token set initially. All the tokens passed in must match the passed in type and level.
+     *             Default: "number"
+     * @param level Level of the token set. 1, 2, 3, or 4.
+     *              Default: 1.
+     * @param tokens Tokens to be added to token set initially.
+     *               <p>Note: All the tokens passed in must match the passed-in type and level.</p>
      */
     constructor(
         name: string,
         type: ExtendedTokenTypes = "number",
         level: Levels = 1,
-        tokens: Token[] = [],
-        modes: string[] = [],
+        tokens: TokenNode[] = [],
     ) {
         if (!name) throw Error(`Name must be passed in for a tokenset`);
         if (!isValidLevel(level))
@@ -69,18 +79,16 @@ export class TokenSet {
             );
 
         this._validateToken(tokens, type);
-        this.modes = new Set();
-        modes.forEach((mode) => this.addMode(mode));
         this.name = name;
         this.type = type;
         this.level = level;
         this.tokens = tokens;
-        this._addModeForToken(tokens);
 
         if (modes.length < 1 && tokens.length < 1) this.modes.add("default");
     }
 
     /**
+     * TODO: Refactor to add mode directly to the tokens.
      * Adds a mode to the token set.
      * @param mode mode to be added
      * @returns `boolean`, whether or not the mode was added.
