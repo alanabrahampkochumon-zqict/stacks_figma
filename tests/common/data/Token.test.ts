@@ -46,47 +46,33 @@ describe("TokenLevel Validator Tests", () => {
 describe("Token Initialization Tests", () => {
     test("returns valid token with token type, when using createToken", () => {
         // When a token is created with createToken
-        const tokenName = "token";
         const tokenValue = { default: "#fff", dark: "#000" };
         const tokenType = "color";
 
-        const token = createToken(tokenName, tokenValue, tokenType);
+        const token = createToken(tokenValue, tokenType);
 
         // Then, a valid token is returned
-        expect(token.name).toStrictEqual(tokenName);
         expect(token.valueByMode).toStrictEqual(tokenValue);
         expect(token.type).toStrictEqual(tokenType);
         expect(token.entityType).toStrictEqual("token");
     });
 
-    test("throws error, when passed in empty name", () => {
+    test("throws error, when passed in empty token value", () => {
         // When a token is created with empty value
-        const tokenName = "";
-        const tokenValue = { default: "#fff", dark: "#000" };
-        const tokenType = "color";
-
-        // Then, an error is thrown
-        expect(() => createToken(tokenName, tokenValue, tokenType)).toThrow();
-    });
-
-    test("throws error, when passed in empty value", () => {
-        // When a token is created with empty value
-        const tokenName = "token name";
         const tokenValue = {};
         const tokenType = "color";
 
         // Then, an error is thrown
-        expect(() => createToken(tokenName, tokenValue, tokenType)).toThrow();
+        expect(() => createToken(tokenValue, tokenType)).toThrow();
     });
 
     test("throws error, when passed in invalid type", () => {
         // When a token is created with invalid type
-        const tokenName = "token name";
         const tokenValue = { default: "#fff", dark: "#000" };
         const tokenType = "invalid token type" as ExtendedTokenTypes;
 
         // Then, an error is thrown
-        expect(() => createToken(tokenName, tokenValue, tokenType)).toThrow();
+        expect(() => createToken(tokenValue, tokenType)).toThrow();
     });
 });
 
