@@ -55,7 +55,7 @@ export function generateGroup(): Group {
  * @export
  * @param {(string | undefined)} [name=undefined] The name of the generated token node.
  *                                                Generates a random name by default.
- * @param {("group" | "token")} [type="token"] The type of token node generate.
+ * @param {("group" | "token")} [type="token"] The type of token node to generate.
  *                                             Default "token".
  * @param {ExtendedTokenTypes} [nodeType="number"] The type of node. Only applicable for "token".
  *                                                 @see ExtendedTokenTypes for details.
@@ -65,6 +65,7 @@ export function generateGroup(): Group {
  *                                                    Generates a parent with 50% RNG by default.
  * @param {boolean} [reference=false] A flag, whether to have a reference.
  *                                    <p>Note: Setting a flag will make value undefined.</p>
+ * @param {(string[] | undefined)} [modes=undefined] The modes to use for generating @see Token. Not applicable for @see Group.
  * @returns {TokenNode} The generated token node.
  */
 export function generateTokenNode(
@@ -74,6 +75,7 @@ export function generateTokenNode(
     uid: string | undefined = undefined,
     parentId: string | undefined = undefined,
     reference: boolean = false,
+    modes: string[] | undefined = undefined,
 ): TokenNode {
     return {
         name: name || faker.science.chemicalElement.name,
@@ -81,7 +83,7 @@ export function generateTokenNode(
         value: !reference
             ? type === "group"
                 ? generateGroup()
-                : generateToken(nodeType)
+                : generateToken(nodeType, modes)
             : undefined,
         parentId: parentId || Math.random() > 0.5 ? v4() : undefined,
         reference: reference ? v4() : undefined,
