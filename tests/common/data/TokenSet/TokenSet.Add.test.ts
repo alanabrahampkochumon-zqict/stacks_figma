@@ -1,5 +1,6 @@
 import { InsertConflictPolicy } from "@src/common/data/Common";
-import { createToken, type Token } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
+import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 
@@ -13,39 +14,18 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: Token[] = [];
+        const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const validToken: Token = createToken("50", { default: 10 }, type);
-        tokenSet.addToken(validToken);
-
-        // Then, the token is added to the set
-        expect(tokenSet.tokens[0]).toStrictEqual(validToken);
-    });
-
-    test("modes gets added, when a valid token is passed in", () => {
-        // Given a empty token set
-        const name = "TokenSet";
-        const type = "number";
-        const level = 1;
-        const tokens: Token[] = [];
-        const tokenSet = new TokenSet(name, type, level, tokens);
-
-        // When a token is added
-        const validToken: Token = createToken(
+        const validToken = createTokenNode(
             "50",
-            { default: 10, another: 25 },
-            type,
+            createToken({ default: 10 }, type),
         );
         tokenSet.addToken(validToken);
 
         // Then, the token is added to the set
         expect(tokenSet.tokens[0]).toStrictEqual(validToken);
-
-        // And, modes are added from the added token
-        expect(tokenSet.modes).contain("default");
-        expect(tokenSet.modes).contain("another");
     });
 
     test("token gets upserted, when an existing token is passed in with insert policy of replace", () => {
@@ -53,9 +33,14 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: Token[] = [createToken("50", { default: 55 }, type)];
+        const tokens = [
+            createTokenNode("50", createToken({ default: 55 }, type)),
+        ];
         const tokenSet = new TokenSet(name, type, level, tokens);
-        const validToken: Token = createToken("50", { default: 10 }, type);
+        const validToken = createTokenNode(
+            "50",
+            createToken({ default: 10 }, type),
+        );
 
         // When a token is added with same name and policy set to update
         tokenSet.addToken(validToken, {
@@ -71,19 +56,34 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const initialToken: Token[] = [
-            createToken("size-100", { default: 10 }, tokenType),
-            createToken("size-150", { default: 15 }, tokenType),
-            createToken("size-0", { default: 0 }, tokenType),
+        const initialToken = [
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+            ),
+            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
         ];
 
-        const sortedTokens: Token[] = [
-            createToken("size-0", { default: 0 }, tokenType),
-            createToken("size-50", { default: 5 }, tokenType),
-            createToken("size-100", { default: 10 }, tokenType),
-            createToken("size-150", { default: 15 }, tokenType),
+        const sortedTokens = [
+            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
+            createTokenNode("size-50", createToken({ default: 5 }, tokenType)),
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+            ),
         ];
-        const token: Token = createToken("size-50", { default: 5 }, tokenType);
+        const token = createTokenNode(
+            "size-50",
+            createToken({ default: 5 }, tokenType),
+        );
 
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
@@ -98,18 +98,33 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const initialToken: Token[] = [
-            createToken("size-100", { default: 10 }, tokenType),
-            createToken("size-150", { default: 15 }, tokenType),
-            createToken("size-0", { default: 0 }, tokenType),
+        const initialToken = [
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+            ),
+            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
         ];
-        const sortedTokens: Token[] = [
-            createToken("size-0", { default: 0 }, tokenType),
-            createToken("size-50", { default: 5 }, tokenType),
-            createToken("size-100", { default: 10 }, tokenType),
-            createToken("size-150", { default: 15 }, tokenType),
+        const sortedTokens = [
+            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
+            createTokenNode("size-50", createToken({ default: 5 }, tokenType)),
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+            ),
         ];
-        const token: Token = createToken("size-50", { default: 5 }, tokenType);
+        const token = createTokenNode(
+            "size-50",
+            createToken({ default: 5 }, tokenType),
+        );
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
         // When a token is added with sorting on
@@ -128,14 +143,13 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: Token[] = [];
+        const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const invalidToken: Token = createToken(
+        const invalidToken = createTokenNode(
             "50",
-            { default: 10 },
-            "string",
+            createToken({ default: 10 }, "string"),
         );
         // Then, an error is thrown
         expect(() => tokenSet.addToken(invalidToken)).toThrow();

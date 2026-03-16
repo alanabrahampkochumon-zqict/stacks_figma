@@ -98,13 +98,14 @@ export class TokenSet {
     }
 
     /**
-     * Inserts token into the token set. Conflicts can be resolved by using `InsertConflictPolicy`.
-     * @param token token to be inserted into the tokenset.
-     * @param options optional options for insertion policy(IGNORE, REPLACE, MERGE not supported). Defaults to ignore.
-     *                and for sorting tokens, after insertions.
+     * Insert the token into the token set.
+     * Conflicts can be resolved by using @see InsertConflictPolicy .
+     * @param token The token node to insert. @see TokenNode for details.
+     * @param options Optional configuration for insertion policy (IGNORE, REPLACE, MERGE not supported).
+     *                Defaults to ignore and for sorting tokens after insertions.
      */
     addToken(
-        token: Token,
+        token: TokenNode,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
@@ -112,11 +113,10 @@ export class TokenSet {
         }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
+        // TODO: Update to use "id"
         if (this.getTokenIndex(token.name) === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.updateToken(token.name, token);
-
-        this._addModeForToken([token]); // Add the modes if they don't exist yet
 
         if (sortToken) {
             this.sort(compareFn);
