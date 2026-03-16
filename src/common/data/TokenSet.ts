@@ -48,7 +48,6 @@ type TokenSetMergeOptions = {
  *                 Can only be from 1 to 4 inclusive.
  * @property tokens List of tokens ( @see TokenNode ) that makes up tokenset.
  */
-
 export class TokenSet {
     name: string;
     type: ExtendedTokenTypes;
@@ -213,6 +212,8 @@ export class TokenSet {
         if (sortToken) this.sort(compareFn);
     }
 
+    //TODO: Add name uniqueness validator and tests to update and insert
+
     /**
      * Converts the current tokenset into a JSON string
      */
@@ -244,15 +245,16 @@ export class TokenSet {
     }
 
     /**
-     * Validates a list of tokens that they are of the same type.
+     * Validate a list of tokens are of the same type.
      * And that each token has a valid value.
      *
      * @param tokens The tokens to validate.
-     * @param tokenType The token type of use for validation.
+     * @param tokenType The token type to use for validation.
      */
     private _validateToken(tokens: TokenNode[], tokenType: ExtendedTokenTypes) {
         const validationResult = tokens.every(
             ({ value: tokenValue }) =>
+                tokenValue &&
                 tokenValue.entityType === "token" &&
                 tokenValue.type === tokenType &&
                 validateToken(tokenValue.valueByMode, tokenValue.type),
