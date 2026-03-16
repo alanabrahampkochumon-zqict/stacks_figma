@@ -228,7 +228,6 @@ export class TokenSet {
             type: this.type,
             level: this.level,
             tokens: this.tokens,
-            modes: [...this.modes],
         });
     }
 
@@ -240,13 +239,7 @@ export class TokenSet {
      */
     static fromJson(jsonString: string): TokenSet {
         const data = JSON.parse(jsonString);
-        return new TokenSet(
-            data?.name,
-            data?.type,
-            data?.level,
-            data?.tokens,
-            data?.modes,
-        );
+        return new TokenSet(data?.name, data?.type, data?.level, data?.tokens);
     }
 
     /**

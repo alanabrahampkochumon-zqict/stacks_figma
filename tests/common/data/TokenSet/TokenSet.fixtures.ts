@@ -57,59 +57,174 @@ export default function setUpTokens() {
 
 export function setUpTokenSet() {
     const originalTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        // createToken((".*"),\s*(\{.*\}),/s*(".*))
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 10 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 15 }, "sizing"),
+            "3",
+        ),
     ];
 
     const cleanMergingTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-300", createToken({ default: 30 }, "sizing")),
-        createTokenNode("size-250", createToken({ default: 250 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 120 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-300",
+            createToken({ default: 30 }, "sizing"),
+            "5",
+        ),
+        createTokenNode(
+            "size-250",
+            createToken({ default: 250 }, "sizing"),
+            "6",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 120 }, "sizing"),
+            "7",
+        ),
     ];
     const cleanMergingResultTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
-        createTokenNode("size-300", createToken({ default: 30 }, "sizing")),
-        createTokenNode("size-250", createToken({ default: 250 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 120 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 10 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 15 }, "sizing"),
+            "3",
+        ),
+        createTokenNode(
+            "size-300",
+            createToken({ default: 30 }, "sizing"),
+            "5",
+        ),
+        createTokenNode(
+            "size-250",
+            createToken({ default: 250 }, "sizing"),
+            "6",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 120 }, "sizing"),
+            "7",
+        ),
     ];
     const sortedMergingResultTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 120 }, "sizing")),
-        createTokenNode("size-250", createToken({ default: 250 }, "sizing")),
-        createTokenNode("size-300", createToken({ default: 30 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 10 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 15 }, "sizing"),
+            "3",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 120 }, "sizing"),
+            "7",
+        ),
+        createTokenNode(
+            "size-250",
+            createToken({ default: 250 }, "sizing"),
+            "6",
+        ),
+        createTokenNode(
+            "size-300",
+            createToken({ default: 30 }, "sizing"),
+            "5",
+        ),
     ];
     const valueByNameSortedMergingResultTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
-        createTokenNode("size-300", createToken({ default: 30 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 120 }, "sizing")),
-        createTokenNode("size-250", createToken({ default: 250 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 10 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 15 }, "sizing"),
+            "3",
+        ),
+        createTokenNode(
+            "size-300",
+            createToken({ default: 30 }, "sizing"),
+            "5",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 120 }, "sizing"),
+            "7",
+        ),
+        createTokenNode(
+            "size-250",
+            createToken({ default: 250 }, "sizing"),
+            "6",
+        ),
     ];
     const conflictMergingTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 15 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 25 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 35 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 15 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 25 }, "sizing"),
+            "3",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 35 }, "sizing"),
+            "4",
+        ),
     ];
     const conflictMergingReplaceResultTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 15 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 25 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 35 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 15 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 25 }, "sizing"),
+            "3",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 35 }, "sizing"),
+            "4",
+        ),
     ];
     const conflictMergingIgnoreResultTokens: TokenNode[] = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
-        createTokenNode("size-200", createToken({ default: 35 }, "sizing")),
+        createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 10 }, "sizing"),
+            "2",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 15 }, "sizing"),
+            "3",
+        ),
+        createTokenNode(
+            "size-200",
+            createToken({ default: 35 }, "sizing"),
+            "4",
+        ),
     ];
     const differentTokenType = "spacing";
     const differentTokens: TokenNode[] = [
