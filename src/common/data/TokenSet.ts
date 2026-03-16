@@ -34,8 +34,8 @@ type TokenSetMergeOptions = {
 
 /**
  * Class representing a single token.
- * It contains the name, type, level (1-3) and the token collection.
- * NOTE: All the token's type must match the parent token type.
+ * It contains the name, type, level (1-3), and the token collection.
+ * NOTE: All the token's types must match the parent token type.
  */
 /**
  * Class representation of a set of tokens.
@@ -45,9 +45,10 @@ type TokenSetMergeOptions = {
  * @property type The type of tokens included in the token set.
  *                Must match the type of tokens added and should be a type of @see ExtendedTokenTypes
  * @property level The level of the token set.
- *                 Can only be from 1 - 4 inclusive.
+ *                 Can only be from 1 to 4 inclusive.
  * @property tokens List of tokens ( @see TokenNode ) that makes up tokenset.
  */
+
 export class TokenSet {
     name: string;
     type: ExtendedTokenTypes;
@@ -55,7 +56,7 @@ export class TokenSet {
     tokens: TokenNode[];
 
     /**
-     * Creates a token set with passed in parameters
+     * Creates a token set with passed-in parameters
      * @param name The name of the token set.<p>Note: Must be unique and not empty. </p>
      * @param type type of tokens, like color or animation. Check `ExtendedTokenTypes` for more details.
      *             Default: "number"
@@ -86,18 +87,6 @@ export class TokenSet {
     }
 
     /**
-     * TODO: Refactor to add mode directly to the tokens.
-     * Adds a mode to the token set.
-     * @param mode mode to be added
-     * @returns `boolean`, whether or not the mode was added.
-     */
-    addMode(mode: string): boolean {
-        if (this.modes.has(mode)) return false;
-        this.modes.add(mode);
-        return true;
-    }
-
-    /**
      * Insert the token into the token set.
      * Conflicts can be resolved by using @see InsertConflictPolicy .
      * @param token The token node to insert. @see TokenNode for details.
@@ -114,9 +103,9 @@ export class TokenSet {
     ) {
         this._validateToken([token], this.type);
         // TODO: Update to use "id"
-        if (this.getTokenIndex(token.name) === -1) this.tokens.push(token);
+        if (this.getTokenIndex(token.uid) === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
-            this.updateToken(token.name, token);
+            this.updateToken(token.uid, token);
 
         if (sortToken) {
             this.sort(compareFn);
@@ -150,13 +139,14 @@ export class TokenSet {
 
     /**
      * Updates the given token having `tokenName` with the newly provided token.
-     * @param tokenName Name of the token to be updated.
+     * @param tokenId The ID of the token to update.
      * @param newToken Token to be updated with.
-     * @param options Optional parameters like UpdatePolicy, whether to sort after insertion, soritng function can be provided.
+     * @param options Optional parameters like UpdatePolicy, whether to sort after insertion.
+     *                Sorting function can be provided.
      */
     updateToken(
-        tokenName: string,
-        newToken: Token,
+        tokenId: string,
+        newToken: TokenNode,
         {
             updatePolicy = UpdatePolicy.INSERT,
             sortToken = false,
@@ -164,8 +154,8 @@ export class TokenSet {
         }: TokenSetUpdateOptions = {},
     ) {
         // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
-        this._validateToken([newToken], this.type ?? newToken.type);
-        let tokenIndex = this.getTokenIndex(tokenName);
+        this._validateToken([newToken], this.type);
+        let tokenIndex = this.getTokenIndex(tokenId);
         if (tokenIndex !== -1) this.tokens[tokenIndex] = newToken;
         else
             switch (updatePolicy) {
