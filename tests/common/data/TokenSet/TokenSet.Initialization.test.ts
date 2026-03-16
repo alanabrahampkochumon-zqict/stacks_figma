@@ -19,7 +19,6 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.level).toStrictEqual(1);
         expect(tokenSet.tokens.length).toStrictEqual(0);
         expect(tokenSet.type).toStrictEqual("number");
-        expect(tokenSet.modes).contain("default");
     });
 
     test("creates tokenset, when initialized with passed in values", () => {

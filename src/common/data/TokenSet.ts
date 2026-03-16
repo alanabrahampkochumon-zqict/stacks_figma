@@ -83,8 +83,6 @@ export class TokenSet {
         this.type = type;
         this.level = level;
         this.tokens = tokens;
-
-        if (modes.length < 1 && tokens.length < 1) this.modes.add("default");
     }
 
     /**
@@ -255,16 +253,19 @@ export class TokenSet {
         );
     }
 
-    private _validateToken(tokens: Token[], tokenType: ExtendedTokenTypes) {
-        if (tokens.length && tokenType !== tokens[0].type)
-            throw new Error(
-                `TokenSet type mismatched. Expected ${tokenType}, where children were passed in as ${tokens[0].type}.`,
-            );
-
+    /**
+     * Validates a list of tokens that they are of the same type.
+     * And that each token has a valid value.
+     *
+     * @param tokens The tokens to validate.
+     * @param tokenType The token type of use for validation.
+     */
+    private _validateToken(tokens: TokenNode[], tokenType: ExtendedTokenTypes) {
         const validationResult = tokens.every(
-            (token) =>
-                token.type === tokenType &&
-                validateToken(token.valueByMode, token.type),
+            ({ value: tokenValue }) =>
+                tokenValue.entityType === "token" &&
+                tokenValue.type === tokenType &&
+                validateToken(tokenValue.valueByMode, tokenValue.type),
         );
         if (!validationResult)
             throw new Error(
@@ -273,11 +274,11 @@ export class TokenSet {
     }
 
     // Adds any mode that is missing from token
-    private _addModeForToken(tokens: Token[]) {
-        tokens.forEach((token) =>
-            Object.keys(token.valueByMode).forEach((mode) =>
-                this.modes.add(mode),
-            ),
-        );
-    }
+    // private _addModeForToken(tokens: Token[]) {
+    //     tokens.forEach((token) =>
+    //         Object.keys(token.valueByMode).forEach((mode) =>
+    //             this.modes.add(mode),
+    //         ),
+    //     );
+    // }
 }

@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import type { Group } from "@src/common/data/Group";
 import type { ExtendedTokenTypes, Token } from "@src/common/data/Token";
 
 function _generateTokenByType(
@@ -39,3 +40,11 @@ export function generateToken(
         ),
     };
 }
+
+export function generateGroup(): Group {
+    return {
+        expanded: Math.random() > 0.5,
+    } as Group;
+}
+
+export function generateTokenNode(type: "group" | "token" = "token") {}
