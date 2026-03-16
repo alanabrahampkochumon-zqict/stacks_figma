@@ -40,6 +40,7 @@ describe("TokenSet Add Tests", () => {
         const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
+            tokens[0].uid,
         );
 
         // When a token is added with same name and policy set to update

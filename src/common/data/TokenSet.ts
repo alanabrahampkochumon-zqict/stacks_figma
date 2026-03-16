@@ -137,7 +137,8 @@ export class TokenSet {
     }
 
     /**
-     * Updates the given token having `tokenName` with the newly provided token.
+     * Update the token with the passed-in tokenId.
+     * If the tokennode doesn't exist, then it is inserted as per {@link UpdatePolicy}
      * @param tokenId The ID of the token to update.
      * @param newToken Token to be updated with.
      * @param options Optional parameters like UpdatePolicy, whether to sort after insertion.
@@ -152,8 +153,8 @@ export class TokenSet {
             compareFn = undefined,
         }: TokenSetUpdateOptions = {},
     ) {
-        // Validate against the current `tokenType` and if it doesn't exist, they use the new token's token type
         this._validateToken([newToken], this.type);
+
         let tokenIndex = this.getTokenIndex(tokenId);
         if (tokenIndex !== -1) this.tokens[tokenIndex] = newToken;
         else
@@ -168,8 +169,12 @@ export class TokenSet {
     }
 
     /**
-     * Sorts the current token set.
-     * @param compareFn (Token, Token) => Number function, that determines the sort order. Defaults to alphanumeric sorting.
+     * Sorts the current token set with the comparator.
+     *
+     * @param {TokenComparator} [compareFn=(a, b) =>
+     *             a.name.localeCompare(b.name, undefined, {
+     *                 numeric: true, sensitivity: "base",
+     *             })] The function that determines the sort order. Defaults to alphanumeric sorting.
      */
     sort(
         compareFn: TokenComparator = (a, b) =>

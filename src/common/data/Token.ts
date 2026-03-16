@@ -1,3 +1,5 @@
+import type { TokenNode } from "./TokenNode";
+
 export const basicTokens = ["number", "string", "boolean", "color"] as const;
 export type BasicTokenTypes = (typeof basicTokens)[number];
 export const extendedTokens = [
@@ -66,7 +68,7 @@ export function isValidLevel(level: number): boolean {
  * @export
  * @typedef {Object} Token
  * @property {Record<string, any>} valueByMode - A key value pair of modes and value associated with that mode. Example: {dark: "#111", light: "eee"}
- * @property {ExtendedTokenTypes} type - Type of token. For details see {@link ExtendedTokenTypes}
+ * @property {ExtendedTokenTypes} type - Type of token. For details, see {@link ExtendedTokenTypes}
  * @property {"token"} entityType - Internal discriminator used to identify this as a token.
  * @readonly
  */
@@ -77,10 +79,10 @@ export type Token = {
 };
 
 /**
- * Creates a @see Token with the given parameters.
- * @param valueByMode key-value pair of mode and value eg, {default: "#fff", dark: "#222"}.
- * @param type type of token. See `TokenType` and `ExtendedTokenType`.
- * @returns a token object.
+ * Creates a {@link Token} with the given parameters.
+ * @param valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
+ * @param type The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
+ * @returns A token object.
  */
 export function createToken(
     valueByMode: Record<string, any>,
@@ -96,4 +98,10 @@ export function createToken(
     };
 }
 
-export type TokenComparator = (a: Token, b: Token) => number;
+/**
+ * Type for {@link TokenNode} comparator.
+ *
+ * @export
+ * @typedef {TokenComparator}
+ */
+export type TokenComparator = (a: TokenNode, b: TokenNode) => number;

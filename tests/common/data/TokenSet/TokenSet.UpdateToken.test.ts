@@ -1,5 +1,5 @@
 import { UpdatePolicy } from "@src/common/data/Common";
-import { createToken, type Token } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
@@ -15,7 +15,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to insert
-        const validToken= createTokenNode(
+        const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
         );
@@ -36,7 +36,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to ignore
-        const validToken= createTokenNode(
+        const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
         );
@@ -65,7 +65,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to insert
-        const validToken= createTokenNode(
+        const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
         );
@@ -93,7 +93,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to ignore
-        const validToken= createTokenNode(
+        const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
         );
@@ -108,11 +108,7 @@ describe("TokenSet Update Tests", () => {
     test("token gets added, when the token set is non-empty and policy is set to insert", () => {
         // Given a non-empty token set
         const { numberTokenSet } = setUpTokens();
-        const validToken= createToken(
-            "new token",
-            { default: 10 },
-            "number",
-        );
+        const validToken = createToken("new token", { default: 10 }, "number");
 
         // and the valid token is not in the set
         expect(numberTokenSet.tokens).not.toContain(validToken);
@@ -154,7 +150,7 @@ describe("TokenSet Update Tests", () => {
                 createToken({ default: 15 }, tokenType),
             ),
         ];
-        const token= createTokenNode(
+        const token = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
         );
@@ -194,7 +190,7 @@ describe("TokenSet Update Tests", () => {
                 createToken({ default: 150 }, tokenType),
             ),
         ];
-        const token= createTokenNode(
+        const token = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
         );
@@ -220,11 +216,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated(upserted)
-        const differentToken= createToken(
-            "50",
-            { default: 10 },
-            "spacing",
-        );
+        const differentToken = createToken("50", { default: 10 }, "spacing");
         // Then, an error is thrown
         expect(() =>
             tokenSet.updateToken(differentToken.name, differentToken),
@@ -250,11 +242,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token is updated(upserted)
-        const differentToken= createToken(
-            "50",
-            { default: 10 },
-            "spacing",
-        );
+        const differentToken = createToken("50", { default: 10 }, "spacing");
         // Then, an error is thrown
         expect(() =>
             tokenSet.updateToken(differentToken.name, differentToken),
@@ -278,7 +266,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token is updated(upserted) with invalid valueByNames
-        const updatedToken= createToken(
+        const updatedToken = createToken(
             "size-65",
             { default: "test" },
             tokenType,
@@ -293,11 +281,11 @@ describe("TokenSet Update Tests", () => {
         const tokenType = "number";
         const level = 1;
         const initialToken: TokenNode[] = [];
-        const token1= createTokenNode(
+        const token1 = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
         );
-        const token2= createTokenNode(
+        const token2 = createTokenNode(
             "size-0",
             createToken({ default: 0 }, tokenType),
         );
@@ -343,7 +331,7 @@ describe("TokenSet Update Tests", () => {
                 createToken({ default: 100 }, tokenType),
             ),
         ];
-        const token= createTokenNode(
+        const token = createTokenNode(
             "size-50",
             createToken({ default: 0 }, tokenType),
         );
