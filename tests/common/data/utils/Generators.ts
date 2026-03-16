@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker";
 import type { Group } from "@src/common/data/Group";
 import type { ExtendedTokenTypes, Token } from "@src/common/data/Token";
+import type { TokenNode } from "@src/common/data/TokenNode";
+import { v4 } from "uuid";
 
 function _generateTokenByType(
     type: ExtendedTokenTypes,
@@ -29,22 +31,59 @@ function _generateTokenByType(
 
 export function generateToken(
     type: ExtendedTokenTypes,
-    name?: string,
     modes: string[] = ["default"],
 ): Token {
     return {
-        name: name || faker.word.words(),
         type: type,
         valueByMode: Object.fromEntries(
             modes.map((mode) => [mode, _generateTokenByType(type)]),
         ),
+        entityType: "token",
     };
 }
 
 export function generateGroup(): Group {
     return {
         expanded: Math.random() > 0.5,
-    } as Group;
+        entityType: "group",
+    };
 }
 
-export function generateTokenNode(type: "group" | "token" = "token") {}
+/**
+ * Generates a @see TokenNode for testing.
+ *
+ * @export
+ * @param {(string | undefined)} [name=undefined] The name of the generated token node.
+ *                                                Generates a random name by default.
+ * @param {("group" | "token")} [type="token"] The type of token node generate.
+ *                                             Default "token".
+ * @param {ExtendedTokenTypes} [nodeType="number"] The type of node. Only applicable for "token".
+ *                                                 @see ExtendedTokenTypes for details.
+ * @param {(string | undefined)} [uid=undefined] The ID of the token node.
+ *                                               Generates a random name by default.
+ * @param {(string | undefined)} [parentId=undefined] The parentId of the token node.
+ *                                                    Generates a parent with 50% RNG by default.
+ * @param {boolean} [reference=false] A flag, whether to have a reference.
+ *                                    <p>Note: Setting a flag will make value undefined.</p>
+ * @returns {TokenNode} The generated token node.
+ */
+export function generateTokenNode(
+    name: string | undefined = undefined,
+    type: "group" | "token" = "token",
+    nodeType: ExtendedTokenTypes = "number",
+    uid: string | undefined = undefined,
+    parentId: string | undefined = undefined,
+    reference: boolean = false,
+): TokenNode {
+    return {
+        name: name || faker.science.chemicalElement.name,
+        uid: uid || v4(),
+        value: !reference
+            ? type === "group"
+                ? generateGroup()
+                : generateToken(nodeType)
+            : undefined,
+        parentId: parentId || Math.random() > 0.5 ? v4() : undefined,
+        reference: reference ? v4() : undefined,
+    };
+}
