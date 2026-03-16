@@ -120,12 +120,12 @@ export class TokenSet {
     }
 
     /**
-     * Returns the index of the token in the tokenset.
-     * @param tokenName token name to get the index of.
-     * @returns number greater than 0, if the token is present else -1
+     * Get the index of the token in the TokenSet, if it exist.
+     * @param tokenId The unique identifier of the token.
+     * @returns The index if the token is present; else -1.
      */
-    getTokenIndex(tokenName: string) {
-        return this.tokens.findIndex((t) => t.name === tokenName);
+    getTokenIndex(tokenId: string) {
+        return this.tokens.findIndex((t) => t.uid === tokenId);
     }
 
     /**

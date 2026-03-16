@@ -3,6 +3,10 @@ import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { generateTokenNode } from "../utils/Generators";
 
+// REGEX
+// createToken\(\s*(".*"),\s*(\{.*\}),\s*(".*|)\)
+// createTokenNode($1, createToken($2, $3))
+
 export default function setUpTokens() {
     const numberTokenModes = ["default"];
     const numberTokens: TokenNode[] = Array(10)
@@ -51,9 +55,6 @@ export default function setUpTokens() {
     };
 }
 
-// REGEX
-// createToken\(\s*(".*"),\s*(\{.*\}),\s*(".*|)\)
-// createTokenNode($1, createToken($2, $3))
 export function setUpTokenSet() {
     const originalTokens: TokenNode[] = [
         createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
