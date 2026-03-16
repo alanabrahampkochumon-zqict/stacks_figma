@@ -1,12 +1,21 @@
 import { createToken, type Token } from "@src/common/data/Token";
+import type { TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
-import { generateToken } from "../utils/Generators";
+import { generateToken, generateTokenNode } from "../utils/Generators";
 
 export default function setUpTokens() {
     const numberTokenModes = ["default"];
-    const numberTokens: Token[] = Array(10)
+    const numberTokens: TokenNode[] = Array(10)
         .fill(0)
-        .map(() => generateToken("number", undefined, numberTokenModes));
+        .map(() =>
+            generateTokenNode(
+                undefined,
+                undefined,
+                "number",
+                undefined,
+                undefined,
+            ),
+        );
     const sortedNumberToken = numberTokens.sort(
         (t, u) =>
             t &&
