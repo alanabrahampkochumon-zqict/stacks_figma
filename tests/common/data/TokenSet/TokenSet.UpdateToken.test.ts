@@ -54,13 +54,13 @@ describe("TokenSet Update Tests", () => {
         const type = "number";
         const level = 1;
         const tokens: TokenNode[] = [
-            createTokenNode("25", createToken({ default: 5 }, type)),
-            createTokenNode("75", createToken({ default: 15 }, type)),
+            createTokenNode("25", createToken({ default: 5 }, type), "1"),
+            createTokenNode("75", createToken({ default: 15 }, type), "2"),
         ];
         const expectedTokens: TokenNode[] = [
-            createTokenNode("25", createToken({ default: 5 }, type)),
-            createTokenNode("75", createToken({ default: 15 }, type)),
-            createTokenNode("50", createToken({ default: 10 }, type)),
+            createTokenNode("25", createToken({ default: 5 }, type), "1"),
+            createTokenNode("75", createToken({ default: 15 }, type), "2"),
+            createTokenNode("50", createToken({ default: 10 }, type), "3"),
         ];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
@@ -68,6 +68,7 @@ describe("TokenSet Update Tests", () => {
         const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
+            "3",
         );
         tokenSet.updateToken(validToken.name, validToken, {
             updatePolicy: UpdatePolicy.INSERT,
@@ -83,12 +84,12 @@ describe("TokenSet Update Tests", () => {
         const type = "number";
         const level = 1;
         const tokens: TokenNode[] = [
-            createTokenNode("25", createToken({ default: 5 }, type)),
-            createTokenNode("75", createToken({ default: 15 }, type)),
+            createTokenNode("25", createToken({ default: 5 }, type), "1"),
+            createTokenNode("75", createToken({ default: 15 }, type), "2"),
         ];
         const expectedTokens: TokenNode[] = [
-            createTokenNode("25", createToken({ default: 5 }, type)),
-            createTokenNode("75", createToken({ default: 15 }, type)),
+            createTokenNode("25", createToken({ default: 5 }, type), "1"),
+            createTokenNode("75", createToken({ default: 15 }, type), "2"),
         ];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
@@ -96,6 +97,7 @@ describe("TokenSet Update Tests", () => {
         const validToken = createTokenNode(
             "50",
             createToken({ default: 10 }, type),
+            "3",
         );
         tokenSet.updateToken(validToken.name, validToken, {
             updatePolicy: UpdatePolicy.IGNORE,
@@ -108,7 +110,10 @@ describe("TokenSet Update Tests", () => {
     test("token gets added, when the token set is non-empty and policy is set to insert", () => {
         // Given a non-empty token set
         const { numberTokenSet } = setUpTokens();
-        const validToken = createToken("new token", { default: 10 }, "number");
+        const validToken = createTokenNode(
+            "new token",
+            createToken({ default: 10 }, "number"),
+        );
 
         // and the valid token is not in the set
         expect(numberTokenSet.tokens).not.toContain(validToken);
@@ -131,28 +136,45 @@ describe("TokenSet Update Tests", () => {
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
+                "1",
             ),
             createTokenNode(
                 "size-150",
                 createToken({ default: 15 }, tokenType),
+                "2",
             ),
-            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 0 }, tokenType),
+                "3",
+            ),
         ];
         const sortedTokens: TokenNode[] = [
-            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
-            createTokenNode("size-50", createToken({ default: 5 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 0 }, tokenType),
+                "3",
+            ),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 5 }, tokenType),
+                "4",
+            ),
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
+                "1",
             ),
             createTokenNode(
                 "size-150",
                 createToken({ default: 15 }, tokenType),
+                "2",
             ),
         ];
         const token = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
+            "4",
         );
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
@@ -171,28 +193,45 @@ describe("TokenSet Update Tests", () => {
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
+                "1",
             ),
             createTokenNode(
                 "size-150",
                 createToken({ default: 150 }, tokenType),
+                "2",
             ),
-            createTokenNode("size-0", createToken({ default: 20 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 20 }, tokenType),
+                "3",
+            ),
         ];
         const sortedTokens: TokenNode[] = [
-            createTokenNode("size-50", createToken({ default: 5 }, tokenType)),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 5 }, tokenType),
+                "4",
+            ),
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
+                "1",
             ),
-            createTokenNode("size-0", createToken({ default: 20 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 20 }, tokenType),
+                "3",
+            ),
             createTokenNode(
                 "size-150",
                 createToken({ default: 150 }, tokenType),
+                "2",
             ),
         ];
         const token = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
+            "4",
         );
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
@@ -200,8 +239,12 @@ describe("TokenSet Update Tests", () => {
         tokenSet.updateToken(token.name, token, {
             sortToken: true,
             compareFn: (a, b) =>
-                Object.values(a.valueByMode)[0] -
-                Object.values(b.valueByMode)[0],
+                Object.values(
+                    a.value?.entityType === "token" && a.value.valueByMode,
+                )[0] -
+                Object.values(
+                    b.value?.entityType === "token" && b.value.valueByMode,
+                )[0],
         });
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
@@ -216,7 +259,10 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated(upserted)
-        const differentToken = createToken("50", { default: 10 }, "spacing");
+        const differentToken = createTokenNode(
+            "50",
+            createToken({ default: 10 }, "spacing"),
+        );
         // Then, an error is thrown
         expect(() =>
             tokenSet.updateToken(differentToken.name, differentToken),
@@ -242,7 +288,10 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token is updated(upserted)
-        const differentToken = createToken("50", { default: 10 }, "spacing");
+        const differentToken = createTokenNode(
+            "50",
+            createToken({ default: 10 }, "spacing"),
+        );
         // Then, an error is thrown
         expect(() =>
             tokenSet.updateToken(differentToken.name, differentToken),
@@ -266,10 +315,9 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token is updated(upserted) with invalid valueByNames
-        const updatedToken = createToken(
-            "size-65",
-            { default: "test" },
-            tokenType,
+        const updatedToken = createTokenNode(
+            "size-50",
+            createToken({ default: "test" }, tokenType),
         );
         // Then, an error is thrown
         expect(() => tokenSet.updateToken("size-50", updatedToken)).toThrow();
@@ -284,15 +332,25 @@ describe("TokenSet Update Tests", () => {
         const token1 = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
+            "1",
         );
         const token2 = createTokenNode(
             "size-0",
             createToken({ default: 0 }, tokenType),
+            "2",
         );
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
         const sortedTokens: TokenNode[] = [
-            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
-            createTokenNode("size-50", createToken({ default: 5 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 0 }, tokenType),
+                "2",
+            ),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 5 }, tokenType),
+                "1",
+            ),
         ];
 
         // When a token is updated(upserted) and sorted
@@ -312,28 +370,45 @@ describe("TokenSet Update Tests", () => {
             createTokenNode(
                 "size-100",
                 createToken({ default: 100 }, tokenType),
+                "1",
             ),
             createTokenNode(
                 "size-150",
                 createToken({ default: 15 }, tokenType),
+                "2",
             ),
-            createTokenNode("size-0", createToken({ default: 50 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 50 }, tokenType),
+                "3",
+            ),
         ];
         const sortedTokens: TokenNode[] = [
-            createTokenNode("size-50", createToken({ default: 0 }, tokenType)),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 0 }, tokenType),
+                "4",
+            ),
             createTokenNode(
                 "size-150",
                 createToken({ default: 15 }, tokenType),
+                "2",
             ),
-            createTokenNode("size-0", createToken({ default: 50 }, tokenType)),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 50 }, tokenType),
+                "3",
+            ),
             createTokenNode(
                 "size-100",
                 createToken({ default: 100 }, tokenType),
+                "1",
             ),
         ];
         const token = createTokenNode(
             "size-50",
             createToken({ default: 0 }, tokenType),
+            "4",
         );
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
@@ -341,8 +416,12 @@ describe("TokenSet Update Tests", () => {
         tokenSet.addToken(token, {
             sortToken: true,
             compareFn: (a, b) =>
-                Object.values(a.valueByMode)[0] -
-                Object.values(b.valueByMode)[0],
+                Object.values(
+                    a.value?.entityType === "token" && a.value.valueByMode,
+                )[0] -
+                Object.values(
+                    b.value?.entityType === "token" && b.value.valueByMode,
+                )[0],
         });
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
