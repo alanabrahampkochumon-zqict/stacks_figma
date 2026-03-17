@@ -32,6 +32,8 @@ type TokenSetMergeOptions = {
     compareFn?: TokenComparator;
 };
 
+// TODO: Add mixed tests (Token + groups)
+
 /**
  * Class representing a single token.
  * It contains the name, type, level (1-3), and the token collection.
