@@ -2,8 +2,8 @@ import {
     createToken,
     type ExtendedTokenTypes,
     type Levels,
-    type Token,
 } from "@src/common/data/Token";
+import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import setUpTokens from "./TokenSet.fixtures";
@@ -25,21 +25,19 @@ describe("TokenSet Intialization Tests", () => {
         // When a tokenset is initialized with default values
         const level = 1;
         const name = "TokenSet";
-        const { numberTokens, numberTokenModes } = setUpTokens();
+        const { numberTokens, numberTokenType } = setUpTokens();
         const tokenSet = new TokenSet(
             name,
-            numberTokens[0].type,
+            numberTokenType,
             level,
             numberTokens,
-            numberTokenModes,
         );
 
         // Then, the object contains the correct name and default values
         expect(tokenSet.name).toStrictEqual(name);
         expect(tokenSet.level).toStrictEqual(level);
         expect(tokenSet.tokens).toStrictEqual(numberTokens);
-        expect(tokenSet.type).toStrictEqual(numberTokens[0].type);
-        expect(Array.from(tokenSet.modes)).toStrictEqual(numberTokenModes);
+        expect(tokenSet.type).toStrictEqual(numberTokenType);
     });
 
     test("creates tokenset, when initialized with empty tokens", () => {
@@ -47,7 +45,7 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: Token[] = [];
+        const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // Then, the object contains the correct name and empty tokens
@@ -62,21 +60,14 @@ describe("TokenSet Intialization Tests", () => {
         // When a tokenset is initialized without specifying modes
         const level = 1;
         const name = "TokenSet";
-        const { colorTokens, colorTokenModes } = setUpTokens();
-        const tokenSet = new TokenSet(
-            name,
-            colorTokens[0].type,
-            level,
-            colorTokens,
-        );
+        const { colorTokens, colorTokenType } = setUpTokens();
+        const tokenSet = new TokenSet(name, colorTokenType, level, colorTokens);
 
         // Then, the object contains the correct name and default valueByNames
         expect(tokenSet.name).toStrictEqual(name);
         expect(tokenSet.level).toStrictEqual(level);
         expect(tokenSet.tokens).toStrictEqual(colorTokens);
-        expect(tokenSet.type).toStrictEqual(colorTokens[0].type);
-        // And, modes are taken from the added token
-        expect(Array.from(tokenSet.modes)).toStrictEqual(colorTokenModes);
+        expect(tokenSet.type).toStrictEqual(colorTokenType);
     });
 
     test("throws error, when initialized with mixed token types", () => {
@@ -85,21 +76,14 @@ describe("TokenSet Intialization Tests", () => {
         const tokenType = "number";
         const level = 1;
 
-        const { colorTokenModes, colorTokens, numberTokenModes, numberTokens } =
-            setUpTokens();
+        const { colorTokens, numberTokens } = setUpTokens();
 
-        const tokens: Token[] = [
+        const tokens: TokenNode[] = [
             ...colorTokens.slice(0, 3),
             ...numberTokens.slice(0, 3),
         ];
         // Then, the initializer throws an error
-        expect(
-            () =>
-                new TokenSet(name, tokenType, level, tokens, [
-                    ...colorTokenModes,
-                    ...numberTokenModes,
-                ]),
-        ).toThrow();
+        expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
     });
 
     test("throws error, when initialized with types different from the tokenSetType", () => {
@@ -107,28 +91,24 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const { colorTokenModes, colorTokens } = setUpTokens();
+        const { colorTokens } = setUpTokens();
 
         // Then, the initializer throws an error
         expect(
-            () =>
-                new TokenSet(
-                    name,
-                    tokenType,
-                    level,
-                    colorTokens,
-                    colorTokenModes,
-                ),
+            () => new TokenSet(name, tokenType, level, colorTokens),
         ).toThrow();
     });
 
     test("throws error, when initialized with invalid token", () => {
         // Given a tokenset trying to get initalized with invalid token
         const name = "TokenSet";
-        const tokenType = "number";
+        const tokenType: ExtendedTokenTypes = "number";
         const level = 1;
-        const tokens: Token[] = [
-            createToken("color-50", { default: "#ffffff" }, tokenType),
+        const tokens: TokenNode[] = [
+            createTokenNode(
+                "color-50",
+                createToken({ default: "#ffffff" }, tokenType),
+            ),
         ];
         // Then, the initializer throws an error
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
@@ -139,17 +119,10 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 8 as Levels;
-        const { numberTokens, numberTokenModes } = setUpTokens();
+        const { numberTokens } = setUpTokens();
         // Then, the initializer throws an error
         expect(
-            () =>
-                new TokenSet(
-                    name,
-                    tokenType,
-                    level,
-                    numberTokens,
-                    numberTokenModes,
-                ),
+            () => new TokenSet(name, tokenType, level, numberTokens),
         ).toThrow();
     });
 
@@ -158,18 +131,11 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType = "invalid token type" as ExtendedTokenTypes;
         const level = 1;
-        const { numberTokens, numberTokenModes } = setUpTokens();
+        const { numberTokens } = setUpTokens();
 
         // Then, the initializer throws an error
         expect(
-            () =>
-                new TokenSet(
-                    name,
-                    tokenType,
-                    level,
-                    numberTokens,
-                    numberTokenModes,
-                ),
+            () => new TokenSet(name, tokenType, level, numberTokens),
         ).toThrow();
     });
 
@@ -178,18 +144,11 @@ describe("TokenSet Intialization Tests", () => {
         const name = "";
         const tokenType = "number";
         const level = 1;
-        const { numberTokens, numberTokenModes } = setUpTokens();
+        const { numberTokens } = setUpTokens();
 
         // Then, the initializer throws an error
         expect(
-            () =>
-                new TokenSet(
-                    name,
-                    tokenType,
-                    level,
-                    numberTokens,
-                    numberTokenModes,
-                ),
+            () => new TokenSet(name, tokenType, level, numberTokens),
         ).toThrow();
     });
 });

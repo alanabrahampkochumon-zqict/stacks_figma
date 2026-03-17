@@ -1,4 +1,4 @@
-import { createToken } from "@src/common/data/Token";
+import { createToken, type ExtendedTokenTypes } from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { generateTokenNode } from "../utils/Generators";
@@ -9,13 +9,14 @@ import { generateTokenNode } from "../utils/Generators";
 
 export default function setUpTokens() {
     const numberTokenModes = ["default"];
+    const numberTokenType: ExtendedTokenTypes = "number";
     const numberTokens: TokenNode[] = Array(10)
         .fill(0)
         .map(() =>
             generateTokenNode(
                 undefined,
                 undefined,
-                "number",
+                numberTokenType,
                 undefined,
                 undefined,
                 undefined,
@@ -28,6 +29,7 @@ export default function setUpTokens() {
             t.name.localeCompare(u.name, undefined, { numeric: true }),
     );
 
+    const colorTokenType: ExtendedTokenTypes = "color";
     const colorTokenModes = ["dark", "light"];
     const colorTokens = Array(10)
         .fill(0)
@@ -35,7 +37,7 @@ export default function setUpTokens() {
             generateTokenNode(
                 undefined,
                 undefined,
-                "color",
+                colorTokenType,
                 undefined,
                 undefined,
                 undefined,
@@ -52,6 +54,8 @@ export default function setUpTokens() {
         colorTokens,
         numberTokenSet,
         sortedNumberToken,
+        numberTokenType,
+        colorTokenType,
     };
 }
 

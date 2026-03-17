@@ -103,7 +103,6 @@ export class TokenSet {
         }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
-        // TODO: Update to use "id"
         if (this.getTokenIndex(token.uid) === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.updateToken(token.uid, token);
@@ -264,13 +263,4 @@ export class TokenSet {
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
             );
     }
-
-    // Adds any mode that is missing from token
-    // private _addModeForToken(tokens: Token[]) {
-    //     tokens.forEach((token) =>
-    //         Object.keys(token.valueByMode).forEach((mode) =>
-    //             this.modes.add(mode),
-    //         ),
-    //     );
-    // }
 }
