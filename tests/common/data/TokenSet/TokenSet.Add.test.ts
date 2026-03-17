@@ -1,4 +1,5 @@
 import { InsertConflictPolicy } from "@src/common/data/Common";
+import { createGroup } from "@src/common/data/Group";
 import { createToken } from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
@@ -28,6 +29,22 @@ describe("TokenSet Add Tests", () => {
         expect(tokenSet.tokens[0]).toStrictEqual(validToken);
     });
 
+    test("token gets added, when a valid group is passed in", () => {
+        // Given a empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens: TokenNode[] = [];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a group is added
+        const validGroup = createTokenNode("group", createGroup(true));
+        tokenSet.addToken(validGroup);
+
+        // Then, the token is added to the set
+        expect(tokenSet.tokens[0]).toStrictEqual(validGroup);
+    });
+
     test("token gets upserted, when an existing token is passed in with insert policy of replace", () => {
         // Given a non-empty token set
         const name = "TokenSet";
@@ -50,6 +67,28 @@ describe("TokenSet Add Tests", () => {
 
         // Then, then the token is updated
         expect(tokenSet.tokens).toStrictEqual([validToken]);
+    });
+
+    test("token gets upserted, when an existing group is passed in with insert policy of replace", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const groups = [createTokenNode("group", createGroup(true))];
+        const tokenSet = new TokenSet(name, type, level, groups);
+        const validGroup = createTokenNode(
+            "group",
+            createGroup(true),
+            groups[0].uid,
+        );
+
+        // When a token is added with same name and policy set to update
+        tokenSet.addToken(validGroup, {
+            insertPolicy: InsertConflictPolicy.REPLACE,
+        });
+
+        // Then, then the token is updated
+        expect(tokenSet.tokens).toStrictEqual([validGroup]);
     });
 
     test("token added and sorted, when sort is turned on", () => {

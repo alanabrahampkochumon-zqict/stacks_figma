@@ -263,10 +263,11 @@ export class TokenSet {
     private _validateToken(tokens: TokenNode[], tokenType: ExtendedTokenTypes) {
         const validationResult = tokens.every(
             ({ value: tokenValue }) =>
-                tokenValue &&
-                tokenValue.entityType === "token" &&
-                tokenValue.type === tokenType &&
-                validateToken(tokenValue.valueByMode, tokenValue.type),
+                (tokenValue &&
+                    tokenValue.entityType === "token" &&
+                    tokenValue.type === tokenType &&
+                    validateToken(tokenValue.valueByMode, tokenValue.type)) ||
+                tokenValue?.entityType === "group",
         );
         if (!validationResult)
             throw new Error(
