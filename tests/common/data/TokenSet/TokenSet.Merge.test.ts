@@ -106,8 +106,12 @@ describe("TokenSet Merge Tests", () => {
         originalTokenSet.mergeTokenSet(cleanMergingTokenSet, {
             sortToken: true,
             compareFn: (a, b) =>
-                Object.values(a.valueByMode)[0] -
-                Object.values(b.valueByMode)[0],
+                Object.values(
+                    a.value?.entityType === "token" && a.value.valueByMode,
+                )[0] -
+                Object.values(
+                    b.value?.entityType === "token" && b.value.valueByMode,
+                )[0],
         });
 
         // Then, the token sets contains elements sorted by valueByName.

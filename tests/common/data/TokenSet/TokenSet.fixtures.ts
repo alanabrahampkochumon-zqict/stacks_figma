@@ -4,7 +4,7 @@ import { TokenSet } from "@src/common/data/TokenSet";
 import { generateTokenNode } from "../utils/Generators";
 
 // REGEX
-// createToken\(\s*(".*"),\s*(\{.*\}),\s*(".*|)\)
+// createToken\(\s*(".*"),\s*(\{.*\}),\s*(.*)\)
 // createTokenNode($1, createToken($2, $3))
 
 export default function setUpTokens() {
@@ -247,16 +247,10 @@ export function setUpTokenSet() {
     ];
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
-    const originalTokenSetString = JSON.stringify(originalTokenSet).replace(
-        `"modes":{}`,
-        `"modes":["default"]`,
-    );
+    const originalTokenSetString = JSON.stringify(originalTokenSet);
 
     const emptyTokenSet = new TokenSet("empty", "animation", 4);
-    const emptyTokenSetString = JSON.stringify(emptyTokenSet).replace(
-        `"modes":{}`,
-        `"modes":["default"]`,
-    );
+    const emptyTokenSetString = JSON.stringify(emptyTokenSet);
 
     const cleanMergingTokenSet = new TokenSet(
         "ts",

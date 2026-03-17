@@ -66,7 +66,7 @@ export function generateGroup(): Group {
  * @param {boolean} [reference=false] A flag, whether to have a reference.
  *                                    <p>Note: Setting a flag will make value undefined.</p>
  * @param {(string[] | undefined)} [modes=undefined] The modes to use for generating @see Token. Not applicable for @see Group.
- * @returns {TokenNode} The generated token node.
+ * @returns {[TokenNode, json]} The generated token node and its string representation.
  */
 export function generateTokenNode(
     name: string | undefined = undefined,
@@ -77,15 +77,21 @@ export function generateTokenNode(
     reference: boolean = false,
     modes: string[] | undefined = undefined,
 ): TokenNode {
+    const tokenName = name || faker.science.chemicalElement.name;
+    const tokenId = uid || v4();
+    const tokenReference = reference ? v4() : undefined;
+    const tokenValue = !tokenReference
+        ? type === "group"
+            ? generateGroup()
+            : generateToken(nodeType, modes)
+        : undefined;
+    const tokenParentId = parentId || Math.random() > 0.5 ? v4() : undefined;
+
     return {
-        name: name || faker.science.chemicalElement.name,
-        uid: uid || v4(),
-        value: !reference
-            ? type === "group"
-                ? generateGroup()
-                : generateToken(nodeType, modes)
-            : undefined,
-        parentId: parentId || Math.random() > 0.5 ? v4() : undefined,
-        reference: reference ? v4() : undefined,
+        name: tokenName,
+        uid: tokenId,
+        value: tokenValue,
+        parentId: tokenParentId,
+        reference: tokenReference,
     };
 }

@@ -1,4 +1,5 @@
-import { createToken, type Token } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
+import { createTokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 
@@ -8,17 +9,49 @@ describe("TokenSet Sorting Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: Token[] = [
-            createToken("size-100", { default: 10 }, tokenType),
-            createToken("size-150", { default: 15 }, tokenType),
-            createToken("size-0", { default: 0 }, tokenType),
-            createToken("size-50", { default: 5 }, tokenType),
+        const tokens = [
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+                "1",
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+                "2",
+            ),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 0 }, tokenType),
+                "3",
+            ),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 5 }, tokenType),
+                "4",
+            ),
         ];
-        const sortedTokens: Token[] = [
-            createToken("size-0", { default: 0 }, tokenType),
-            createToken("size-50", { default: 5 }, tokenType),
-            createToken("size-100", { default: 10 }, tokenType),
-            createToken("size-150", { default: 15 }, tokenType),
+        const sortedTokens = [
+            createTokenNode(
+                "size-0",
+                createToken({ default: 0 }, tokenType),
+                "3",
+            ),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 5 }, tokenType),
+                "4",
+            ),
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+                "1",
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+                "2",
+            ),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
@@ -34,25 +67,61 @@ describe("TokenSet Sorting Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: Token[] = [
-            createToken("size-100", { default: 55 }, tokenType),
-            createToken("size-150", { default: 35 }, tokenType),
-            createToken("size-0", { default: 100 }, tokenType),
-            createToken("size-50", { default: 50 }, tokenType),
+        const tokens = [
+            createTokenNode(
+                "size-100",
+                createToken({ default: 55 }, tokenType),
+                "1",
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 35 }, tokenType),
+                "2",
+            ),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 100 }, tokenType),
+                "3",
+            ),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 50 }, tokenType),
+                "4",
+            ),
         ];
-        const sortedTokens: Token[] = [
-            createToken("size-150", { default: 35 }, tokenType),
-            createToken("size-50", { default: 50 }, tokenType),
-            createToken("size-100", { default: 55 }, tokenType),
-            createToken("size-0", { default: 100 }, tokenType),
+        const sortedTokens = [
+            createTokenNode(
+                "size-150",
+                createToken({ default: 35 }, tokenType),
+                "2",
+            ),
+            createTokenNode(
+                "size-50",
+                createToken({ default: 50 }, tokenType),
+                "4",
+            ),
+            createTokenNode(
+                "size-100",
+                createToken({ default: 55 }, tokenType),
+                "1",
+            ),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 100 }, tokenType),
+                "3",
+            ),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When sort function is called on it with a comparator
         tokenSet.sort(
             (a, b) =>
-                Object.values(a.valueByMode)[0] -
-                Object.values(b.valueByMode)[0],
+                Object.values(
+                    a.value?.entityType === "token" && a.value.valueByMode,
+                )[0] -
+                Object.values(
+                    b.value?.entityType === "token" && b.value.valueByMode,
+                )[0],
         );
 
         // Then, the tokens are sorted by the comparator(here, valueByName)

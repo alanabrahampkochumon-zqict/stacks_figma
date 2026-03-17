@@ -1,10 +1,5 @@
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
-import type {
-    ExtendedTokenTypes,
-    Levels,
-    Token,
-    TokenComparator,
-} from "./Token";
+import type { ExtendedTokenTypes, Levels, TokenComparator } from "./Token";
 import {
     extendedTokens,
     isValidExtendedToken,
@@ -12,7 +7,7 @@ import {
     validateToken,
     validLevels,
 } from "./Token";
-import type { TokenNode } from "./TokenNode";
+import { createTokenNode, type TokenNode } from "./TokenNode";
 
 type TokenSetUpdateOptions = {
     updatePolicy?: UpdatePolicy;
@@ -130,10 +125,10 @@ export class TokenSet {
     }
 
     /**
-     * Removes token from a token set.
-     * @param token token to be removed from the tokenset.
+     * Remove {@link TokenNode} from a token set.
+     * @param token The token node to remove.
      */
-    removeToken(token: Token) {
+    removeToken(token: TokenNode) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
@@ -188,12 +183,14 @@ export class TokenSet {
     }
 
     /**
-     * Merges a token set with the current token set.
-     * For merge to work, both tokens must have same name, type and level, else it will throw an error.
+     * Merge a token set with the current token set.
+     * In order for merge to succeed, both {@link TokenSet} must have the same name, type and level;
+     * else it will throw an error.
      * Common tokens will only get added once.
-     * @param tokenSet token set to be merged with the current token set.
-     * @param options optional options for insertion policy(IGNORE, REPLACE, MERGE not  supported). Defaults to IGNORE.
-     *                and for sorting tokens, after insertions.
+     *
+     * @param tokenSet The token set to merge.
+     * @param options [Optional parameters] for {@link InsertionPolicy}(Note:MERGE not supported). Defaults to IGNORE.
+     *                Sorting tokens, after insertions.
      * @throws error if tokens don't match level and type when merging on conflict.
      */
     mergeTokenSet(
@@ -221,7 +218,7 @@ export class TokenSet {
     //TODO: Add name uniqueness validator and tests to update and insert
 
     /**
-     * Converts the current tokenset into a JSON string
+     * Produces a JSON string representation of the current {@link TokenSet}.
      */
     toJsonString(): string {
         return JSON.stringify({
@@ -233,14 +230,27 @@ export class TokenSet {
     }
 
     /**
-     * Converts a given string into TokenSet if valid.
+     * Generate a {@link TokenSet} from a JSON string if its valid.
      * @param jsonString json string to be parsed
      * @return TokenSet if the json string is valid
      * @throws Error if a invalid string is passed in or if the values passed in not in the range, for example, 5 is passed for level which should be between 1..4
      */
     static fromJson(jsonString: string): TokenSet {
         const data = JSON.parse(jsonString);
-        return new TokenSet(data?.name, data?.type, data?.level, data?.tokens);
+        return new TokenSet(
+            data?.name,
+            data?.type,
+            data?.level,
+            data?.tokens?.map((token: TokenNode) =>
+                createTokenNode(
+                    token?.name,
+                    token?.value,
+                    token.uid,
+                    token?.reference,
+                    token?.parentId,
+                ),
+            ),
+        );
     }
 
     /**
