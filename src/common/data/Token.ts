@@ -1,7 +1,22 @@
 import type { TokenNode } from "./TokenNode";
 
+/**
+ * Basic Design System token categories.
+ *
+ * @category Constants
+ */
 export const basicTokens = ["number", "string", "boolean", "color"] as const;
+
+/**
+ * Primitive token types used for standard values.
+ */
 export type BasicTokenTypes = (typeof basicTokens)[number];
+
+/**
+ * Complete list of supported token categories, including layout and effects.
+ * 
+ * @category Constants
+ */
 export const extendedTokens = [
     ...basicTokens,
     "typography",
@@ -12,12 +27,27 @@ export const extendedTokens = [
     "box-shadow",
     "gradient",
 ] as const;
+
+/**
+ * Union type of all supported token categories.
+ * Used for validation and node classification.
+ */
 export type ExtendedTokenTypes = (typeof extendedTokens)[number];
 
+/**
+ * Type guard to check if a string is a member of {@link ExtendedTokenTypes}.
+ */
 export function isValidExtendedToken(token: string): boolean {
     return (extendedTokens as readonly string[]).includes(token);
 }
 
+/**
+ * Validates the underlying values of a token against its schema definition.
+ *
+ * @param {Record<string, any>} tokenValuesByMode Map of mode keys to their respective values.
+ * @param {ExtendedTokenTypes} tokenType The schema to validate against (e.g., "color" checks hex strings).
+ * @returns {boolean} `true` if all values satisfy the type requirements.
+ */
 export function validateToken(
     tokenValuesByMode: Record<string, any>,
     tokenType: ExtendedTokenTypes,
@@ -52,10 +82,28 @@ export function validateToken(
     return false;
 }
 
+/**
+ * List of valid levels.
+ *
+ * @type {readonly [1, 2, 3, 4]}
+ */
 export const validLevels = [1, 2, 3, 4] as const;
 
+/**
+ * Type definition for Level.
+ *
+ * @export
+ * @typedef {Levels}
+ */
 export type Levels = (typeof validLevels)[number];
 
+/**
+ * Validate the token level.
+ *
+ * @export
+ * @param {number} level The level to validate.
+ * @returns {boolean} True if the level is within valid range.
+ */
 export function isValidLevel(level: number): boolean {
     return (validLevels as readonly number[]).includes(level);
 }
@@ -80,9 +128,11 @@ export type Token = {
 
 /**
  * Creates a {@link Token} with the given parameters.
- * @param valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
- * @param type The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
- * @returns A token object.
+ *
+ * @export
+ * @param {Record<string, any>} valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
+ * @param {ExtendedTokenTypes} type The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
+ * @returns {Token} The created token object.
  */
 export function createToken(
     valueByMode: Record<string, any>,
