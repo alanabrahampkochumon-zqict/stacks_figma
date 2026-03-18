@@ -2,14 +2,26 @@ import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { Token, TokenComparator } from "./Token";
 import { TokenSet } from "./TokenSet";
 
-type DesignSystemUpdateOptions = {
-    updatePolicy?: UpdatePolicy;
+/**
+ * Options for adding contents to a {@link DesignSystem}.
+ * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
+ * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
+ * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ */
+type DesignSystemAddOptions = {
+    insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
 
-type DesignSystemAddOptions = {
-    insertPolicy?: InsertConflictPolicy;
+/**
+ * Options for updating the contents of a {@link DesignSystem}.
+ * @property {?UpdatePolicy} updatePolicy Policy to handle conflicts if a tokenset does not exist.
+ * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
+ * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ */
+type DesignSystemUpdateOptions = {
+    updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };

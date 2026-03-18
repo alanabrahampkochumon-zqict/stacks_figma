@@ -291,13 +291,13 @@ export class TokenSet {
      * @throws {IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
     private _validateToken(tokens: TokenNode[], tokenType: TokenSetType) {
-        // Token Type validation
+        // Parent Token Type validation
         if (!(tokenType === "group" || isValidExtendedToken(tokenType)))
             throw new IllegalArgumentError(
                 `Invalid token type: Type must be in ${extendedTokens}`,
             );
 
-        // Token validation
+        // Token Type validation
         let validationResult = false;
         if (tokenType === "group")
             validationResult = tokens.every(
