@@ -1,3 +1,4 @@
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import type { TokenNode } from "./TokenNode";
 
 /**
@@ -44,8 +45,9 @@ export function isValidExtendedToken(token: string): boolean {
 /**
  * Validate the underlying values of a token against its schema definition.
  *
- * @param {Record<string, any>} tokenValuesByMode Map of mode keys to their respective values.
- * @param {ExtendedTokenTypes} tokenType The schema to validate against (e.g., "color" checks hex strings).
+ * @param {Record<string, any>} tokenValuesByMode  Map of mode keys to their respective values.
+ * @param {ExtendedTokenTypes} tokenType           The schema to validate against (e.g., "color" checks hex strings).
+ *
  * @returns {boolean} `true` if all values satisfy the type requirements.
  */
 export function validateToken(
@@ -114,9 +116,9 @@ export function isValidLevel(level: number): boolean {
  * @see {@link TokenNode} for the tree-structure representation.
  *
  * @typedef {Object} Token
- * @property {Record<string, any>} valueByMode - Map of mode keys to their respective values. Example: {dark: "#111", light: "eee"}
- * @property {ExtendedTokenTypes} type - The type of token. For details, see {@link ExtendedTokenTypes}
- * @property {"token"} entityType - Internal discriminator used to identify this as a token.
+ * @property {Record<string, any>} valueByMode   Map of mode keys to their respective values. Example: {dark: "#111", light: "eee"}
+ * @property {ExtendedTokenTypes} type           The type of token. For details, see {@link ExtendedTokenTypes}
+ * @property {"token"} entityType                Internal discriminator used to identify this as a token.
  */
 export type Token = {
     valueByMode: Record<string, any>;
@@ -126,19 +128,21 @@ export type Token = {
 
 /**
  * Factory function to initialize a validated {@link Token}.
- * @throws {Error} If `valueByMode` is empty or if `type` is not a valid {@link ExtendedTokenTypes}.
  *
  * @param {Record<string, any>} valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
- * @param {ExtendedTokenTypes} type The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
+ * @param {ExtendedTokenTypes} type         The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
+ *
  * @returns {Token} A frozen-ready token object.
+ * @throws {IllegalArgumentError} If `valueByMode` is empty or if `type` is not a valid {@link ExtendedTokenTypes}.
  */
 export function createToken(
     valueByMode: Record<string, any>,
     type: ExtendedTokenTypes,
 ): Token {
     if (!valueByMode || !Object.values(valueByMode).length)
-        throw new Error("Token must have atleast one value");
-    if (!isValidExtendedToken(type)) throw new Error("Invalid token");
+        throw new IllegalArgumentError("Token must have atleast one value");
+    if (!isValidExtendedToken(type))
+        throw new IllegalArgumentError("Invalid token");
     return {
         valueByMode,
         type,
