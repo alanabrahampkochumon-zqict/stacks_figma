@@ -14,7 +14,7 @@ export type BasicTokenTypes = (typeof basicTokens)[number];
 
 /**
  * Complete list of supported token categories, including layout and effects.
- * 
+ *
  * @category Constants
  */
 export const extendedTokens = [
@@ -35,14 +35,14 @@ export const extendedTokens = [
 export type ExtendedTokenTypes = (typeof extendedTokens)[number];
 
 /**
- * Type guard to check if a string is a member of {@link ExtendedTokenTypes}.
+ * Validator to check if a string is a member of {@link ExtendedTokenTypes}.
  */
 export function isValidExtendedToken(token: string): boolean {
     return (extendedTokens as readonly string[]).includes(token);
 }
 
 /**
- * Validates the underlying values of a token against its schema definition.
+ * Validate the underlying values of a token against its schema definition.
  *
  * @param {Record<string, any>} tokenValuesByMode Map of mode keys to their respective values.
  * @param {ExtendedTokenTypes} tokenType The schema to validate against (e.g., "color" checks hex strings).
@@ -83,16 +83,15 @@ export function validateToken(
 }
 
 /**
- * List of valid levels.
+ * Design System levels
  *
- * @type {readonly [1, 2, 3, 4]}
+ * @category Constants
  */
 export const validLevels = [1, 2, 3, 4] as const;
 
 /**
- * Type definition for Level.
+ * Type definition for Design System level.
  *
- * @export
  * @typedef {Levels}
  */
 export type Levels = (typeof validLevels)[number];
@@ -100,7 +99,6 @@ export type Levels = (typeof validLevels)[number];
 /**
  * Validate the token level.
  *
- * @export
  * @param {number} level The level to validate.
  * @returns {boolean} True if the level is within valid range.
  */
@@ -109,16 +107,16 @@ export function isValidLevel(level: number): boolean {
 }
 
 /**
- * Type encapsulating a Design System Token.
- * <p>Note: It is not recommended to create tokens as standalone objects.
- * Use {@link TokenNode} and {@link createTokenNode}.</p>
+ * Represents a single Design System Token entry.
+ * @remarks
+ * **Important:** Do not instantiate this object manually.
+ * Use the {@link createToken} factory function to ensure schema integrity.
+ * @see {@link TokenNode} for the tree-structure representation.
  *
- * @export
  * @typedef {Object} Token
- * @property {Record<string, any>} valueByMode - A key value pair of modes and value associated with that mode. Example: {dark: "#111", light: "eee"}
- * @property {ExtendedTokenTypes} type - Type of token. For details, see {@link ExtendedTokenTypes}
+ * @property {Record<string, any>} valueByMode - Map of mode keys to their respective values. Example: {dark: "#111", light: "eee"}
+ * @property {ExtendedTokenTypes} type - The type of token. For details, see {@link ExtendedTokenTypes}
  * @property {"token"} entityType - Internal discriminator used to identify this as a token.
- * @readonly
  */
 export type Token = {
     valueByMode: Record<string, any>;
@@ -127,12 +125,12 @@ export type Token = {
 };
 
 /**
- * Creates a {@link Token} with the given parameters.
+ * Factory function to initialize a validated {@link Token}.
+ * @throws {Error} If `valueByMode` is empty or if `type` is not a valid {@link ExtendedTokenTypes}.
  *
- * @export
  * @param {Record<string, any>} valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
  * @param {ExtendedTokenTypes} type The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
- * @returns {Token} The created token object.
+ * @returns {Token} A frozen-ready token object.
  */
 export function createToken(
     valueByMode: Record<string, any>,
@@ -149,9 +147,6 @@ export function createToken(
 }
 
 /**
- * Type for {@link TokenNode} comparator.
- *
- * @export
- * @typedef {TokenComparator}
+ * Comparator definition used by {@link TokenNode}.
  */
 export type TokenComparator = (a: TokenNode, b: TokenNode) => number;
