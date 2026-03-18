@@ -9,6 +9,7 @@ import { describe, expect, test } from "vitest";
 // \{\s*type:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*name:\s*(.*)\s*\} -> createToken($3, $2, $1)
 // \{\s*name:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*type:\s*(.*)\s*\} -> createToken($1, $2, $3)
 
+// TODO: Groups cant be added to tokenonly nodes or vice verse
 describe("TokenSet Add Tests", () => {
     test("token gets added, when a valid token is passed in", () => {
         // Given a empty token set
@@ -29,10 +30,10 @@ describe("TokenSet Add Tests", () => {
         expect(tokenSet.tokens[0]).toStrictEqual(validToken);
     });
 
-    test("token gets added, when a valid group is passed in", () => {
+    test("group gets added, when a valid group is passed in", () => {
         // Given a empty token set
         const name = "TokenSet";
-        const type = "number";
+        const type = "group";
         const level = 1;
         const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
@@ -69,15 +70,15 @@ describe("TokenSet Add Tests", () => {
         expect(tokenSet.tokens).toStrictEqual([validToken]);
     });
 
-    test("token gets upserted, when an existing group is passed in with insert policy of replace", () => {
+    test("group gets upserted, when an existing group is passed in with insert policy of replace", () => {
         // Given a non-empty token set
         const name = "TokenSet";
-        const type = "number";
+        const type = "group";
         const level = 1;
-        const groups = [createTokenNode("group", createGroup(true))];
+        const groups = [createTokenNode(type, createGroup(true))];
         const tokenSet = new TokenSet(name, type, level, groups);
         const validGroup = createTokenNode(
-            "group",
+            type,
             createGroup(true),
             groups[0].uid,
         );
@@ -214,6 +215,41 @@ describe("TokenSet Add Tests", () => {
         });
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
+    });
+
+    test("throws error, when a group is passed to a token set", () => {
+        // Given a non-empty "token" set
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const tokens = [
+            createTokenNode("50", createToken({ default: 55 }, type)),
+        ];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a group is added
+        const validGroup = createTokenNode("group", createGroup(true));
+
+        // Then, an error is thrown
+        expect(() => tokenSet.addToken(validGroup)).toThrow();
+    });
+
+    test("throws error, when a token is passed to a group set", () => {
+        // Given a non-empty "group" set
+        const name = "TokenSet";
+        const type = "group";
+        const level = 1;
+        const tokens = [createTokenNode(type, createGroup(true))];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a group is added
+        const validToken = createTokenNode(
+            "50",
+            createToken({ default: 55 }, "number"),
+        );
+
+        // Then, an error is thrown
+        expect(() => tokenSet.addToken(validToken)).toThrow();
     });
 
     test("throws error, when a token with mismatching type is passed in", () => {

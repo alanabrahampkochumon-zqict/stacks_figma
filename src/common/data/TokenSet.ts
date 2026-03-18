@@ -27,53 +27,56 @@ type TokenSetMergeOptions = {
     compareFn?: TokenComparator;
 };
 
-// TODO: Add mixed tests (Token + groups)
+/**
+ * Type definition for {@link TokenSet} value type.
+ *
+ * @typedef {TokenSetType}
+ */
+type TokenSetType = ExtendedTokenTypes | "group";
 
 /**
- * Class representing a single token.
- * It contains the name, type, level (1-3), and the token collection.
- * NOTE: All the token's types must match the parent token type.
- */
-/**
  * Class representation of a set of tokens.
+ *
+ * @export
+ * @class TokenSet
+ * @typedef {TokenSet}
  *
  * @property name The name of the token set.
  *                Must be unique.
  * @property type The type of tokens included in the token set.
- *                Must match the type of tokens added and should be a type of @see ExtendedTokenTypes
+ *                Must match the type of tokens added and should be a type in {@link ExtendedTokenTypes} or "group" if the set contains {@link Group}.
  * @property level The level of the token set.
  *                 Can only be from 1 to 4 inclusive.
  * @property tokens List of tokens ( @see TokenNode ) that makes up tokenset.
  */
 export class TokenSet {
     name: string;
-    type: ExtendedTokenTypes;
+    type: TokenSetType;
     level: Levels;
     tokens: TokenNode[];
 
     /**
-     * Creates a token set with passed-in parameters
-     * @param name The name of the token set.<p>Note: Must be unique and not empty. </p>
-     * @param type type of tokens, like color or animation. Check `ExtendedTokenTypes` for more details.
-     *             Default: "number"
-     * @param level Level of the token set. 1, 2, 3, or 4.
-     *              Default: 1.
-     * @param tokens Tokens to be added to token set initially.
-     *               <p>Note: All the tokens passed in must match the passed-in type and level.</p>
+     * Creates an instance of TokenSet with passed-in parameters.
+     * <p>Note: Each set can only contain a {@link Group} or {@link Token}, not both. </p>
+     *
+     * @constructor
+     * @param {string} name The name of the token set.
+     *                      <p>Note: Must be unique and not empty.</p>
+     * @param {ExtendedTokenTypes} [type="number"] The type of tokens, e.g: color, animation.
+     *                                             Check {@link ExtendedTokenTypes} for more details.
+     *                                             Default: "number"
+     * @param {Levels} [level=1] Level of the token set. 1, 2, 3, or 4.
+     *                           Default: 1.
      */
     constructor(
         name: string,
-        type: ExtendedTokenTypes = "number",
+        type: TokenSetType,
         level: Levels = 1,
         tokens: TokenNode[] = [],
     ) {
         if (!name) throw Error(`Name must be passed in for a tokenset`);
         if (!isValidLevel(level))
             throw Error(`Invalid level: Level must be in ${validLevels}`);
-        if (!isValidExtendedToken(type))
-            throw Error(
-                `Invalid token type: Type must be in ${extendedTokens}`,
-            );
 
         this._validateToken(tokens, type);
         this.name = name;
@@ -257,18 +260,33 @@ export class TokenSet {
      * Validate a list of tokens are of the same type.
      * And that each token has a valid value.
      *
-     * @param tokens The tokens to validate.
-     * @param tokenType The token type to use for validation.
+     * @private
+     * @param {TokenNode[]} tokens The tokens to validate.
+     * @param {TokenSetType} tokenType The token type to use for validation.
      */
-    private _validateToken(tokens: TokenNode[], tokenType: ExtendedTokenTypes) {
-        const validationResult = tokens.every(
-            ({ value: tokenValue }) =>
-                (tokenValue &&
+    private _validateToken(tokens: TokenNode[], tokenType: TokenSetType) {
+        // Token Type validation
+        if (!(tokenType === "group" || isValidExtendedToken(tokenType)))
+            throw Error(
+                `Invalid token type: Type must be in ${extendedTokens}`,
+            );
+
+        // Token validation
+        let validationResult = false;
+        if (tokenType === "group")
+            validationResult = tokens.every(
+                ({ value: tokenValue }) =>
+                    tokenValue && tokenValue.entityType === "group",
+            );
+        else
+            validationResult = tokens.every(
+                ({ value: tokenValue }) =>
+                    tokenValue &&
                     tokenValue.entityType === "token" &&
                     tokenValue.type === tokenType &&
-                    validateToken(tokenValue.valueByMode, tokenValue.type)) ||
-                tokenValue?.entityType === "group",
-        );
+                    validateToken(tokenValue.valueByMode, tokenValue.type),
+            );
+
         if (!validationResult)
             throw new Error(
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
