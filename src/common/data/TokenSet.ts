@@ -1,3 +1,4 @@
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { ExtendedTokenTypes, Levels, TokenComparator } from "./Token";
 import {
@@ -9,18 +10,36 @@ import {
 } from "./Token";
 import { createTokenNode, type TokenNode } from "./TokenNode";
 
+/**
+ * Options for updating the contents of a {@link TokenSet}.
+ * @property {?UpdatePolicy} updatePolicy Policy to handle conflicts if a token does not exist.
+ * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
+ * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ */
 type TokenSetUpdateOptions = {
     updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
 
+/**
+ * Options for adding contents to a {@link TokenSet}.
+ * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
+ * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
+ * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ */
 type TokenSetAddOptions = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
 
+/**
+ * Options for merging contents of a {@link TokenSet} with another.
+ * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
+ * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
+ * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ */
 type TokenSetMergeOptions = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
@@ -28,26 +47,24 @@ type TokenSetMergeOptions = {
 };
 
 /**
- * Type definition for {@link TokenSet} value type.
- *
- * @typedef {TokenSetType}
+ * The allowed schema types for a {@link TokenSet}.
+ * Either a specific design token category or a structural 'group'.
  */
 type TokenSetType = ExtendedTokenTypes | "group";
 
 /**
- * Class representation of a set of tokens.
+ * A strictly-typed collection of {@link TokenNode}s.
+ * @remarks
+ * **Invariants:**
+ * - All nodes in a set must share the same `type`.
+ * - A set cannot mix {@link Group} nodes and {@link Token} nodes.
+ * - Names within a set should be unique (TODO: strict enforcement pending).
+ * @category Core
  *
- * @export
- * @class TokenSet
- * @typedef {TokenSet}
- *
- * @property name The name of the token set.
- *                Must be unique.
- * @property type The type of tokens included in the token set.
- *                Must match the type of tokens added and should be a type in {@link ExtendedTokenTypes} or "group" if the set contains {@link Group}.
- * @property level The level of the token set.
- *                 Can only be from 1 to 4 inclusive.
- * @property tokens List of tokens ( @see TokenNode ) that makes up tokenset.
+ * @property {string} name          The unique name identifying this collection.
+ * @property {TokenSetType} type    The mandatory schema for all members of this set.
+ * @property {Levels} level         The elevation/hierarchy level (1-4). @see {@link Levels}.
+ * @property {TokenNode[]} tokens   The internal collection of nodes..
  */
 export class TokenSet {
     name: string;
@@ -56,17 +73,11 @@ export class TokenSet {
     tokens: TokenNode[];
 
     /**
-     * Creates an instance of TokenSet with passed-in parameters.
-     * <p>Note: Each set can only contain a {@link Group} or {@link Token}, not both. </p>
-     *
-     * @constructor
-     * @param {string} name The name of the token set.
-     *                      <p>Note: Must be unique and not empty.</p>
-     * @param {ExtendedTokenTypes} [type="number"] The type of tokens, e.g: color, animation.
-     *                                             Check {@link ExtendedTokenTypes} for more details.
-     *                                             Default: "number"
-     * @param {Levels} [level=1] Level of the token set. 1, 2, 3, or 4.
-     *                           Default: 1.
+     * @param name - Unique identifier for the set.
+     * @param type - The expected type for all member tokens.
+     * @param level - The architectural level (Default: 1).
+     * @param tokens - Initial members (validated upon construction).
+     * @throws {IllegalArgumentError} If name is empty or initial tokens fail type validation.
      */
     constructor(
         name: string,
@@ -74,9 +85,14 @@ export class TokenSet {
         level: Levels = 1,
         tokens: TokenNode[] = [],
     ) {
-        if (!name) throw Error(`Name must be passed in for a tokenset`);
+        if (!name)
+            throw new IllegalArgumentError(
+                `Name must be passed in for a tokenset`,
+            );
         if (!isValidLevel(level))
-            throw Error(`Invalid level: Level must be in ${validLevels}`);
+            throw new IllegalArgumentError(
+                `Invalid level: Level must be in ${validLevels}`,
+            );
 
         this._validateToken(tokens, type);
         this.name = name;
@@ -86,11 +102,12 @@ export class TokenSet {
     }
 
     /**
-     * Insert the token into the token set.
-     * Conflicts can be resolved by using @see InsertConflictPolicy .
-     * @param token The token node to insert. @see TokenNode for details.
-     * @param options Optional configuration for insertion policy (IGNORE, REPLACE, MERGE not supported).
-     *                Defaults to ignore and for sorting tokens after insertions.
+     * Adds a node to the set while enforcing type consistency.
+     *
+     * @param {TokenNode} token              The node to insert.
+     * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
+     *
+     * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      */
     addToken(
         token: TokenNode,
@@ -111,16 +128,18 @@ export class TokenSet {
     }
 
     /**
-     * Returns the size of the current token set.
-     * @returns integer greater than 0
+     * Get the size of the current token set.
+     * @returns Non-zero number if the token set is not empty; else 0.
      */
     size() {
         return this.tokens.length;
     }
 
     /**
-     * Get the index of the token in the TokenSet, if it exist.
-     * @param tokenId The unique identifier of the token.
+     * Get the index of the token in the sset, if it exist.
+     *
+     * @param {string} tokenId The unique identifier of the token.
+     *
      * @returns The index if the token is present; else -1.
      */
     getTokenIndex(tokenId: string) {
@@ -128,20 +147,23 @@ export class TokenSet {
     }
 
     /**
-     * Remove {@link TokenNode} from a token set.
-     * @param token The token node to remove.
+     * Remove a token from the set.
+     * @param {TokenNode} token The token node to remove.
      */
     removeToken(token: TokenNode) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
     /**
-     * Update the token with the passed-in tokenId.
-     * If the tokennode doesn't exist, then it is inserted as per {@link UpdatePolicy}
-     * @param tokenId The ID of the token to update.
-     * @param newToken Token to be updated with.
-     * @param options Optional parameters like UpdatePolicy, whether to sort after insertion.
-     *                Sorting function can be provided.
+     * Update a token with tokenId with the given token.
+     * @remarks
+     * **Important:** If the token is not in the tokenset, it will added a per option.updatePolicy.
+     *
+     * @param {string} tokenId               The unique identifier of the token.
+     * @param {TokenNode} newToken           The token to update.
+     * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
+     *
+     * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      */
     updateToken(
         tokenId: string,
@@ -168,12 +190,10 @@ export class TokenSet {
     }
 
     /**
-     * Sorts the current token set with the comparator.
+     * Re-orders the internal token collection.
      *
-     * @param {TokenComparator} [compareFn=(a, b) =>
-     *             a.name.localeCompare(b.name, undefined, {
-     *                 numeric: true, sensitivity: "base",
-     *             })] The function that determines the sort order. Defaults to alphanumeric sorting.
+     * @param {TokenComparator} compareFn   The comparison logic. Defaults to a numeric-aware,
+     *                                      case-insensitive alphanumeric sort (e.g., "red-10" comes before "red-20").
      */
     sort(
         compareFn: TokenComparator = (a, b) =>
@@ -186,15 +206,14 @@ export class TokenSet {
     }
 
     /**
-     * Merge a token set with the current token set.
-     * In order for merge to succeed, both {@link TokenSet} must have the same name, type and level;
-     * else it will throw an error.
-     * Common tokens will only get added once.
+     * Merges an external set into the current one.
+     * @remarks
+     * Both sets must have identical `name`, `type`, and `level` to be considered compatible for merging.
      *
-     * @param tokenSet The token set to merge.
-     * @param options [Optional parameters] for {@link InsertionPolicy}(Note:MERGE not supported). Defaults to IGNORE.
-     *                Sorting tokens, after insertions.
-     * @throws error if tokens don't match level and type when merging on conflict.
+     * @param {TokenSet} tokenSet   The source set to merge from.
+     * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
+     *
+     * @throws {IllegalArgumentError} If architectural metadata (name/type/level) does not match.
      */
     mergeTokenSet(
         tokenSet: TokenSet,
@@ -209,7 +228,7 @@ export class TokenSet {
             this.type !== tokenSet.type ||
             this.level !== tokenSet.level
         )
-            throw new Error(
+            throw new IllegalArgumentError(
                 `TokenSet mismatch while merging: {${this.name}, ${this.type}, ${this.level}} != ${tokenSet.name}, ${tokenSet.type}, ${tokenSet.level}`,
             );
         for (const token of tokenSet.tokens) {
@@ -221,7 +240,8 @@ export class TokenSet {
     //TODO: Add name uniqueness validator and tests to update and insert
 
     /**
-     * Produces a JSON string representation of the current {@link TokenSet}.
+     * Returns a JSON string representation of the current set.
+     * @returns A JSON string.
      */
     toJsonString(): string {
         return JSON.stringify({
@@ -233,10 +253,13 @@ export class TokenSet {
     }
 
     /**
-     * Generate a {@link TokenSet} from a JSON string if its valid.
-     * @param jsonString json string to be parsed
-     * @return TokenSet if the json string is valid
-     * @throws Error if a invalid string is passed in or if the values passed in not in the range, for example, 5 is passed for level which should be between 1..4
+     * Hydrates a {@link TokenSet} from a JSON string.
+     *
+     * @param {string} jsonString   A valid JSON representation of a TokenSet.
+     *
+     * @returns A new, validated instance of TokenSet.
+     * @throws {SyntaxError} If the string is not valid JSON.
+     * @throws {IllegalArgumentError} If the hydrated data fails level or type validation.
      */
     static fromJson(jsonString: string): TokenSet {
         const data = JSON.parse(jsonString);
@@ -258,16 +281,19 @@ export class TokenSet {
 
     /**
      * Validate a list of tokens are of the same type.
-     * And that each token has a valid value.
+     * @remarks
+     * Type must be the same among all the tokens and the parent token type.
      *
      * @private
      * @param {TokenNode[]} tokens The tokens to validate.
-     * @param {TokenSetType} tokenType The token type to use for validation.
+     * @param {TokenSetType} tokenType The parent token type to use for validation.
+     *
+     * @throws {IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
     private _validateToken(tokens: TokenNode[], tokenType: TokenSetType) {
         // Token Type validation
         if (!(tokenType === "group" || isValidExtendedToken(tokenType)))
-            throw Error(
+            throw new IllegalArgumentError(
                 `Invalid token type: Type must be in ${extendedTokens}`,
             );
 
@@ -288,7 +314,7 @@ export class TokenSet {
             );
 
         if (!validationResult)
-            throw new Error(
+            throw new IllegalArgumentError(
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
             );
     }
