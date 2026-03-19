@@ -73,10 +73,11 @@ export class TokenSet {
     tokens: TokenNode[];
 
     /**
-     * @param name - Unique identifier for the set.
-     * @param type - The expected type for all member tokens.
-     * @param level - The architectural level (Default: 1).
-     * @param tokens - Initial members (validated upon construction).
+     * @param {string} name          Unique identifier for the set.
+     * @param {TokenSetType} type    The expected type for all member tokens (Default: "number").
+     * @param {Levels} level         The architectural level (Default: 1).
+     * @param {TokenNode[]} tokens   Initial members (validated upon construction).
+     *
      * @throws {IllegalArgumentError} If name is empty or initial tokens fail type validation.
      */
     constructor(
