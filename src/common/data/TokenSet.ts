@@ -238,8 +238,6 @@ export class TokenSet {
         if (sortToken) this.sort(compareFn);
     }
 
-    //TODO: Add name uniqueness validator and tests to update and insert
-
     /**
      * Returns a JSON string representation of the current set.
      * @returns A JSON string.
@@ -254,7 +252,7 @@ export class TokenSet {
     }
 
     /**
-     * Hydrates a {@link TokenSet} from a JSON string.
+     * Reconstructs a {@link TokenSet} instance from a JSON string.
      *
      * @param {string} jsonString   A valid JSON representation of a TokenSet.
      *

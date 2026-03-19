@@ -211,4 +211,8 @@ export class DesignSystem {
         });
         return new DesignSystem(parsedData?.name, parsedData?.tokenSets || []);
     }
+
+    clone(): DesignSystem {
+        return DesignSystem.fromJson(this.toJson())!!;
+    }
 }
