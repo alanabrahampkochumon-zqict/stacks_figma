@@ -9,7 +9,6 @@ import { describe, expect, test } from "vitest";
 // \{\s*type:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*name:\s*(.*)\s*\} -> createToken($3, $2, $1)
 // \{\s*name:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*type:\s*(.*)\s*\} -> createToken($1, $2, $3)
 
-// TODO: Groups cant be added to tokenonly nodes or vice verse
 describe("TokenSet Add Tests", () => {
     test("token gets added, when a valid token is passed in", () => {
         // Given a empty token set

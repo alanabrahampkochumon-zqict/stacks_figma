@@ -1,3 +1,4 @@
+import { createGroup } from "@src/common/data/Group";
 import { createToken, type ExtendedTokenTypes } from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
@@ -245,6 +246,12 @@ export function setUpTokenSet() {
             createToken({ default: 45 }, differentTokenType),
         ),
     ];
+    const groupTokenSet = new TokenSet("groups", "group", 1, [
+        createTokenNode("group-1", createGroup(true), "1"),
+        createTokenNode("group-2", createGroup(true), "2"),
+        createTokenNode("group-3", createGroup(true), "3"),
+    ]);
+    const groupJson = JSON.stringify(groupTokenSet);
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
     const originalTokenSetString = JSON.stringify(originalTokenSet);
@@ -314,5 +321,7 @@ export function setUpTokenSet() {
         originalTokenSetString,
         emptyTokenSet,
         emptyTokenSetString,
+        groupTokenSet,
+        groupJson,
     };
 }

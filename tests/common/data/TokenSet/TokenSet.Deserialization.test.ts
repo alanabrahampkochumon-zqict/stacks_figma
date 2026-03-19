@@ -81,11 +81,22 @@ describe("TokenSet Deserialization Tests", () => {
 
         // When converted to token set
         const ts = TokenSet.fromJson(originalTokenSetString);
-        console.log(ts);
-        console.log(originalTokenSet);
         // Then a token set is created with the correct valueByNames
         expect(ts).toBeDefined();
         expect(ts).toStrictEqual(originalTokenSet);
+    });
+
+    test("returns correct tokenset, when json string with name, type, and group is passed in is passed in", () => {
+        // Given a json string with name only
+        const { groupJson, groupTokenSet } = setUpTokenSet();
+
+        // When converted to token set
+        const ts = TokenSet.fromJson(groupJson);
+        console.log(ts);
+        console.log(ts);
+        // Then a token set is created with the correct valueByNames
+        expect(ts).toBeDefined();
+        expect(ts).toStrictEqual(groupTokenSet);
     });
 
     test("throws error, when json string with no name is passed in", () => {
