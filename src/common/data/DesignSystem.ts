@@ -37,6 +37,8 @@ export class DesignSystem {
         this._tokenSets = tokenSets;
     }
 
+    // TODO: Add name uniqueness validator for tokensets
+
     /**
      * Adds a token set to a design system. If the tokenset already exist, the insertion policy is used to determine what to do with the duplicate.
      * @param tokenSet The token set to be inserted.
@@ -58,7 +60,10 @@ export class DesignSystem {
         } else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this._tokenSets[tokenSetIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
-            this._tokenSets[tokenSetIndex].mergeTokenSet(tokenSet);
+            // TODO: Add test for merge policy
+            this._tokenSets[tokenSetIndex].mergeTokenSet(tokenSet, {
+                insertPolicy,
+            });
         else
             return console.warn(
                 "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",

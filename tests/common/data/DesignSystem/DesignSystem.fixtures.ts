@@ -1,56 +1,167 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
-import { createToken, type Token } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
+import { createTokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 
 export function setUpDesignSystem() {
     const tokenType1 = "number";
-    const tokens1: Token[] = [
-        createToken("size-0", { default: 0 }, tokenType1),
-        createToken("size-150", { default: 150 }, tokenType1),
-        createToken("size-50", { default: 50 }, tokenType1),
-        createToken("size-1000", { default: 100 }, tokenType1),
+    const tokens1 = [
+        createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 150 }, tokenType1),
+            "2",
+        ),
+        createTokenNode(
+            "size-50",
+            createToken({ default: 50 }, tokenType1),
+            "3",
+        ),
+        createTokenNode(
+            "size-1000",
+            createToken({ default: 100 }, tokenType1),
+            "4",
+        ),
     ];
-    const sortedTokens1: Token[] = [
-        createToken("size-0", { default: 0 }, tokenType1),
-        createToken("size-50", { default: 50 }, tokenType1),
-        createToken("size-150", { default: 150 }, tokenType1),
-        createToken("size-1000", { default: 100 }, tokenType1),
+    const sortedTokens1 = [
+        createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
+        createTokenNode(
+            "size-50",
+            createToken({ default: 50 }, tokenType1),
+            "3",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 150 }, tokenType1),
+            "2",
+        ),
+        createTokenNode(
+            "size-1000",
+            createToken({ default: 100 }, tokenType1),
+            "4",
+        ),
     ];
     const tokenType2 = "string";
-    const tokens2: Token[] = [
-        createToken("light", { default: "light" }, tokenType2),
-        createToken("regular", { default: "regular" }, tokenType2),
-        createToken("bold", { default: "bold" }, tokenType2),
+    const tokens2 = [
+        createTokenNode(
+            "light",
+            createToken({ default: "light" }, tokenType2),
+            "11",
+        ),
+        createTokenNode(
+            "regular",
+            createToken({ default: "regular" }, tokenType2),
+            "22",
+        ),
+        createTokenNode(
+            "bold",
+            createToken({ default: "bold" }, tokenType2),
+            "33",
+        ),
     ];
-    const tokens3: Token[] = [
-        createToken("size-0", { default: 0 }, tokenType1),
-        createToken("size-100", { default: 1000 }, tokenType1),
-        createToken("size-150", { default: 15 }, tokenType1),
-        createToken("size-350", { default: 35 }, tokenType1),
+    const tokens3 = [
+        createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 1000 }, tokenType1),
+            "6",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 15 }, tokenType1),
+            "2",
+        ),
+        createTokenNode(
+            "size-350",
+            createToken({ default: 35 }, tokenType1),
+            "8",
+        ),
     ];
-    const mergedToken: Token[] = [
-        createToken("size-0", { default: 0 }, tokenType1),
-        createToken("size-150", { default: 150 }, tokenType1),
-        createToken("size-50", { default: 50 }, tokenType1),
-        createToken("size-1000", { default: 100 }, tokenType1),
-        createToken("size-100", { default: 1000 }, tokenType1),
-        createToken("size-350", { default: 35 }, tokenType1),
+    const mergedToken = [
+        createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
+        createTokenNode(
+            "size-50",
+            createToken({ default: 50 }, tokenType1),
+            "3",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 150 }, tokenType1),
+            "2",
+        ),
+        createTokenNode(
+            "size-1000",
+            createToken({ default: 100 }, tokenType1),
+            "4",
+        ),
+
+        createTokenNode(
+            "size-100",
+            createToken({ default: 1000 }, tokenType1),
+            "6",
+        ),
+        createTokenNode(
+            "size-350",
+            createToken({ default: 35 }, tokenType1),
+            "8",
+        ),
     ];
-    const sortedMergedToken: Token[] = [
-        createToken("size-0", { default: 0 }, tokenType1),
-        createToken("size-50", { default: 50 }, tokenType1),
-        createToken("size-100", { default: 1000 }, tokenType1),
-        createToken("size-150", { default: 150 }, tokenType1),
-        createToken("size-350", { default: 35 }, tokenType1),
-        createToken("size-1000", { default: 100 }, tokenType1),
+    const sortedMergedToken = [
+        createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
+        createTokenNode(
+            "size-50",
+            createToken({ default: 50 }, tokenType1),
+            "3",
+        ),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 1000 }, tokenType1),
+            "6",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 150 }, tokenType1),
+            "2",
+        ),
+
+        createTokenNode(
+            "size-350",
+            createToken({ default: 35 }, tokenType1),
+            "8",
+        ),
+        createTokenNode(
+            "size-1000",
+            createToken({ default: 100 }, tokenType1),
+            "4",
+        ),
     ];
-    const sortedMergedTokenByValue: Token[] = [
-        createToken("size-0", { default: 0 }, tokenType1),
-        createToken("size-350", { default: 35 }, tokenType1),
-        createToken("size-50", { default: 50 }, tokenType1),
-        createToken("size-1000", { default: 100 }, tokenType1),
-        createToken("size-150", { default: 150 }, tokenType1),
-        createToken("size-100", { default: 1000 }, tokenType1),
+    const sortedMergedTokenByValue = [
+        createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
+        createTokenNode(
+            "size-350",
+            createToken({ default: 35 }, tokenType1),
+            "8",
+        ),
+        createTokenNode(
+            "size-50",
+            createToken({ default: 50 }, tokenType1),
+            "3",
+        ),
+        createTokenNode(
+            "size-1000",
+            createToken({ default: 100 }, tokenType1),
+            "4",
+        ),
+        createTokenNode(
+            "size-150",
+            createToken({ default: 150 }, tokenType1),
+            "2",
+        ),
+        createTokenNode(
+            "size-100",
+            createToken({ default: 1000 }, tokenType1),
+            "6",
+        ),
     ];
     const tokenSet1 = new TokenSet("token-1", tokenType1, 1, tokens1);
     const sortedTokenSet1 = new TokenSet(

@@ -1,9 +1,14 @@
 import { InsertConflictPolicy } from "@src/common/data/Common";
 import { DesignSystem } from "@src/common/data/DesignSystem";
-import { createToken, type Token } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
+import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { setUpDesignSystem } from "./DesignSystem.fixtures";
+
+// REGEX
+// createToken\(\s*(".*"),\s*(\{.*\}),\s*(.*)\)
+// createTokenNode($1, createToken($2, $3))
 
 describe("Design System Add TokenSet", () => {
     test("tokenset(single) gets added, when added to empty design system", () => {
@@ -56,10 +61,9 @@ describe("Design System Add TokenSet", () => {
     test("throws error, when tokenset with different levels are merged", () => {
         // Given a non-empty design system
         const { dsName, tokenSets } = setUpDesignSystem();
-        const token: Token = createToken(
+        const token: TokenNode = createTokenNode(
             "invalid",
-            { default: "#ffffff" },
-            "color",
+            createToken({ default: "#ffffff" }, "color"),
         );
         const newSet = new TokenSet(
             tokenSets[0].name,
@@ -115,8 +119,12 @@ describe("Design System Add TokenSet", () => {
             sortToken: true,
             insertPolicy: InsertConflictPolicy.MERGE,
             compareFn: (a, b) =>
-                Object.values(a.valueByMode)[0] -
-                Object.values(b.valueByMode)[0],
+                Object.values(
+                    a.value?.entityType === "token" && a.value.valueByMode,
+                )[0] -
+                Object.values(
+                    b.value?.entityType === "token" && b.value.valueByMode,
+                )[0],
         });
 
         // Then the merged tokens are sorted
