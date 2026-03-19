@@ -1,5 +1,5 @@
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
-import type { Token, TokenComparator } from "./Token";
+import type { TokenComparator } from "./Token";
 import { TokenSet } from "./TokenSet";
 
 /**
@@ -60,7 +60,6 @@ export class DesignSystem {
         } else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this._tokenSets[tokenSetIndex] = tokenSet;
         else if (insertPolicy === InsertConflictPolicy.MERGE)
-            // TODO: Add test for merge policy
             this._tokenSets[tokenSetIndex].mergeTokenSet(tokenSet, {
                 insertPolicy,
             });
@@ -126,19 +125,6 @@ export class DesignSystem {
     getTokenSet(name: string): TokenSet | undefined {
         const index = this.getIndex(name);
         return index === -1 ? undefined : this._tokenSets[index];
-    }
-
-    addToken(token: Token, tokenSetName: string) {
-        this._tokenSets
-            .find((tokenSet) => tokenSet.name == tokenSetName)
-            ?.tokens.push(token);
-    }
-
-    removeToken(token: Token, tokenSetName: string) {
-        const foundTokenSet = this._tokenSets.find(
-            (tokenSet) => tokenSet.name == tokenSetName,
-        );
-        foundTokenSet?.tokens.filter((curToken) => curToken != token);
     }
 
     /**
