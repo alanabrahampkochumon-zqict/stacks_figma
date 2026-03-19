@@ -1,6 +1,7 @@
 import { UpdatePolicy } from "@src/common/data/Common";
 import { DesignSystem } from "@src/common/data/DesignSystem";
-import type { Token } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
+import { createTokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { setUpDesignSystem } from "./DesignSystem.fixtures";
@@ -63,29 +64,26 @@ describe("Design Sytem Update TokenSet", () => {
     test("tokenset gets updated, when a existing tokenset is passed in with insert", () => {
         // Given a non-empty token set
         const { dsName, tokenSets } = setUpDesignSystem();
-        const token1: Token = {
-            name: "test-3",
-            type: tokenSets[0].type,
-            valueByMode: { default: 3 },
-        };
-        const token2: Token = {
-            name: "test-1",
-            type: tokenSets[0].type,
-            valueByMode: { default: 1 },
-        };
-
+        const tokenNode1 = createTokenNode(
+            "test-3",
+            createToken({ default: 3 }, "number"),
+        );
+        const tokenNode2 = createTokenNode(
+            "test-1",
+            createToken({ default: 1 }, "number"),
+        );
         const tokenSet = new TokenSet(
             tokenSets[0].name,
             tokenSets[0].type,
             tokenSets[0].level,
-            [token1, token2],
+            [tokenNode1, tokenNode2],
         );
 
         const tokenSetSorted = new TokenSet(
             tokenSets[0].name,
             tokenSets[0].type,
             tokenSets[0].level,
-            [token2, token1],
+            [tokenNode2, tokenNode1],
         );
 
         const designSystem = new DesignSystem(dsName, tokenSets);
