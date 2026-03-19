@@ -81,7 +81,7 @@ export class TokenSet {
      */
     constructor(
         name: string,
-        type: TokenSetType,
+        type: TokenSetType = "number",
         level: Levels = 1,
         tokens: TokenNode[] = [],
     ) {
