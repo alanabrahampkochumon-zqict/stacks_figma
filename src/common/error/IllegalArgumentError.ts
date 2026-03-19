@@ -1,5 +1,5 @@
 /**
- * Class representation of Illegal Argument.
+ * Represents an IllegalArgument Error.
  *
  * @export
  * @class IllegalArgumentError

@@ -1,3 +1,5 @@
+import type { DuplicationError } from "../error/DuplicationError";
+import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { TokenComparator } from "./Token";
 import { TokenSet } from "./TokenSet";
@@ -26,24 +28,47 @@ type DesignSystemUpdateOptions = {
     compareFn?: TokenComparator;
 };
 
+/**
+ * The root container for a Design System.
+ * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.
+ *
+ * @remarks
+ * **Architecture Note:**
+ * This class acts as a Facade for managing design tokens across different levels
+ * and categories. It enforces a unique naming constraint across all child sets.
+ * * @category Core
+ *
+ * @property {string} name    The unique name of the design system.
+ */
 export class DesignSystem {
     name: string;
+    /** @internal Internal storage for token collections. */
     private _tokenSets: TokenSet[];
 
+    /**
+     * @param name         Unique name identifier for the Design System. Must not be empty.
+     * @param tokenSets    Optional initial collections to seed the system.
+     * @throws {IllegalArgumentError} If `name` is null, undefined, or an empty string.
+     */
     constructor(name: string, tokenSets: TokenSet[] = []) {
         if (!name)
-            throw new Error("Design system needs a name to be initialized!");
+            throw new IllegalArgumentError(
+                "Design system needs a name to be initialized!",
+            );
         this.name = name;
         this._tokenSets = tokenSets;
     }
 
-    // TODO: Add name uniqueness validator for tokensets
-
     /**
-     * Adds a token set to a design system. If the tokenset already exist, the insertion policy is used to determine what to do with the duplicate.
-     * @param tokenSet The token set to be inserted.
-     * @param options Sets the insertion policy(Defaults to IGNORE), and sorting option.
-     * @throws error if tokens don't match level and type when merging on conflict.
+     * Integrates a {@link TokenSet} into the system.
+     * @remarks
+     * If {@link InsertConflictPolicy.MERGE} is used, the existing set is updated
+     * in-place using the target set's tokens.
+     *
+     * @param {TokenSet} tokenSet                The collection to add.
+     * @param {DesignSystemAddOptions} options   Configuration for conflict resolution and sorting.
+     *
+     * @throws {IllegalArgumentError} If tokens level and type does not match while **merging**.
      */
     addTokenSet(
         tokenSet: TokenSet,
@@ -71,29 +96,28 @@ export class DesignSystem {
     }
 
     /**
-     * Returns the index of a token set if it exists else -1
-     * @param tokenSetName name of the token set to match for
-     * @returns -1 if not found else index of tokenset
+     * Get the index of a tokenset if it exists.
+     * @param {string} tokenSetName The name of the token set to match.
+     * @returns -1 if no match is found else index of tokenset
      */
     getIndex(tokenSetName: string) {
         return this._tokenSets.findIndex((ts) => ts.name === tokenSetName);
     }
 
     /**
-     * Removes a tokenset if it exists
-     * @param tokenSet to be removed
+     * Remove a token set from the design system.
+     * @param {TokenSet} tokenSet The token set to be removed
      */
     removeTokenSet(tokenSet: TokenSet) {
         this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
     }
 
     /**
-     * Updates a tokenset with the given token set, if it exists,
-     * else it gets inserted if UpdatePolicy is set to UpdatePolicy.INSERT,
-     * else nothing gets updated/inserted
-     * @param tokenSetName key used for updating tokenset
-     * @param newTokenSet tokenset to be updated with
-     * @param option update options: UpdatePolicy(Defaults to IGNORE), sortToken: Sorts the updated/inserted tokenset
+     * Update a tokenset with the given tokenset, if it exists.
+     *
+     * @param {string} tokenSetName                The name of the tokenset to update.
+     * @param {TokenSet} newTokenSet               Token set to update.
+     * @param {DesignSystemUpdateOptions} option   Configuration for conflict resolution and sorting.
      */
     updateTokenSet(
         tokenSetName: string,
@@ -112,15 +136,15 @@ export class DesignSystem {
             this.addTokenSet(newTokenSet, { sortToken, compareFn });
         else
             console.log(
-                "No matching token found! Update policy set to IGNORE. Aborting operation.",
+                "No matching token found! Aborting operation(Update policy set to IGNORE).",
             );
     }
 
     /**
-     * Get's a token set fromt the design system.
-     * Any mutations if applied to the tokenset will be applied to the design system.
-     * @param name the name of the token set to get return.
-     * @returns tokenset if it exists or undefined.
+     * Get a tokenset from the design system with name used for identification.
+     *
+     * @param name    Then name to match for.
+     * @returns The token set if it exists.
      */
     getTokenSet(name: string): TokenSet | undefined {
         const index = this.getIndex(name);
@@ -128,11 +152,14 @@ export class DesignSystem {
     }
 
     /**
-     * Updates the name of the tokenset in the design system.
-     * Direct mutation with tokensets is not recommended as it does not check for collisions.
-     * @param name the name used to reference the tokenset
-     * @param newName the new name to assign to.
-     * @throws error if new name is a duplicate name, or when a tokenset with given name does not exist.
+     * Safely updates a TokenSet's name while checking for system-wide collisions.
+     * @remarks
+     * - Direct mutation is not recommended due to lack of collision checking.
+     *
+     * @param name      The current name of the set.
+     * @param newName   The desired new name.
+     * @throws {DuplicationError}       If the new name already exists.
+     * @throws {IllegalArgumentError}   If the reference name does not exists.
      */
     updateTokenSetName(name: string, newName: string) {
         const tokenSetIndex = this.getIndex(name);
@@ -146,16 +173,16 @@ export class DesignSystem {
     }
 
     /**
-     * Accessor for tokensets.
-     * @returns tokensets that make up the design system
+     * Returns a read-only view of the token sets.
+     * @returns A read-only view of the managed tokensets.
      */
-    getTokenSets(): TokenSet[] {
+    getTokenSets(): readonly TokenSet[] {
         return this._tokenSets;
     }
 
     /**
-     * Parses the calling design system instance to a JSON string
-     * @returns Json string representation of the current design system
+     * Serializes the entire Design System into a JSON string.
+     * Includes all nested {@link TokenSet} and {@link TokenNode} data.
      */
     toJson(): string {
         return JSON.stringify({
@@ -165,10 +192,10 @@ export class DesignSystem {
     }
 
     /**
-     * Parses a JSON string to a `DesignSystem`.
-     * @param jsonString jsonstring to be parsed
-     * @returns a `DesignSystem` instance created from the passed in string, if it is valid.
-     * @throws Error if the design system is invalid.
+     * Reconstructs a full {@link DesignSystem} instance from a JSON string.
+     * @param jsonString    The serialized data.
+     * @returns A new DesignSystem instance or undefined if parsing fails.
+     * @throws {Error} If the JSON structure is valid but the data violates system invariants.
      */
     static fromJson(jsonString: string): DesignSystem | undefined {
         const parsedData = JSON.parse(jsonString, (key, value) => {

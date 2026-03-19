@@ -103,7 +103,7 @@ export class TokenSet {
     }
 
     /**
-     * Adds a node to the set while enforcing type consistency.
+     * Add a node to the set while enforcing type consistency.
      *
      * @param {TokenNode} token              The node to insert.
      * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
