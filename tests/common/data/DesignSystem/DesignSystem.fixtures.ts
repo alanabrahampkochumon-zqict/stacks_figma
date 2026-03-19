@@ -80,14 +80,14 @@ export function setUpDesignSystem() {
     const mergedToken = [
         createTokenNode("size-0", createToken({ default: 0 }, tokenType1), "1"),
         createTokenNode(
-            "size-50",
-            createToken({ default: 50 }, tokenType1),
-            "3",
-        ),
-        createTokenNode(
             "size-150",
             createToken({ default: 150 }, tokenType1),
             "2",
+        ),
+        createTokenNode(
+            "size-50",
+            createToken({ default: 50 }, tokenType1),
+            "3",
         ),
         createTokenNode(
             "size-1000",
