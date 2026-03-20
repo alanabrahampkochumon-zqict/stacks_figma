@@ -44,6 +44,8 @@ export class DesignSystem {
     name: string;
     /** @internal Internal storage for token collections. */
     private _tokenSets: TokenSet[];
+    /** @internal Internal flag for determining if the design system is hardened(immutable). */
+    private _isHardened: boolean;
 
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.
@@ -57,6 +59,7 @@ export class DesignSystem {
             );
         this.name = name;
         this._tokenSets = tokenSets;
+        this._isHardened = false;
     }
 
     /**
@@ -78,6 +81,8 @@ export class DesignSystem {
             compareFn,
         }: DesignSystemAddOptions = {},
     ) {
+        if (Object.isFrozen(this))
+            throw new Error("Cannot modify a locked Design System.");
         let tokenSetIndex = this.getIndex(tokenSet.name);
         if (tokenSetIndex === -1) {
             this._tokenSets.push(tokenSet);
@@ -109,6 +114,8 @@ export class DesignSystem {
      * @param {TokenSet} tokenSet The token set to be removed
      */
     removeTokenSet(tokenSet: TokenSet) {
+        if (Object.isFrozen(this))
+            throw new Error("Cannot modify a locked Design System.");
         this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
     }
 
@@ -128,6 +135,8 @@ export class DesignSystem {
             compareFn,
         }: DesignSystemUpdateOptions = {},
     ) {
+        if (Object.isFrozen(this))
+            throw new Error("Cannot modify a locked Design System.");
         const tokenSetIndex = this.getIndex(tokenSetName);
         if (tokenSetIndex !== -1) {
             this._tokenSets[tokenSetIndex] = newTokenSet;
@@ -162,6 +171,8 @@ export class DesignSystem {
      * @throws {IllegalArgumentError}   If the reference name does not exists.
      */
     updateTokenSetName(name: string, newName: string) {
+        if (Object.isFrozen(this))
+            throw new Error("Cannot modify a locked Design System.");
         const tokenSetIndex = this.getIndex(name);
         if (tokenSetIndex === -1)
             throw new Error(`TokenSet with ${name} doesn't exist.`);
@@ -227,5 +238,23 @@ export class DesignSystem {
      */
     clearAll() {
         this._tokenSets = [];
+    }
+
+    /**
+     * Hardens the Design System, preventing any further internal or external mutations.
+     * @remarks
+     * - This performs a "Deep Freeze." Once locked, any attempt to modify tokens,
+     * sets, or names will throw a runtime TypeError in strict mode.
+     * - If you need mutation, use {@link clone} to create a copy of the Design System.
+     */
+    harden() {
+        this._isHardened = true;
+        this._tokenSets.forEach((tks) => {
+            tks.tokens.forEach(Object.freeze);
+            Object.freeze(tks.tokens);
+            Object.freeze(tks);
+        });
+        Object.freeze(this._tokenSets);
+        Object.freeze(this);
     }
 }
