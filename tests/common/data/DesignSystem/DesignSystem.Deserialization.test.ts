@@ -79,6 +79,7 @@ describe("Design System Deserialization", () => {
         // Then, it throws an error
         expect(() => DesignSystem.fromJson(jsonString)).toThrow();
     });
+
     test("throws error, when malformed json string is passed in", () => {
         // Given a json string without an name
         const jsonString = `
@@ -89,5 +90,21 @@ describe("Design System Deserialization", () => {
         `;
         // Then, it throws an error
         expect(() => DesignSystem.fromJson(jsonString)).toThrow();
+    });
+
+    test("throws error, when a hardened design system is deserialized and modified", () => {
+        // When a hardened design system json is deserialized
+        let { serializedDesignSystem } = setUpDesignSystem();
+        serializedDesignSystem = serializedDesignSystem.replace(
+            `"isHardened":false`,
+            `"isHardened":true`,
+        );
+
+        const result = DesignSystem.fromJson(serializedDesignSystem);
+
+        // Then, it create a hardened design system
+        expect(result).toBeDefined();
+        expect(() => result?.clearAll()).toThrow();
+        expect(() => result && (result.name = "new design system")).toThrow();
     });
 });

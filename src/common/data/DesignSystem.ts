@@ -229,6 +229,7 @@ export class DesignSystem {
             parsedData?.tokenSets || [],
         );
         if (parsedData.isHardened) ds.harden();
+
         return ds;
     }
 

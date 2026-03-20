@@ -60,4 +60,15 @@ describe("Design System Hardening", () => {
             designSystem.updateTokenSetName(tokenSets[0].name, "new name"),
         ).toThrow();
     });
+
+    test("throws error, when trying to clear tokenset", () => {
+        // Given a design system
+        const { designSystem } = setUpDesignSystem();
+
+        // When hardened
+        designSystem.harden();
+
+        // Then, it throws an error when trying to clear a tokenset
+        expect(() => designSystem.clearAll()).toThrow();
+    });
 });
