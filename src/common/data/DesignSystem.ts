@@ -212,7 +212,20 @@ export class DesignSystem {
         return new DesignSystem(parsedData?.name, parsedData?.tokenSets || []);
     }
 
+    /**
+     * Make a deep-copy of this Design System.
+     * @returns A new instance of the Design System.
+     */
     clone(): DesignSystem {
         return DesignSystem.fromJson(this.toJson())!!;
+    }
+
+    /**
+     * Clear all collections from the Design System.
+     * @remarks
+     * **WARNING**: This is an irreversible process and will reset your Design System.
+     */
+    clearAll() {
+        this._tokenSets = [];
     }
 }
