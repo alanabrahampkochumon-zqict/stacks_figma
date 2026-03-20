@@ -20,7 +20,8 @@ describe("Design System Serialization", () => {
         const serializedDesignSystem = `
         {
             "name": "Falcon",
-            "tokenSets": []
+            "tokenSets": [],
+            "isHardened": false
         }
         `.replace(/\s/g, "");
 
@@ -28,5 +29,22 @@ describe("Design System Serialization", () => {
 
         // Then it output string is correct
         expect(serialized).toStrictEqual(serializedDesignSystem);
+    });
+
+    test("returns serialized output with hardened = true, when serializing hardened design system", () => {
+        // Given, a hardened design system
+        const { designSystem, serializedDesignSystem } = setUpDesignSystem();
+        designSystem.harden();
+
+        // When serialized
+        const serialized = designSystem.toJson();
+
+        // Then, it matches the hardened design system serialization output
+        expect(serialized).toStrictEqual(
+            serializedDesignSystem.replace(
+                '"isHardened":false',
+                '"isHardened":true',
+            ),
+        );
     });
 });

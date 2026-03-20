@@ -199,6 +199,7 @@ export class DesignSystem {
         return JSON.stringify({
             name: this.name,
             tokenSets: this._tokenSets.map((tks) => tks.toJsonString()),
+            isHardened: this._isHardened,
         });
     }
 

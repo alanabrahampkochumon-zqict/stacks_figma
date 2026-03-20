@@ -194,6 +194,7 @@ export function setUpDesignSystem() {
     const serializedDesignSystem = JSON.stringify({
         name: designSystem.name,
         tokenSets: designSystem.getTokenSets().map((it) => JSON.stringify(it)),
+        isHardened: Object.isFrozen(designSystem),
     })
         .replace(/\\"modes\\":{}/g, `\\"modes\\":[\\"default\\"]`)
         .replace("_tokenSet", "tokenSet");
