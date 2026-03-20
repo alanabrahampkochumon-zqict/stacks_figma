@@ -224,7 +224,12 @@ export class DesignSystem {
             }
             return value;
         });
-        return new DesignSystem(parsedData?.name, parsedData?.tokenSets || []);
+        const ds = new DesignSystem(
+            parsedData?.name,
+            parsedData?.tokenSets || [],
+        );
+        if (parsedData.isHardened) ds.harden();
+        return ds;
     }
 
     /**
