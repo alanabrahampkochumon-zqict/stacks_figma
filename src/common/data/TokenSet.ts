@@ -1,3 +1,4 @@
+import { DuplicationError } from "../error/DuplicationError";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { ExtendedTokenTypes, Levels, TokenComparator } from "./Token";
@@ -109,6 +110,7 @@ export class TokenSet {
      * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
+     * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
      */
     addToken(
         token: TokenNode,
@@ -119,7 +121,14 @@ export class TokenSet {
         }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
-        if (this.getTokenIndex(token.uid) === -1) this.tokens.push(token);
+        const tokenIndex = this.getTokenIndex(token.uid);
+        if (tokenIndex === -1 && !this._checkUniqueName(token.name))
+            console.log(token);
+        if (tokenIndex === -1 && !this._checkUniqueName(token.name))
+            throw new DuplicationError(
+                "A token with the same name already exists.",
+            );
+        else if (tokenIndex === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
             this.updateToken(token.uid, token);
 
@@ -316,5 +325,15 @@ export class TokenSet {
             throw new IllegalArgumentError(
                 "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
             );
+    }
+
+    /**
+     * Perform check on whether the name is unique in the tokenset.
+     *
+     * @param {string} name The name to check.
+     * @returns {boolean} True if the name is unique within the current tokenset.
+     */
+    _checkUniqueName(name: string): boolean {
+        return !this.tokens.some((token) => token.name === name);
     }
 }

@@ -28,9 +28,6 @@ type DesignSystemUpdateOptions = {
     compareFn?: TokenComparator;
 };
 
-// TODO: Add deserialization hardening
-// TODO: Add test for hardened serialization
-
 /**
  * The root container for a Design System.
  * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.

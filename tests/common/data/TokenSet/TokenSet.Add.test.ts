@@ -267,4 +267,38 @@ describe("TokenSet Add Tests", () => {
         // Then, an error is thrown
         expect(() => tokenSet.addToken(invalidToken)).toThrow();
     });
+
+    test("throws error, when adding token node with non-unique name and different id", () => {
+        // Given a non-empty token set
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const initialTokens = [
+            createTokenNode(
+                "size-100",
+                createToken({ default: 10 }, tokenType),
+                "1",
+            ),
+            createTokenNode(
+                "size-150",
+                createToken({ default: 15 }, tokenType),
+                "2",
+            ),
+            createTokenNode(
+                "size-0",
+                createToken({ default: 0 }, tokenType),
+                "3",
+            ),
+        ];
+        const token = createTokenNode(
+            "size-100",
+            createToken({ default: 15 }, tokenType),
+            "50",
+        );
+        // When a token with duplicate name and unique id is added
+        const tokenSet = new TokenSet(name, tokenType, level, initialTokens);
+
+        // Then, it throws an error
+        expect(() => tokenSet.addToken(token)).toThrow();
+    });
 });
