@@ -80,6 +80,7 @@ export class TokenSet {
      * @param {TokenNode[]} tokens   Initial members (validated upon construction).
      *
      * @throws {IllegalArgumentError} If name is empty or initial tokens fail type validation.
+     * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
      */
     constructor(
         name: string,
@@ -94,6 +95,17 @@ export class TokenSet {
         if (!isValidLevel(level))
             throw new IllegalArgumentError(
                 `Invalid level: Level must be in ${validLevels}`,
+            );
+            // Checks if any of the token set contains a unique id
+        if (
+            tokens.some(
+                (token) =>
+                    !this._checkUniqueName(token.name, tokens) &&
+                    tokens.findIndex((tk) => token.uid === tk.uid) === -1,
+            )
+        )
+            throw new DuplicationError(
+                "Tokens in the set must have unique name.",
             );
 
         this._validateToken(tokens, type);
@@ -331,9 +343,12 @@ export class TokenSet {
      * Perform check on whether the name is unique in the tokenset.
      *
      * @param {string} name The name to check.
+     * @param {TokenNode[]} tokens The tokens to match against.
+     *                             If undefined uses this tokenset's collection.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    _checkUniqueName(name: string): boolean {
-        return !this.tokens.some((token) => token.name === name);
+    _checkUniqueName(name: string, tokens?: TokenNode[] | undefined): boolean {
+        const tokenCollection = tokens ? tokens : this.tokens;
+        return !tokenCollection.some((token) => token.name === name);
     }
 }
