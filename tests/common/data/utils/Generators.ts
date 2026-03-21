@@ -77,7 +77,7 @@ export function generateTokenNode(
     reference: boolean = false,
     modes: string[] | undefined = undefined,
 ): TokenNode {
-    const tokenName = name || faker.science.chemicalElement.name;
+    const tokenName = name || v4();
     const tokenId = uid || v4();
     const tokenReference = reference ? v4() : undefined;
     const tokenValue = !tokenReference

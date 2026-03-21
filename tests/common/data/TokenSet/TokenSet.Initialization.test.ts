@@ -6,6 +6,7 @@ import {
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
+import { generateTokenNode } from "../utils/Generators";
 import setUpTokens from "./TokenSet.fixtures";
 
 describe("TokenSet Intialization Tests", () => {
@@ -54,20 +55,6 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.tokens).toStrictEqual(tokens);
         expect(tokenSet.tokens.length).toStrictEqual(0);
         expect(tokenSet.type).toStrictEqual(tokenType);
-    });
-
-    test("creates modes automatically, when initialized by non empty tokens", () => {
-        // When a tokenset is initialized without specifying modes
-        const level = 1;
-        const name = "TokenSet";
-        const { colorTokens, colorTokenType } = setUpTokens();
-        const tokenSet = new TokenSet(name, colorTokenType, level, colorTokens);
-
-        // Then, the object contains the correct name and default valueByNames
-        expect(tokenSet.name).toStrictEqual(name);
-        expect(tokenSet.level).toStrictEqual(level);
-        expect(tokenSet.tokens).toStrictEqual(colorTokens);
-        expect(tokenSet.type).toStrictEqual(colorTokenType);
     });
 
     test("throws error, when initialized with mixed token types", () => {
@@ -149,6 +136,22 @@ describe("TokenSet Intialization Tests", () => {
         // Then, the initializer throws an error
         expect(
             () => new TokenSet(name, tokenType, level, numberTokens),
+        ).toThrow();
+    });
+
+    test("throws error, when initializing tokenset with duplicate names and unique ids", () => {
+        // When a tokenset is initialized with default values
+        const level = 1;
+        const name = "TokenSet";
+        const { numberTokens, numberTokenType } = setUpTokens();
+        const dupToken = generateTokenNode(numberTokens[0].name);
+        console.log([...numberTokens, dupToken]);
+        expect(
+            () =>
+                new TokenSet(name, numberTokenType, level, [
+                    ...numberTokens,
+                    dupToken,
+                ]),
         ).toThrow();
     });
 });

@@ -96,18 +96,11 @@ export class TokenSet {
             throw new IllegalArgumentError(
                 `Invalid level: Level must be in ${validLevels}`,
             );
-            // Checks if any of the token set contains a unique id
-        if (
-            tokens.some(
-                (token) =>
-                    !this._checkUniqueName(token.name, tokens) &&
-                    tokens.findIndex((tk) => token.uid === tk.uid) === -1,
-            )
-        )
+        // TODO: Checks if any of the token set contains a unique id
+        if (tokens.some((token) => !this._checkTokenUniqueness(token, tokens)))
             throw new DuplicationError(
-                "Tokens in the set must have unique name.",
+                "Tokens cannot contain non-unique elements.",
             );
-
         this._validateToken(tokens, type);
         this.name = name;
         this.type = type;
@@ -343,12 +336,30 @@ export class TokenSet {
      * Perform check on whether the name is unique in the tokenset.
      *
      * @param {string} name The name to check.
-     * @param {TokenNode[]} tokens The tokens to match against.
-     *                             If undefined uses this tokenset's collection.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    _checkUniqueName(name: string, tokens?: TokenNode[] | undefined): boolean {
-        const tokenCollection = tokens ? tokens : this.tokens;
-        return !tokenCollection.some((token) => token.name === name);
+    _checkUniqueName(name: string): boolean {
+        return !this.tokens.some((token) => token.name === name);
+    }
+
+    /**
+     * Perform a uniqueness check on token against a given set of token.
+     * **Invariants**
+     * - A token is considered unique if it has the same name and ID.
+     * - A token with same name but different will is not unique.
+     *
+     * @param {string} name The name to check.
+     * @returns {boolean} True if the name is unique within the current tokenset.
+     */
+    static checkTokenUniqueness(token: TokenNode, tokens: TokenNode[]) {
+        let nameOccurance = 0;
+        let idOccurance = 0;
+        console.log(token, tokens);
+        tokens.forEach((tk) => {
+            if (token.name === tk.name) nameOccurance += 1;
+            if (token.uid === tk.uid) idOccurance += 1;
+        });
+
+        return nameOccurance === idOccurance;
     }
 }
