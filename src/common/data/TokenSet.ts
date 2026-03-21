@@ -22,7 +22,8 @@ type TokenSetUpdateOptions = {
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
-
+// TODO: Refactor uniqueness check to run in Θ(N) time by taking into consideration the entire token
+// TODO: Add uniqueness test for deserialization
 /**
  * Options for adding contents to a {@link TokenSet}.
  * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
@@ -59,7 +60,7 @@ type TokenSetType = ExtendedTokenTypes | "group";
  * **Invariants:**
  * - All nodes in a set must share the same `type`.
  * - A set cannot mix {@link Group} nodes and {@link Token} nodes.
- * - Names within a set should be unique (TODO: strict enforcement pending).
+ * - Names within a set should be unique.
  * @category Core
  *
  * @property {string} name          The unique name identifying this collection.
