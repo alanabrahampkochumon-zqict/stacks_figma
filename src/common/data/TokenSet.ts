@@ -96,11 +96,17 @@ export class TokenSet {
             throw new IllegalArgumentError(
                 `Invalid level: Level must be in ${validLevels}`,
             );
-        // TODO: Checks if any of the token set contains a unique id
-        if (tokens.some((token) => !this._checkTokenUniqueness(token, tokens)))
+
+        // Checks if any of the token set contains a unique id
+        if (
+            tokens.some(
+                (token) => !TokenSet.checkTokenUniqueness(token, tokens),
+            )
+        )
             throw new DuplicationError(
                 "Tokens cannot contain non-unique elements.",
             );
+
         this._validateToken(tokens, type);
         this.name = name;
         this.type = type;
@@ -346,7 +352,7 @@ export class TokenSet {
      * Perform a uniqueness check on token against a given set of token.
      * **Invariants**
      * - A token is considered unique if it has the same name and ID.
-     * - A token with same name but different will is not unique.
+     * - A token with same name but different ID will is not unique.
      *
      * @param {string} name The name to check.
      * @returns {boolean} True if the name is unique within the current tokenset.
@@ -354,7 +360,6 @@ export class TokenSet {
     static checkTokenUniqueness(token: TokenNode, tokens: TokenNode[]) {
         let nameOccurance = 0;
         let idOccurance = 0;
-        console.log(token, tokens);
         tokens.forEach((tk) => {
             if (token.name === tk.name) nameOccurance += 1;
             if (token.uid === tk.uid) idOccurance += 1;
