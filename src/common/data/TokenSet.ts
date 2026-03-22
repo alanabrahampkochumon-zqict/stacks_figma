@@ -100,8 +100,9 @@ export class TokenSet {
                 `Invalid level: Level must be in ${validLevels}`,
             );
 
+        this._tokenIDMap = new Map();
         // Checks if any of the token set contains a unique id
-        if (TokenSet.checkAllTokenUniqueness(tokens))
+        if (!this.checkAllTokenUniqueness(tokens))
             throw new DuplicationError(
                 "Tokens cannot contain non-unique elements.",
             );
@@ -111,7 +112,6 @@ export class TokenSet {
         this.type = type;
         this.level = level;
         this.tokens = tokens;
-        this._tokenIDMap = new Map();
     }
 
     /**
@@ -349,7 +349,7 @@ export class TokenSet {
     }
 
     /**
-     * Perform a uniqueness check on token against a given set of token.
+     * Perform a uniqueness check on token against a this tokenset's internal collection.
      * **Invariants**
      * - A token is considered unique if it has the same name and ID.
      * - A token with same name but different ID will is not unique.
@@ -358,13 +358,16 @@ export class TokenSet {
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
     checkTokenUniqueness(token: TokenNode): boolean {
+        console.log(this._tokenIDMap);
+        console.log(this._tokenIDMap.has(token.name));
+        console.log(this._tokenIDMap.get(token.name));
         if (
             this._tokenIDMap.has(token.name) &&
             this._tokenIDMap.get(token.name) !== token.uid
         )
             return false;
         this._tokenIDMap.set(token.name, token.uid);
-        return false;
+        return true;
     }
 
     /**
@@ -376,16 +379,17 @@ export class TokenSet {
      * @param {TokenNode[]} tokens The set of tokens to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    static checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
-        const nameIdMap = new Map(); // A map to store name to uid
-
+    checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
         for (const { name, uid } of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
-            if (nameIdMap.has(name) && nameIdMap.get(name) !== uid)
+            if (
+                this._tokenIDMap.has(name) &&
+                this._tokenIDMap.get(name) !== uid
+            )
                 return false;
 
             // Add the id and name
-            nameIdMap.set(name, uid);
+            this._tokenIDMap.set(name, uid);
         }
 
         return true;
