@@ -1,4 +1,3 @@
-import type { DuplicationError } from "../error/DuplicationError";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { TokenComparator } from "./Token";

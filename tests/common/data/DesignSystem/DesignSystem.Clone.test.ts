@@ -21,7 +21,6 @@ describe("Design System Cloning", () => {
         // Then, the old design system is untouched
         expect(designSystem.name).toStrictEqual(dsName);
         expect(designSystem.getTokenSets()).toStrictEqual(tokenSets);
-        console.log(newDS);
         // And, new one is updated.
         expect(newDS.name).toStrictEqual("Jetlag");
         expect(newDS.getTokenSet("groups")).toBeDefined();

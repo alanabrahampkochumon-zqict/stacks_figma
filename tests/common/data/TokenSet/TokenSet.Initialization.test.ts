@@ -145,7 +145,6 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const { numberTokens, numberTokenType } = setUpTokens();
         const dupToken = generateTokenNode(numberTokens[0].name);
-        console.log([...numberTokens, dupToken]);
         expect(
             () =>
                 new TokenSet(name, numberTokenType, level, [

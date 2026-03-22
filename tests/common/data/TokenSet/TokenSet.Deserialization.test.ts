@@ -92,8 +92,6 @@ describe("TokenSet Deserialization Tests", () => {
 
         // When converted to token set
         const ts = TokenSet.fromJson(groupJson);
-        console.log(ts);
-        console.log(ts);
         // Then a token set is created with the correct valueByNames
         expect(ts).toBeDefined();
         expect(ts).toStrictEqual(groupTokenSet);
