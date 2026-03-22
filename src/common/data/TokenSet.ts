@@ -74,7 +74,7 @@ export class TokenSet {
     level: Levels;
     tokens: TokenNode[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
-    private _tokenIDMap: Map<string, string>;
+    #tokenIDMap: Map<string, string>;
 
     /**
      * @param {string} name          Unique identifier for the set.
@@ -100,7 +100,7 @@ export class TokenSet {
                 `Invalid level: Level must be in ${validLevels}`,
             );
 
-        this._tokenIDMap = new Map();
+        this.#tokenIDMap = new Map();
         // Checks if any of the token set contains a unique id
         if (!this.checkAllTokenUniqueness(tokens))
             throw new DuplicationError(
@@ -359,11 +359,11 @@ export class TokenSet {
      */
     checkTokenUniqueness(token: TokenNode): boolean {
         if (
-            this._tokenIDMap.has(token.name) &&
-            this._tokenIDMap.get(token.name) !== token.uid
+            this.#tokenIDMap.has(token.name) &&
+            this.#tokenIDMap.get(token.name) !== token.uid
         )
             return false;
-        this._tokenIDMap.set(token.name, token.uid);
+        this.#tokenIDMap.set(token.name, token.uid);
         return true;
     }
 
@@ -380,13 +380,13 @@ export class TokenSet {
         for (const { name, uid } of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
             if (
-                this._tokenIDMap.has(name) &&
-                this._tokenIDMap.get(name) !== uid
+                this.#tokenIDMap.has(name) &&
+                this.#tokenIDMap.get(name) !== uid
             )
                 return false;
 
             // Add the id and name
-            this._tokenIDMap.set(name, uid);
+            this.#tokenIDMap.set(name, uid);
         }
 
         return true;
