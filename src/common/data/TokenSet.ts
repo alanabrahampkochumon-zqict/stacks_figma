@@ -368,4 +368,19 @@ export class TokenSet {
 
         return nameOccurance === idOccurance;
     }
+
+    static checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
+        const nameIdMap = new Map(); // A map to store name to uid
+
+        for (const { name, uid } of tokens) {
+            // If token is name is already in the set with a different ID, then it's not unique.
+            if (nameIdMap.has(name))
+                if (nameIdMap.get(name) !== uid) return false;
+
+            // Add the id and name
+            nameIdMap.set(name, uid);
+        }
+
+        return true;
+    }
 }
