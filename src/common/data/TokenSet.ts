@@ -73,6 +73,8 @@ export class TokenSet {
     type: TokenSetType;
     level: Levels;
     tokens: TokenNode[];
+    /* Internal map for storing name to uid map to prevent duplicate entry. */
+    private _tokenIDMap: Map<string, string>;
 
     /**
      * @param {string} name          Unique identifier for the set.
@@ -99,11 +101,7 @@ export class TokenSet {
             );
 
         // Checks if any of the token set contains a unique id
-        if (
-            tokens.some(
-                (token) => !TokenSet.checkTokenUniqueness(token, tokens),
-            )
-        )
+        if (TokenSet.checkAllTokenUniqueness(tokens))
             throw new DuplicationError(
                 "Tokens cannot contain non-unique elements.",
             );
@@ -113,6 +111,7 @@ export class TokenSet {
         this.type = type;
         this.level = level;
         this.tokens = tokens;
+        this._tokenIDMap = new Map();
     }
 
     /**
@@ -355,20 +354,28 @@ export class TokenSet {
      * - A token is considered unique if it has the same name and ID.
      * - A token with same name but different ID will is not unique.
      *
-     * @param {string} name The name to check.
+     * @param {string} token The name to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    static checkTokenUniqueness(token: TokenNode, tokens: TokenNode[]) {
-        let nameOccurance = 0;
-        let idOccurance = 0;
-        tokens.forEach((tk) => {
-            if (token.name === tk.name) nameOccurance += 1;
-            if (token.uid === tk.uid) idOccurance += 1;
-        });
-
-        return nameOccurance === idOccurance;
+    checkTokenUniqueness(token: TokenNode): boolean {
+        if (
+            this._tokenIDMap.has(token.name) &&
+            this._tokenIDMap.get(token.name) !== token.uid
+        )
+            return false;
+        this._tokenIDMap.set(token.name, token.uid);
+        return false;
     }
 
+    /**
+     * Perform a uniqueness check on every token against every other token in a given set of token.
+     * **Invariants**
+     * - A token is considered unique if it has the same name and ID.
+     * - A token with same name but different ID will is not unique.
+     *
+     * @param {TokenNode[]} tokens The set of tokens to validate.
+     * @returns {boolean} True if the name is unique within the current tokenset.
+     */
     static checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
         const nameIdMap = new Map(); // A map to store name to uid
 
