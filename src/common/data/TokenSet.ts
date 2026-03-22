@@ -22,7 +22,6 @@ type TokenSetUpdateOptions = {
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
-// TODO: Refactor uniqueness check to run in Θ(N) time by taking into consideration the entire token
 // TODO: Add uniqueness test for deserialization
 /**
  * Options for adding contents to a {@link TokenSet}.
@@ -133,9 +132,7 @@ export class TokenSet {
     ) {
         this._validateToken([token], this.type);
         const tokenIndex = this.getTokenIndex(token.uid);
-        if (tokenIndex === -1 && !this._checkUniqueName(token.name))
-            console.log(token);
-        if (tokenIndex === -1 && !this._checkUniqueName(token.name))
+        if (!this.checkTokenUniqueness(token))
             throw new DuplicationError(
                 "A token with the same name already exists.",
             );
