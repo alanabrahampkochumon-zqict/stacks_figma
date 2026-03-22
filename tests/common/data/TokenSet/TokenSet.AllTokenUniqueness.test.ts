@@ -9,9 +9,10 @@ describe("Token Set: All Token Uniqueness", () => {
         const { numberTokens } = setUpTokens();
         numberTokens.push(numberTokens[0]);
         numberTokens.push(numberTokens[1]);
+        const tks = new TokenSet("tks");
 
         // When checked for uniqueness
-        const result = TokenSet.checkAllTokenUniqueness(numberTokens);
+        const result = tks.checkAllTokenUniqueness(numberTokens);
 
         // Then, the result is true
         expect(result).toBeTruthy();
@@ -20,9 +21,10 @@ describe("Token Set: All Token Uniqueness", () => {
     test("returns true, if not duplicates are in the set", () => {
         // Given a list of tokens with no duplicates
         const { numberTokens } = setUpTokens();
+        const tks = new TokenSet("tks");
 
         // When checked for uniqueness
-        const result = TokenSet.checkAllTokenUniqueness(numberTokens);
+        const result = tks.checkAllTokenUniqueness(numberTokens);
 
         // Then, the result is true
         expect(result).toBeTruthy();
@@ -32,10 +34,10 @@ describe("Token Set: All Token Uniqueness", () => {
         // Given a list of tokens with a duplicate name but different id token
         const { numberTokens } = setUpTokens();
         numberTokens.push({ ...numberTokens[0], uid: v4() });
-        console.log(numberTokens);
+        const tks = new TokenSet("tks");
 
         // When checked for uniqueness
-        const result = TokenSet.checkAllTokenUniqueness(numberTokens);
+        const result = tks.checkAllTokenUniqueness(numberTokens);
 
         // Then, the result is true
         expect(result).toBeFalsy();

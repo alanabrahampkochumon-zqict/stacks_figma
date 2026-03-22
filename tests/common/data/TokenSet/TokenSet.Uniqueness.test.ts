@@ -39,8 +39,6 @@ describe("Token Uniqueness", () => {
             .map(() => generateTokenNode(undefined, "token", tokenType));
         const duplicateToken = generateTokenNode(tokens[0].name);
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
-        console.log(tokens);
-        console.log(duplicateToken);
 
         // When checked for uniqueness of duplicate element
         // Then, it returns true

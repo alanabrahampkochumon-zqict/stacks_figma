@@ -358,9 +358,6 @@ export class TokenSet {
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
     checkTokenUniqueness(token: TokenNode): boolean {
-        console.log(this._tokenIDMap);
-        console.log(this._tokenIDMap.has(token.name));
-        console.log(this._tokenIDMap.get(token.name));
         if (
             this._tokenIDMap.has(token.name) &&
             this._tokenIDMap.get(token.name) !== token.uid
