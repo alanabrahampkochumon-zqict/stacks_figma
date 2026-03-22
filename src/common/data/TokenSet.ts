@@ -374,8 +374,8 @@ export class TokenSet {
 
         for (const { name, uid } of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
-            if (nameIdMap.has(name))
-                if (nameIdMap.get(name) !== uid) return false;
+            if (nameIdMap.has(name) && nameIdMap.get(name) !== uid)
+                return false;
 
             // Add the id and name
             nameIdMap.set(name, uid);
