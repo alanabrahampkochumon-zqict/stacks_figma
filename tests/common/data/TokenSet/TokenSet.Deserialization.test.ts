@@ -1,5 +1,6 @@
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
+import { generateTokenNode } from "../utils/Generators";
 import { setUpTokenSet } from "./TokenSet.fixtures";
 
 describe("TokenSet Deserialization Tests", () => {
@@ -136,6 +137,28 @@ describe("TokenSet Deserialization Tests", () => {
         // When converted to token set
         // Then, it throws and error
         expect(() => TokenSet.fromJson(invalidTypeTokenString)).toThrow();
+    });
+
+    test("throws error, when deserializing a json string with duplicate values", () => {
+        // When a JSON string with duplicate entries is converted to a tokenset
+        const tokenNode1 = generateTokenNode();
+        const tokenNode2 = generateTokenNode();
+        const dupTokenNode = generateTokenNode(tokenNode1.name);
+        const nameAndTypeTokenJSON = `
+        {
+            "name": "test",
+            "type": "number",
+            "level": 1,
+            "tokens": [
+                ${JSON.stringify(tokenNode1)},
+                ${JSON.stringify(tokenNode2)},
+                ${JSON.stringify(dupTokenNode)}
+            ]
+        }
+        `;
+
+        // Then, it throws an error
+        expect(() => TokenSet.fromJson(nameAndTypeTokenJSON)).toThrow();
     });
 
     test("throws error, when malformed json string is passed in", () => {

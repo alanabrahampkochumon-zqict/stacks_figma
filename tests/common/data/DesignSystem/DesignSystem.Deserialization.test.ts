@@ -68,12 +68,7 @@ describe("Design System Deserialization", () => {
         // When a json string without name is serialized
         const jsonString = `
         {
-            "tokenSets": [
-                { type: tokenType1, value: 0, name: "size-0" },
-                { type: tokenType1, value: 150, name: "size-150" },
-                { type: tokenType1, value: 50, name: "size-50" },
-                { type: tokenType1, value: 100, name: "size-1000" },
-            ]
+            "tokenSets": []
         }
         `;
         // Then, it throws an error
