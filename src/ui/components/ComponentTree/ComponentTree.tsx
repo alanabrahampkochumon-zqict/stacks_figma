@@ -1,5 +1,6 @@
-import { createGroup, type Group } from "@src/common/data/Group";
-import type { Token } from "@src/common/data/Token";
+import { createGroup } from "@src/common/data/Group";
+import { createToken } from "@src/common/data/Token";
+import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { OlHTMLAttributes } from "react";
 import styles from "./ComponentTree.module.css";
@@ -8,9 +9,10 @@ import TreeItem from "./TreeItem";
 type ComponentTreeProps = {} & OlHTMLAttributes<HTMLOListElement>;
 
 function ComponentTree({ className, children, ...props }: ComponentTreeProps) {
-    const items: (Group | Token)[] = [
-        createGroup("test", true),
-        createGroup("test 2", false),
+    const items: TokenNode[] = [
+        createTokenNode("group 1", createGroup()),
+        createTokenNode("group 2", createGroup(true)),
+        createTokenNode("group 2", createToken({ default: 10 }, "string")),
     ];
     return (
         <ol role="list" {...props} className={cn(styles.root, className)}>

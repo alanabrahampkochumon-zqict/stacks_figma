@@ -27,6 +27,7 @@ type DesignSystemUpdateOptions = {
     compareFn?: TokenComparator;
 };
 
+// TODO: Add lookup caching using a map
 /**
  * The root container for a Design System.
  * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.
