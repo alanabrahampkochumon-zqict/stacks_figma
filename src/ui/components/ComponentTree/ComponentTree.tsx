@@ -12,7 +12,10 @@ function ComponentTree({ className, children, ...props }: ComponentTreeProps) {
     const items: TokenNode[] = [
         createTokenNode("group 1", createGroup()),
         createTokenNode("group 2", createGroup(true)),
-        createTokenNode("group 2", createToken({ default: 10 }, "string")),
+        createTokenNode(
+            "string item",
+            createToken({ default: "string" }, "string"),
+        ),
     ];
     return (
         <ol role="list" {...props} className={cn(styles.root, className)}>
