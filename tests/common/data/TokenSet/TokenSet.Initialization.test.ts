@@ -57,6 +57,29 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toStrictEqual(tokenType);
     });
 
+    test("removes non-unique duplicates, when initialized", () => {
+        // Given a set of tokens with non-unique duplicates
+        const level = 1;
+        const name = "TokenSet";
+        const { numberTokens, numberTokenType } = setUpTokens();
+        const duplicatedTokens = [
+            ...numberTokens,
+            numberTokens[0],
+            numberTokens[1],
+        ];
+
+        // When a token set is created
+        const tokenSet = new TokenSet(
+            name,
+            numberTokenType,
+            level,
+            duplicatedTokens,
+        );
+
+        // Then, there are no duplicates
+        expect(tokenSet.tokens).toStrictEqual(numberTokens);
+    });
+
     test("throws error, when initialized with mixed token types", () => {
         // Given a tokenset trying to get initalized with mixed types
         const name = "TokenSet";

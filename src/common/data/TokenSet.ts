@@ -112,7 +112,15 @@ export class TokenSet {
         this.name = name;
         this.type = type;
         this.level = level;
-        this.tokens = tokens; // TODO: Remove duplicates
+        this.tokens = [];
+
+        // Removes any duplicate tokens.
+        const duplicates = new Set();
+        for (const token of tokens)
+            if (!duplicates.has(token.name)) {
+                duplicates.add(token.name);
+                this.tokens.push(token);
+            }
     }
 
     /**
