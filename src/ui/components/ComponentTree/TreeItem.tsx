@@ -73,7 +73,19 @@ function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
                     </>
                 );
             case "color":
-                return <></>;
+                return (
+                    <>
+                        <span
+                            className={styles["color-icon"]}
+                            style={{
+                                backgroundColor: Object.values(
+                                    value.valueByMode,
+                                )[0],
+                            }}
+                        ></span>
+                        <span>{name}</span>
+                    </>
+                );
             case "typography":
                 return <></>;
             case "sizing":
