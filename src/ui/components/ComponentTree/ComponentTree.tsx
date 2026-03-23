@@ -16,6 +16,12 @@ function ComponentTree({ className, children, ...props }: ComponentTreeProps) {
             "string item",
             createToken({ default: "string" }, "string"),
         ),
+        createTokenNode("number item", createToken({ default: 123 }, "number")),
+        createTokenNode("bool item", createToken({ default: true }, "boolean")),
+        createTokenNode(
+            "color item",
+            createToken({ default: "#E41E7C" }, "color"),
+        ),
     ];
     return (
         <ol role="list" {...props} className={cn(styles.root, className)}>

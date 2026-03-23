@@ -1,5 +1,7 @@
 import AlignLeftIcon from "@src/assets/icons/align-left.svg?react";
 import ChevronRightIcon from "@src/assets/icons/chevron-right.svg?react";
+import HashTagIcon from "@src/assets/icons/hashtag.svg?react";
+import ToggleIcon from "@src/assets/icons/toggle.svg?react";
 import type { TokenNode } from "@src/common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes, JSX } from "react";
@@ -42,16 +44,34 @@ function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
                     <>
                         <AlignLeftIcon
                             className={styles["group-icon"]}
+                            height={18}
+                            width={18}
+                        />
+                        <span>{name}</span>
+                    </>
+                );
+            case "number":
+                return (
+                    <>
+                        <HashTagIcon
+                            className={styles["group-icon"]}
+                            height={14}
+                            width={14}
+                        />
+                        <span>{name}</span>
+                    </>
+                );
+            case "boolean":
+                return (
+                    <>
+                        <ToggleIcon
+                            className={styles["group-icon"]}
                             height={16}
                             width={16}
                         />
                         <span>{name}</span>
                     </>
                 );
-            case "number":
-                return <></>;
-            case "boolean":
-                return <></>;
             case "color":
                 return <></>;
             case "typography":
