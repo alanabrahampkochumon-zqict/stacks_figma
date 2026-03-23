@@ -22,7 +22,7 @@ type TokenSetUpdateOptions = {
     sortToken?: boolean;
     compareFn?: TokenComparator;
 };
-// TODO: Add uniqueness test for deserialization
+
 /**
  * Options for adding contents to a {@link TokenSet}.
  * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
@@ -52,6 +52,9 @@ type TokenSetMergeOptions = {
  * Either a specific design token category or a structural 'group'.
  */
 type TokenSetType = ExtendedTokenTypes | "group";
+
+// TODO: Remove duplicates when constructing
+// TODO: Add tests to check only unique tokens are in the system
 
 /**
  * A strictly-typed collection of {@link TokenNode}s.
@@ -105,12 +108,11 @@ export class TokenSet {
             throw new DuplicationError(
                 "Tokens cannot contain non-unique elements.",
             );
-
         this._validateToken(tokens, type);
         this.name = name;
         this.type = type;
         this.level = level;
-        this.tokens = tokens;
+        this.tokens = tokens; // TODO: Remove duplicates
     }
 
     /**
@@ -288,8 +290,8 @@ export class TokenSet {
                     token?.name,
                     token?.value,
                     token.uid,
-                    token?.reference,
                     token?.parentId,
+                    token?.reference,
                 ),
             ),
         );
@@ -312,7 +314,6 @@ export class TokenSet {
             throw new IllegalArgumentError(
                 `Invalid token type: Type must be in ${extendedTokens}`,
             );
-
         // Token Type validation
         let validationResult = false;
         if (tokenType === "group")

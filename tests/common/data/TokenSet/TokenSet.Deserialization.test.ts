@@ -139,12 +139,52 @@ describe("TokenSet Deserialization Tests", () => {
         expect(() => TokenSet.fromJson(invalidTypeTokenString)).toThrow();
     });
 
+    // Non-unique -> Same name and same id
+    test("create token node, when deserializing a json string with non-unique duplicate values", () => {
+        // When a JSON string with duplicate entries is converted to a tokenset
+        const tokenNode1 = generateTokenNode(
+            undefined,
+            "token",
+            "number",
+            undefined,
+            undefined,
+            false,
+        );
+        const tokenNode2 = generateTokenNode(
+            undefined,
+            "token",
+            "number",
+            undefined,
+            undefined,
+            false,
+        );
+
+        const json = `
+        {
+            "name": "test",
+            "type": "number",
+            "level": 1,
+            "tokens": [
+                ${JSON.stringify(tokenNode1)},
+                ${JSON.stringify(tokenNode2)},
+                ${JSON.stringify(tokenNode1)}
+            ]
+        }
+        `;
+
+        const tokenSet = TokenSet.fromJson(json);
+
+        // Then, the token set contains the tokens.
+        expect(tokenSet.tokens).toContainEqual(tokenNode1);
+        expect(tokenSet.tokens).toContainEqual(tokenNode2);
+    });
+
     test("throws error, when deserializing a json string with duplicate values", () => {
         // When a JSON string with duplicate entries is converted to a tokenset
-        const tokenNode1 = generateTokenNode();
-        const tokenNode2 = generateTokenNode();
+        const tokenNode1 = generateTokenNode(undefined, "token", "number");
+        const tokenNode2 = generateTokenNode(undefined, "token", "number");
         const dupTokenNode = generateTokenNode(tokenNode1.name);
-        const nameAndTypeTokenJSON = `
+        const json = `
         {
             "name": "test",
             "type": "number",
@@ -158,7 +198,7 @@ describe("TokenSet Deserialization Tests", () => {
         `;
 
         // Then, it throws an error
-        expect(() => TokenSet.fromJson(nameAndTypeTokenJSON)).toThrow();
+        expect(() => TokenSet.fromJson(json)).toThrow();
     });
 
     test("throws error, when malformed json string is passed in", () => {
