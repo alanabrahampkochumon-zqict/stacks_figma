@@ -44,7 +44,7 @@ export class DesignSystem {
     /** @internal Internal storage for token collections. */
     private _tokenSets: TokenSet[];
     /** @internal Internal flag for determining if the design system is hardened(immutable). */
-    private _isHardened: boolean;
+    #isHardened: boolean;
 
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.
@@ -58,7 +58,7 @@ export class DesignSystem {
             );
         this.name = name;
         this._tokenSets = tokenSets;
-        this._isHardened = false;
+        this.#isHardened = false;
     }
 
     /**
@@ -198,7 +198,7 @@ export class DesignSystem {
         return JSON.stringify({
             name: this.name,
             tokenSets: this._tokenSets.map((tks) => tks.toJsonString()),
-            isHardened: this._isHardened,
+            isHardened: this.#isHardened,
         });
     }
 
@@ -254,7 +254,7 @@ export class DesignSystem {
      * - If you need mutation, use {@link clone} to create a copy of the Design System.
      */
     harden() {
-        this._isHardened = true;
+        this.#isHardened = true;
         this._tokenSets.forEach((tks) => {
             tks.tokens.forEach(Object.freeze);
             Object.freeze(tks.tokens);

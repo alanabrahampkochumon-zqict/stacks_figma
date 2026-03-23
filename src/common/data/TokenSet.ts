@@ -53,9 +53,6 @@ type TokenSetMergeOptions = {
  */
 type TokenSetType = ExtendedTokenTypes | "group";
 
-// TODO: Remove duplicates when constructing
-// TODO: Add tests to check only unique tokens are in the system
-
 /**
  * A strictly-typed collection of {@link TokenNode}s.
  * @remarks
