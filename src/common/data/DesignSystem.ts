@@ -48,6 +48,9 @@ export class DesignSystem {
     private _tokenSets: TokenSet[];
     /** @internal Internal flag for determining if the design system is hardened(immutable). */
     #isHardened: boolean;
+    // TODO: Implement
+    /** @internal Internal cache for group tokenset ID */
+
     /** @internal Internal cache for groups. */
     #groupCache: Map<string, string>;
 
@@ -112,7 +115,7 @@ export class DesignSystem {
      * @returns The group name if it exists else undefined.
      */
     getGroupName(id: string): string | undefined {
-        return undefined;
+        const groups = this._tokenSets.filter(tokenset => tokenset.type === )
     }
 
     /**
