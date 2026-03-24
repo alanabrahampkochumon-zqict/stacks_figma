@@ -74,9 +74,15 @@ export class DesignSystem {
         for (const tokenSet of tokenSets) {
             this._tokenSets.push(tokenSet);
             // "Caches" the group names to prevent redundant checks on every single tokenset
-            // when seeking group names from ID.
+            // when seeking group names from ID. NOTE: Might be redundant.
             if (tokenSet.type === "group")
                 this.#groupNameCache.add(tokenSet.name);
+
+            // Stores the group name and id as a cache.
+            if (tokenSet.type === "group")
+                tokenSet.tokens.forEach((token) =>
+                    this.#groupCache.set(token.uid, token.name),
+                );
         }
     }
 
@@ -120,6 +126,8 @@ export class DesignSystem {
         if (tokenSet.type === "group") this.#groupNameCache.add(tokenSet.name);
     }
 
+    // TODO: Add tests for cache invalidation.
+
     /**
      * Get the group name for the matching ID.
      *
@@ -128,8 +136,7 @@ export class DesignSystem {
      * @returns The group name if it exists else undefined.
      */
     getGroupName(id: string): string | undefined {
-        // const groups = this._tokenSets.filter(tokenset => tokenset.type === )
-        return undefined;
+        return this.#groupCache.get(id);
     }
 
     /**
