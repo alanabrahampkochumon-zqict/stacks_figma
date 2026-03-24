@@ -49,7 +49,8 @@ export class DesignSystem {
     /** @internal Internal flag for determining if the design system is hardened(immutable). */
     #isHardened: boolean;
     // TODO: Implement
-    /** @internal Internal cache for group tokenset ID */
+    /** @internal Internal cache for for determining TokenSets that are "groups". */
+    #groupNameCache: Set<string>;
 
     /** @internal Internal cache for groups. */
     #groupCache: Map<string, string>;
@@ -65,8 +66,18 @@ export class DesignSystem {
                 "Design system needs a name to be initialized!",
             );
         this.name = name;
-        this._tokenSets = tokenSets;
+        this._tokenSets = [];
         this.#isHardened = false;
+        this.#groupNameCache = new Set();
+        this.#groupCache = new Map();
+
+        for (const tokenSet of tokenSets) {
+            this._tokenSets.push(tokenSet);
+            // "Caches" the group names to prevent redundant checks on every single tokenset
+            // when seeking group names from ID.
+            if (tokenSet.type === "group")
+                this.#groupNameCache.add(tokenSet.name);
+        }
     }
 
     /**
@@ -105,6 +116,8 @@ export class DesignSystem {
                 "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",
             );
         if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
+        // Update the cache
+        if (tokenSet.type === "group") this.#groupNameCache.add(tokenSet.name);
     }
 
     /**
@@ -115,7 +128,8 @@ export class DesignSystem {
      * @returns The group name if it exists else undefined.
      */
     getGroupName(id: string): string | undefined {
-        const groups = this._tokenSets.filter(tokenset => tokenset.type === )
+        // const groups = this._tokenSets.filter(tokenset => tokenset.type === )
+        return undefined;
     }
 
     /**
@@ -135,6 +149,9 @@ export class DesignSystem {
         if (Object.isFrozen(this))
             throw new Error("Cannot modify a locked Design System.");
         this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
+
+        // Update the cache
+        if (tokenSet.type === "group") this.#groupNameCache.add(tokenSet.name);
     }
 
     /**
@@ -199,6 +216,12 @@ export class DesignSystem {
                 `Name collision: TokenSet with ${newName} already exists`,
             );
         this._tokenSets[tokenSetIndex].name = newName;
+
+        // Update the cache
+        if (this._tokenSets[tokenSetIndex].type === "group") {
+            this.#groupNameCache.delete(name);
+            this.#groupNameCache.add(newName);
+        }
     }
 
     /**
