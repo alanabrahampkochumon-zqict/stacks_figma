@@ -184,8 +184,19 @@ export class DesignSystem {
             throw new Error("Cannot modify a locked Design System.");
         const tokenSetIndex = this.getIndex(tokenSetName);
         if (tokenSetIndex !== -1) {
+            const oldTokenSet = this._tokenSets[tokenSetIndex];
+
             this._tokenSets[tokenSetIndex] = newTokenSet;
             this._tokenSets[tokenSetIndex].sort(compareFn);
+
+            // TODO: Implement a smarter update strategy if possible
+            // Invalidate cache
+            oldTokenSet.tokens.forEach((token) =>
+                this.#groupCache.delete(token.uid),
+            );
+            newTokenSet.tokens.forEach((token) =>
+                this.#groupCache.set(token.uid, token.name),
+            );
         } else if (updatePolicy === UpdatePolicy.INSERT)
             this.addTokenSet(newTokenSet, { sortToken, compareFn });
         else
