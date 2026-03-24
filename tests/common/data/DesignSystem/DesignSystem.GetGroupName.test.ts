@@ -39,7 +39,27 @@ describe("Design System: Get Group Name", () => {
         expect(tokenName).toBeUndefined();
     });
 
-    test("invalidates cache, after name is updated", () => {
-        // TODO:
+    test("returns correct name, after tokenset name is updated", () => {
+        // Given token nodes
+        const tokenNodes = Array(10)
+            .fill(0)
+            .map(() => generateTokenNode(undefined, "group"));
+        const designSystem = new DesignSystem("ds", [
+            new TokenSet("groups", "group", 1, tokenNodes),
+        ]);
+        const tokenNode = tokenNodes[2];
+
+        // After the name of a token set is updated
+        designSystem.updateTokenSetName("groups", "new groups");
+
+        // When searched for a updated token ID
+        const tokenName = designSystem.getGroupName(tokenNode.uid);
+
+        // Then, it the new name
+        expect(tokenName).toStrictEqual(tokenNode.name);
     });
+
+    test("invalidates cache, after token is added", () => {});
+
+    test("invalidates cache, after token is removed", () => {});
 });

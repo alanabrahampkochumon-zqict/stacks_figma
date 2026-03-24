@@ -226,11 +226,14 @@ export class DesignSystem {
 
         // Update the cache
         if (this._tokenSets[tokenSetIndex].type === "group") {
+            // TODO: Remove
             this.#groupNameCache.delete(name);
             this.#groupNameCache.add(newName);
+            this.#groupCache.set(this._tokenSets[tokenSetIndex])
         }
     }
 
+    // TODO: Add cache clearing.
     /**
      * Returns a read-only view of the token sets.
      * @returns A read-only view of the managed tokensets.
