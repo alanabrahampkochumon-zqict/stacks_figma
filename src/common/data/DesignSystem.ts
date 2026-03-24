@@ -314,6 +314,8 @@ export class DesignSystem {
      */
     clearAll() {
         this._tokenSets = [];
+        this.#groupCache.clear();
+        this.#isHardened = false;
     }
 
     /**

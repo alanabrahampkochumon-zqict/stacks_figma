@@ -129,4 +129,32 @@ describe("Design System: Get Group Name", () => {
             expect(designSystem.getGroupName(tokenNode.uid)).toBeUndefined(),
         );
     });
+
+    test("clears all cache, when invalidated", () => {
+        // Given token nodes
+        const tokenNodes = Array(10)
+            .fill(0)
+            .map(() => generateTokenNode(undefined, "group"));
+        const tks = new TokenSet("groups", "group", 1, tokenNodes);
+        const tks2 = new TokenSet(
+            "groups new",
+            "group",
+            1,
+            Array(5)
+                .fill(0)
+                .map(() => generateTokenNode(undefined, "group")),
+        );
+        const designSystem = new DesignSystem("ds", [tks, tks2]);
+
+        // After the tokenset is cleared
+        designSystem.clearAll();
+
+        // Then search for any name in the token set returns undefined
+        tokenNodes.forEach((tokenNode) =>
+            expect(designSystem.getGroupName(tokenNode.uid)).toBeUndefined(),
+        );
+        tks2.tokens.forEach((token) =>
+            expect(designSystem.getGroupName(token.uid)).toBeUndefined(),
+        );
+    });
 });
