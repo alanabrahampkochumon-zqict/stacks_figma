@@ -48,9 +48,6 @@ export class DesignSystem {
     private _tokenSets: TokenSet[];
     /** @internal Internal flag for determining if the design system is hardened(immutable). */
     #isHardened: boolean;
-    // TODO: Implement
-    /** @internal Internal cache for for determining TokenSets that are "groups". */
-    #groupNameCache: Set<string>;
 
     /** @internal Internal cache for groups. */
     #groupCache: Map<string, string>;
@@ -68,15 +65,10 @@ export class DesignSystem {
         this.name = name;
         this._tokenSets = [];
         this.#isHardened = false;
-        this.#groupNameCache = new Set();
         this.#groupCache = new Map();
 
         for (const tokenSet of tokenSets) {
             this._tokenSets.push(tokenSet);
-            // "Caches" the group names to prevent redundant checks on every single tokenset
-            // when seeking group names from ID. NOTE: Might be redundant.
-            if (tokenSet.type === "group")
-                this.#groupNameCache.add(tokenSet.name);
 
             // Stores the group name and id as a cache.
             if (tokenSet.type === "group")
@@ -123,12 +115,10 @@ export class DesignSystem {
             );
         if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
         // Update the cache
-        if (tokenSet.type === "group") {
-            this.#groupNameCache.add(tokenSet.name); // TODO: Remove
+        if (tokenSet.type === "group")
             tokenSet.tokens.forEach((token) =>
                 this.#groupCache.set(token.uid, token.name),
             );
-        }
     }
 
     /**
@@ -161,12 +151,10 @@ export class DesignSystem {
         this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
 
         // Update the cache
-        if (tokenSet.type === "group") {
-            this.#groupNameCache.delete(tokenSet.name);
+        if (tokenSet.type === "group")
             tokenSet.tokens.forEach((token) =>
                 this.#groupCache.delete(token.uid),
             );
-        }
     }
 
     /**
@@ -242,16 +230,8 @@ export class DesignSystem {
                 `Name collision: TokenSet with ${newName} already exists`,
             );
         this._tokenSets[tokenSetIndex].name = newName;
-
-        // Update the cache
-        if (this._tokenSets[tokenSetIndex].type === "group") {
-            // TODO: Remove
-            this.#groupNameCache.delete(name);
-            this.#groupNameCache.add(newName);
-        }
     }
 
-    // TODO: Add cache clearing.
     /**
      * Returns a read-only view of the token sets.
      * @returns A read-only view of the managed tokensets.
