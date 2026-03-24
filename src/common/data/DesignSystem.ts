@@ -123,10 +123,13 @@ export class DesignSystem {
             );
         if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
         // Update the cache
-        if (tokenSet.type === "group") this.#groupNameCache.add(tokenSet.name);
+        if (tokenSet.type === "group") {
+            this.#groupNameCache.add(tokenSet.name); // TODO: Remove
+            tokenSet.tokens.forEach((token) =>
+                this.#groupCache.set(token.uid, token.name),
+            );
+        }
     }
-
-    // TODO: Add tests for cache invalidation.
 
     /**
      * Get the group name for the matching ID.
@@ -229,7 +232,6 @@ export class DesignSystem {
             // TODO: Remove
             this.#groupNameCache.delete(name);
             this.#groupNameCache.add(newName);
-            this.#groupCache.set(this._tokenSets[tokenSetIndex])
         }
     }
 
