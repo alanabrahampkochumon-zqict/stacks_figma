@@ -95,7 +95,7 @@ describe("Design System: Get Group Name", () => {
             .fill(0)
             .map(() => generateTokenNode(undefined, "group"));
 
-        // After the name of a token set is updated
+        // After the tokenset is updated
         designSystem.updateTokenSet(
             "groups",
             new TokenSet("groups new", "group", 2, tokenNodes2),
@@ -108,11 +108,25 @@ describe("Design System: Get Group Name", () => {
         expect(tokenName).toStrictEqual(tokenNodes2[2].name);
 
         // And returns undefined for all tokens in the old token set
-        tokenNodes.forEach(
-            (tokenNode) =>
-                expect(designSystem.getGroupName(tokenNode.name)).toBeUndefined,
+        tokenNodes.forEach((tokenNode) =>
+            expect(designSystem.getGroupName(tokenNode.uid)).toBeUndefined(),
         );
     });
 
-    test("invalidates cache, after token is removed", () => {});
+    test("invalidates cache, after token is removed", () => {
+        // Given token nodes
+        const tokenNodes = Array(10)
+            .fill(0)
+            .map(() => generateTokenNode(undefined, "group"));
+        const tks = new TokenSet("groups", "group", 1, tokenNodes);
+        const designSystem = new DesignSystem("ds", [tks]);
+
+        // After the tokenset is removed
+        designSystem.removeTokenSet(tks);
+
+        // Then search for any name in the token set returns undefined
+        tokenNodes.forEach((tokenNode) =>
+            expect(designSystem.getGroupName(tokenNode.uid)).toBeUndefined(),
+        );
+    });
 });

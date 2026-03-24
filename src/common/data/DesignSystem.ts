@@ -161,7 +161,12 @@ export class DesignSystem {
         this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
 
         // Update the cache
-        if (tokenSet.type === "group") this.#groupNameCache.add(tokenSet.name);
+        if (tokenSet.type === "group") {
+            this.#groupNameCache.delete(tokenSet.name);
+            tokenSet.tokens.forEach((token) =>
+                this.#groupCache.delete(token.uid),
+            );
+        }
     }
 
     /**
