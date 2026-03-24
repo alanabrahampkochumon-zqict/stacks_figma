@@ -28,6 +28,8 @@ type DesignSystemUpdateOptions = {
 };
 
 // TODO: Add lookup caching using a map
+// TODO: Hydrate token
+// TODO: Group cache
 /**
  * The root container for a Design System.
  * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.
@@ -46,6 +48,8 @@ export class DesignSystem {
     private _tokenSets: TokenSet[];
     /** @internal Internal flag for determining if the design system is hardened(immutable). */
     #isHardened: boolean;
+    /** @internal Internal cache for groups. */
+    #groupCache: Map<string, string>;
 
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.
@@ -98,6 +102,17 @@ export class DesignSystem {
                 "Duplicate token found, and insertion policy is set `InsertionConflictPolicy.IGNORE`",
             );
         if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
+    }
+
+    /**
+     * Get the group name for the matching ID.
+     *
+     * @param {string} id The ID to be get the name for.
+     *
+     * @returns The group name if it exists else undefined.
+     */
+    getGroupName(id: string): string | undefined {
+        return undefined;
     }
 
     /**

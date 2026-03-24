@@ -27,7 +27,7 @@ function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
                 <span>{item.name}</span>
             </>
         );
-    } else content = getTreeItem(item);
+    } else content = getTreeItem(item) || <></>;
 
     return (
         <li {...props} className={cn(styles.base, "label-small", className)}>
