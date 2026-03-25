@@ -1,6 +1,7 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { TokenComparator } from "./Token";
+import type { TokenNode } from "./TokenNode";
 import { TokenSet } from "./TokenSet";
 
 /**
@@ -29,7 +30,6 @@ type DesignSystemUpdateOptions = {
 
 // TODO: Add lookup caching using a map
 // TODO: Hydrate token
-// TODO: Group cache
 /**
  * The root container for a Design System.
  * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.
@@ -52,6 +52,9 @@ export class DesignSystem {
     /** @internal Internal cache for groups. */
     #groupCache: Map<string, string>;
 
+    /** @internal Internal cache for reference tokens. */
+    #tokenReferenceCache: Map<string, { tokenSet: TokenSet; token: TokenNode }>;
+
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.
      * @param tokenSets    Optional initial collections to seed the system.
@@ -66,6 +69,7 @@ export class DesignSystem {
         this._tokenSets = [];
         this.#isHardened = false;
         this.#groupCache = new Map();
+        this.#tokenReferenceCache = new Map();
 
         for (const tokenSet of tokenSets) {
             this._tokenSets.push(tokenSet);
@@ -75,6 +79,15 @@ export class DesignSystem {
                 tokenSet.tokens.forEach((token) =>
                     this.#groupCache.set(token.uid, token.name),
                 );
+            else
+                tokenSet.tokens.forEach((token) => {
+                    if (token.reference)
+                        this.#tokenReferenceCache.set(token.reference, {
+                            tokenSet,
+                            token,
+                        });
+                    else return;
+                });
         }
     }
 
