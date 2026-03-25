@@ -323,16 +323,21 @@ export class TokenSet {
         let validationResult = false;
         if (tokenType === "group")
             validationResult = tokens.every(
-                ({ value: tokenValue }) =>
-                    tokenValue && tokenValue.entityType === "group",
+                ({ value: tokenValue, reference }) =>
+                    (tokenValue && tokenValue?.entityType === "group") ||
+                    reference,
             );
         else
             validationResult = tokens.every(
-                ({ value: tokenValue }) =>
-                    tokenValue &&
-                    tokenValue.entityType === "token" &&
-                    tokenValue.type === tokenType &&
-                    validateToken(tokenValue.valueByMode, tokenValue.type),
+                ({ value: tokenValue, reference }) =>
+                    (tokenValue &&
+                        tokenValue.entityType === "token" &&
+                        tokenValue.type === tokenType &&
+                        validateToken(
+                            tokenValue.valueByMode,
+                            tokenValue.type,
+                        )) ||
+                    reference,
             );
 
         if (!validationResult)
