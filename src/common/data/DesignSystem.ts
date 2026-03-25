@@ -7,8 +7,8 @@ import { TokenSet } from "./TokenSet";
 /**
  * Options for adding contents to a {@link DesignSystem}.
  * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
- * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
- * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ * @property {?boolean} sortToken                 Whether to re-sort the collection after the operation.
+ * @property {?TokenComparator} compareFn         Custom sorting logic. Defaults to alphanumeric by name.
  */
 type DesignSystemAddOptions = {
     insertPolicy?: InsertConflictPolicy;
@@ -19,13 +19,23 @@ type DesignSystemAddOptions = {
 /**
  * Options for updating the contents of a {@link DesignSystem}.
  * @property {?UpdatePolicy} updatePolicy Policy to handle conflicts if a tokenset does not exist.
- * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
+ * @property {?boolean} sortToken         Whether to re-sort the collection after the operation.
  * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
 type DesignSystemUpdateOptions = {
     updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
     compareFn?: TokenComparator;
+};
+
+/**
+ * Token type returned after hydrating a reference {@link TokenNode}.
+ * @property {string} recursivePath     The entire path that was traversed to get to the primitive.
+ * @property {TokenNode} primitiveToken The primitive token node.
+ */
+type HydratedToken = {
+    recursivePath: string;
+    primitiveToken: TokenNode;
 };
 
 // TODO: Add lookup caching using a map
@@ -132,6 +142,20 @@ export class DesignSystem {
             tokenSet.tokens.forEach((token) =>
                 this.#groupCache.set(token.uid, token.name),
             );
+    }
+
+    /**
+     * Recursively traverses through a tokens references, until a primitive token is retrieved, if it exists.
+     * @param referenceToken The `reference token` to hydate with value.
+     * @throws {@link IllegalArgumentError} If the passed in token is a primitive (i.e, There is no reference identifier.)
+     */
+    hydrateToken(referenceToken: TokenNode): HydratedToken {
+        if (!referenceToken.reference)
+            throw new IllegalArgumentError(
+                "Primitive token cannot be hydrated",
+            );
+        const visitedNode = new Set(); // Contains reference id of the token nodes already visited. To prevent circular dependency.
+        return undefined;
     }
 
     /**
