@@ -183,6 +183,7 @@ export class DesignSystem {
             visitedNode.add(referenceToken);
         }
         // Add to recursive path the token name
+        console.log("TOKEN: ", token);
         fullPath += token.name;
 
         return {

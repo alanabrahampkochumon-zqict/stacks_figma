@@ -65,7 +65,7 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                primitiveTokenSetName + "/" + primitiveTokens[index - 1].name,
+                primitiveTokenSetName + +primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
                 primitiveTokenSetName + "/" + primitiveTokens[index - 1].name,
@@ -76,31 +76,31 @@ describe("Design System: Hydrate Token", () => {
         },
     );
 
-    // test.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])(
-    //     "returns correct hydrated token, when passing a level 3 token for token at index %i",
-    //     (index) => {
-    //         // Given a design system
-    //         const designSystem = new DesignSystem("ds", [
-    //             primitiveTKS,
-    //             aliasTKS,
-    //             semanticTKS,
-    //         ]);
+    test.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])(
+        "returns correct hydrated token, when passing a level 3 token for token at index %i",
+        (index) => {
+            // Given a design system
+            const designSystem = new DesignSystem("ds", [
+                primitiveTKS,
+                aliasTKS,
+                semanticTKS,
+            ]);
 
-    //         // When hydrating a level 3 token
-    //         const hydratedToken = designSystem.hydrateToken(
-    //             aliasTokens[index - 1],
-    //         );
+            // When hydrating a level 3 token
+            const hydratedToken = designSystem.hydrateToken(
+                semanticTokens[index - 1],
+            );
 
-    //         // Then it returns a level 1 path, and the correct primitive
-    //         expect(hydratedToken.recursivePath).toStrictEqual(
-    //             "primitives/" + "alias/" + primitiveTokens[index - 1].name,
-    //         );
-    //         expect(hydratedToken.relativePath).toStrictEqual(
-    //             "alias/" + primitiveTokens[index - 1].name,
-    //         );
-    //         expect(hydratedToken.primitiveToken).toStrictEqual(
-    //             primitiveTokens[index - 1],
-    //         );
-    //     },
-    // );
+            // Then it returns a level 1 path, and the correct primitive
+            expect(hydratedToken.recursivePath).toStrictEqual(
+                "primitives/" + "alias/" + primitiveTokens[index - 1].name,
+            );
+            expect(hydratedToken.relativePath).toStrictEqual(
+                "alias/" + primitiveTokens[index - 1].name,
+            );
+            expect(hydratedToken.primitiveToken).toStrictEqual(
+                primitiveTokens[index - 1],
+            );
+        },
+    );
 });
