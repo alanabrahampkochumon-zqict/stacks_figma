@@ -65,7 +65,7 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                primitiveTokenSetName + +primitiveTokens[index - 1].name,
+                primitiveTokenSetName + "/" + primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
                 primitiveTokenSetName + "/" + primitiveTokens[index - 1].name,

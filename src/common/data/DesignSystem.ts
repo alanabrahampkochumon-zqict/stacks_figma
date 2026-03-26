@@ -157,37 +157,49 @@ export class DesignSystem {
                 "Primitive token cannot be hydrated",
             );
         const visitedNode = new Set(); // Contains reference id of the token nodes already visited. To prevent circular dependency.
-        let token = referenceToken;
+        let currentToken = referenceToken;
         let fullPath = "";
         let relativePath = "";
         while (
-            token.value == null &&
-            token.reference != null &&
-            !visitedNode.has(referenceToken)
+            currentToken.value == null &&
+            currentToken.reference != null &&
+            !visitedNode.has(currentToken)
         ) {
-            const mappedTokenSet = this.#tokenReferenceCache.get(
-                referenceToken.reference,
+            const nextTokenSet = this.#tokenReferenceCache.get(
+                currentToken.reference,
             );
             // If there is no matching token then throw an error
-            if (!mappedTokenSet || !mappedTokenSet.token)
+            if (!nextTokenSet || !nextTokenSet.token)
                 throw new Error("Token cannot be matched with a primitive.");
 
             // Replace the current token as the primitive
-            token = mappedTokenSet.token;
-
+            currentToken = nextTokenSet.token;
+            console.log(currentToken);
             // Update the relative and full path
             if (relativePath.length === 0)
-                relativePath += `${mappedTokenSet.tokenSet.name}/${token.name}`;
-            fullPath += mappedTokenSet.tokenSet.name;
-            if (fullPath.length > 0 && !fullPath.endsWith("/")) fullPath += "/";
-            visitedNode.add(referenceToken);
+                relativePath += `${nextTokenSet.tokenSet.name}/${currentToken.name}`;
+            // fullPath += mappedTokenSet.tokenSet.name;
+            fullPath = nextTokenSet.tokenSet.name + "/" + fullPath;
+            console.log("FULL PATH: ", fullPath);
+            // if (fullPath.length > 0 && !fullPath.endsWith("/")) fullPath += "/";
+            visitedNode.add(currentToken);
+            console.log("Current Token Before:", currentToken);
+            currentToken = nextTokenSet.token;
+            console.log("Current Token After:", currentToken);
         }
         // Add to recursive path the token name
-        console.log("TOKEN: ", token);
-        fullPath += token.name;
+        console.log("TOKEN: ", currentToken);
+        console.log(
+            currentToken.value == null &&
+                currentToken.reference != null &&
+                !visitedNode.has(currentToken),
+        );
+        fullPath += currentToken.name;
+
+        console.log("FULL PATH TK NAME: ", fullPath);
 
         return {
-            primitiveToken: token,
+            primitiveToken: currentToken,
             relativePath: relativePath,
             recursivePath: fullPath,
         };
