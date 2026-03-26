@@ -160,11 +160,7 @@ export class DesignSystem {
         let currentToken = referenceToken;
         let fullPath = "";
         let relativePath = "";
-        while (
-            !currentToken.value &&
-            currentToken.reference &&
-            !visitedNode.has(currentToken)
-        ) {
+        while (currentToken.reference && !visitedNode.has(currentToken)) {
             const nextTokenSet = this.#tokenReferenceCache.get(
                 currentToken.reference,
             );
@@ -174,7 +170,7 @@ export class DesignSystem {
                 throw new Error("Token cannot be matched with a primitive.");
 
             if (relativePath.length === 0)
-                relativePath += `${nextTokenSet.tokenSet.name}/${currentToken.name}`;
+                relativePath += `${nextTokenSet.tokenSet.name}/${nextTokenSet.token.name}`;
 
             fullPath = nextTokenSet.tokenSet.name + "/" + fullPath;
 

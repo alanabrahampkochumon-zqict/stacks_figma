@@ -93,14 +93,41 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                "primitives/" + "alias/" + primitiveTokens[index - 1].name,
+                primitiveTokenSetName +
+                    "/" +
+                    aliasTokenSetName +
+                    "/" +
+                    primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
-                "alias/" + primitiveTokens[index - 1].name,
+                aliasTokenSetName + "/" + primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.primitiveToken).toStrictEqual(
                 primitiveTokens[index - 1],
             );
         },
     );
+
+    test("returns correct hydrated token, when passing a a token with value and reference", () => {
+        // Given a design system
+        const token = {
+            ...primitiveTokens[0],
+            reference: primitiveTokens[0].uid,
+            name: v4(),
+            uid: v4(),
+        };
+        const tokenSet = new TokenSet("mapped", "number", 2, [token]);
+        const designSystem = new DesignSystem("ds", [primitiveTKS, tokenSet]);
+        // When hydrating a token with both level and value
+        const hydratedToken = designSystem.hydrateToken(token);
+
+        // Then the level takes precedence
+        expect(hydratedToken.recursivePath).toStrictEqual(
+            primitiveTokenSetName + "/" + primitiveTokens[0].name,
+        );
+        expect(hydratedToken.relativePath).toStrictEqual(
+            primitiveTokenSetName + "/" + primitiveTokens[0].name,
+        );
+        expect(hydratedToken.primitiveToken).toStrictEqual(primitiveTokens[0]);
+    });
 });
