@@ -168,34 +168,23 @@ export class DesignSystem {
             const nextTokenSet = this.#tokenReferenceCache.get(
                 currentToken.reference,
             );
+
             // If there is no matching token then throw an error
             if (!nextTokenSet || !nextTokenSet.token)
                 throw new Error("Token cannot be matched with a primitive.");
 
-            console.log(currentToken);
-            // Update the relative and full path
             if (relativePath.length === 0)
                 relativePath += `${nextTokenSet.tokenSet.name}/${currentToken.name}`;
-            // fullPath += mappedTokenSet.tokenSet.name;
+
             fullPath = nextTokenSet.tokenSet.name + "/" + fullPath;
-            console.log("FULL PATH: ", fullPath);
-            // if (fullPath.length > 0 && !fullPath.endsWith("/")) fullPath += "/";
+
             visitedNode.add(currentToken);
-            console.log("Current Token Before:", currentToken);
+
             // Replace the current token as the primitive
             currentToken = nextTokenSet.token;
-            console.log("Current Token After:", currentToken);
         }
         // Add to recursive path the token name
-        console.log("TOKEN: ", currentToken);
-        console.log(
-            currentToken.value == null &&
-                currentToken.reference != null &&
-                !visitedNode.has(currentToken),
-        );
         fullPath += currentToken.name;
-
-        console.log("FULL PATH TK NAME: ", fullPath);
 
         return {
             primitiveToken: currentToken,
