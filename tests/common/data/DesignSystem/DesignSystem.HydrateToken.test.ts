@@ -23,15 +23,23 @@ describe("Design System: Hydrate Token", () => {
     const semanticTokens = aliasTokens.map((token) => {
         return { ...token, uid: v4(), reference: token.uid, value: undefined };
     });
+    const primitiveTokenSetName = "primitives";
+    const aliasTokenSetName = "alias";
+    const semanticTokenSetName = "semantic";
 
     const primitiveTKS = new TokenSet(
-        "primitives",
+        primitiveTokenSetName,
         "number",
         1,
         primitiveTokens,
     );
-    const aliasTKS = new TokenSet("alias", "number", 2, aliasTokens);
-    const semanticTKS = new TokenSet("semantic", "number", 3, semanticTokens);
+    const aliasTKS = new TokenSet(aliasTokenSetName, "number", 2, aliasTokens);
+    const semanticTKS = new TokenSet(
+        semanticTokenSetName,
+        "number",
+        3,
+        semanticTokens,
+    );
 
     test("throws illegal argument error, if primitive token is hydrated", () => {
         // Given a design system
@@ -41,20 +49,58 @@ describe("Design System: Hydrate Token", () => {
         expect(() => designSystem.hydrateToken(primitiveTokens[0])).toThrow();
     });
 
-    test("returns correct hydrated token, when passing a level 2 token", () => {
-        // Given a design system
-        const designSystem = new DesignSystem("ds", [primitiveTKS, aliasTKS]);
+    test.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])(
+        "returns correct hydrated token, when passing a level 2 token for token at index %i",
+        (index) => {
+            // Given a design system
+            const designSystem = new DesignSystem("ds", [
+                primitiveTKS,
+                aliasTKS,
+            ]);
 
-        // When hydrating a level 2 tokenset
-        const hydratedToken = designSystem.hydrateToken(aliasTokens[0]);
+            // When hydrating a level 2 token
+            const hydratedToken = designSystem.hydrateToken(
+                aliasTokens[index - 1],
+            );
 
-        // Then it returns a level 1 path, and the correct primitive
-        expect(hydratedToken.recursivePath).toStrictEqual(
-            "primitives/" + primitiveTokens[0].name,
-        );
-        expect(hydratedToken.relativePath).toStrictEqual(
-            "primitives/" + primitiveTokens[0].name,
-        );
-        expect(hydratedToken.primitiveToken).toStrictEqual(primitiveTokens[0]);
-    });
+            // Then it returns a level 1 path, and the correct primitive
+            expect(hydratedToken.recursivePath).toStrictEqual(
+                primitiveTokenSetName + "/" + primitiveTokens[index - 1].name,
+            );
+            expect(hydratedToken.relativePath).toStrictEqual(
+                primitiveTokenSetName + "/" + primitiveTokens[index - 1].name,
+            );
+            expect(hydratedToken.primitiveToken).toStrictEqual(
+                primitiveTokens[index - 1],
+            );
+        },
+    );
+
+    // test.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])(
+    //     "returns correct hydrated token, when passing a level 3 token for token at index %i",
+    //     (index) => {
+    //         // Given a design system
+    //         const designSystem = new DesignSystem("ds", [
+    //             primitiveTKS,
+    //             aliasTKS,
+    //             semanticTKS,
+    //         ]);
+
+    //         // When hydrating a level 3 token
+    //         const hydratedToken = designSystem.hydrateToken(
+    //             aliasTokens[index - 1],
+    //         );
+
+    //         // Then it returns a level 1 path, and the correct primitive
+    //         expect(hydratedToken.recursivePath).toStrictEqual(
+    //             "primitives/" + "alias/" + primitiveTokens[index - 1].name,
+    //         );
+    //         expect(hydratedToken.relativePath).toStrictEqual(
+    //             "alias/" + primitiveTokens[index - 1].name,
+    //         );
+    //         expect(hydratedToken.primitiveToken).toStrictEqual(
+    //             primitiveTokens[index - 1],
+    //         );
+    //     },
+    // );
 });
