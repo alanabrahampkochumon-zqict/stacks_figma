@@ -31,10 +31,14 @@ type DesignSystemUpdateOptions = {
 /**
  * Token type returned after hydrating a reference {@link TokenNode}.
  * @property {string} recursivePath     The entire path that was traversed to get to the primitive.
+ *                                      For example: `semantic/button.danger` -> `alias/primitives/red.600`.
+ * @property {string} relativePath      The first path that was traversed to get to the primitive.
+ *                                      For example: `semantic/button.danger` -> `alias/danger.500`.
  * @property {TokenNode} primitiveToken The primitive token node.
  */
 type HydratedToken = {
     recursivePath: string;
+    relativePath: string;
     primitiveToken: TokenNode;
 };
 
@@ -91,12 +95,10 @@ export class DesignSystem {
                 );
             else
                 tokenSet.tokens.forEach((token) => {
-                    if (token.reference)
-                        this.#tokenReferenceCache.set(token.reference, {
-                            tokenSet,
-                            token,
-                        });
-                    else return;
+                    this.#tokenReferenceCache.set(token.uid, {
+                        tokenSet,
+                        token,
+                    });
                 });
         }
     }
@@ -155,7 +157,39 @@ export class DesignSystem {
                 "Primitive token cannot be hydrated",
             );
         const visitedNode = new Set(); // Contains reference id of the token nodes already visited. To prevent circular dependency.
-        return undefined;
+        let token = referenceToken;
+        let fullPath = "";
+        let relativePath = "";
+        while (
+            token.value == null &&
+            token.reference != null &&
+            !visitedNode.has(referenceToken)
+        ) {
+            const mappedTokenSet = this.#tokenReferenceCache.get(
+                referenceToken.reference,
+            );
+            // If there is no matching token then throw an error
+            if (!mappedTokenSet || !mappedTokenSet.token)
+                throw new Error("Token cannot be matched with a primitive.");
+
+            // Replace the current token as the primitive
+            token = mappedTokenSet.token;
+
+            // Update the relative and full path
+            if (relativePath.length === 0)
+                relativePath += `${mappedTokenSet.tokenSet.name}/${token.name}`;
+            fullPath += mappedTokenSet.tokenSet.name;
+            if (fullPath.length > 0 && !fullPath.endsWith("/")) fullPath += "/";
+            visitedNode.add(referenceToken);
+        }
+        // Add to recursive path the token name
+        fullPath += token.name;
+
+        return {
+            primitiveToken: token,
+            relativePath: relativePath,
+            recursivePath: fullPath,
+        };
     }
 
     /**

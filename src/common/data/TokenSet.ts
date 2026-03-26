@@ -319,6 +319,7 @@ export class TokenSet {
             throw new IllegalArgumentError(
                 `Invalid token type: Type must be in ${extendedTokens}`,
             );
+
         // Token Type validation
         let validationResult = false;
         if (tokenType === "group")

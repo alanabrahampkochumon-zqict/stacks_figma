@@ -46,5 +46,15 @@ describe("Design System: Hydrate Token", () => {
         const designSystem = new DesignSystem("ds", [primitiveTKS, aliasTKS]);
 
         // When hydrating a level 2 tokenset
+        const hydratedToken = designSystem.hydrateToken(aliasTokens[0]);
+
+        // Then it returns a level 1 path, and the correct primitive
+        expect(hydratedToken.recursivePath).toStrictEqual(
+            "primitives/" + primitiveTokens[0].name,
+        );
+        expect(hydratedToken.relativePath).toStrictEqual(
+            "primitives/" + primitiveTokens[0].name,
+        );
+        expect(hydratedToken.primitiveToken).toStrictEqual(primitiveTokens[0]);
     });
 });
