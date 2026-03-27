@@ -144,6 +144,12 @@ export class DesignSystem {
             tokenSet.tokens.forEach((token) =>
                 this.#groupCache.set(token.uid, token.name),
             );
+        tokenSet.tokens.forEach((token) => {
+            this.#tokenReferenceCache.set(token.uid, {
+                tokenSet,
+                token,
+            });
+        });
     }
 
     /**
