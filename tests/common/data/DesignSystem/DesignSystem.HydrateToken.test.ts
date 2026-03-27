@@ -277,4 +277,59 @@ describe("Design System: Hydrate Token", () => {
             );
         },
     );
+
+    test.each([1, 2, 3, 4])(
+        "returns correct hydrated token $i, after updating a tokenset",
+        (index) => {
+            // Given a design system
+            const {
+                primitiveTKS,
+                aliasTKS,
+                primitiveTokenSetName,
+                aliasTokenSetName,
+                semanticTokens,
+                semanticTKS,
+            } = setUp();
+            const newPrimitives: TokenSet = new TokenSet(
+                primitiveTKS.name,
+                primitiveTKS.type,
+                primitiveTKS.level,
+                primitiveTKS.tokens.map((token) => ({
+                    ...token,
+                    name: v4(),
+                })),
+            );
+
+            const designSystem = new DesignSystem("ds", [
+                primitiveTKS,
+                aliasTKS,
+                semanticTKS,
+            ]);
+            console.log("Old Prim", primitiveTKS.tokens[index - 1]);
+            console.log("New Prim", newPrimitives.tokens[index - 1]);
+
+            // After adding all token sets
+            designSystem.updateTokenSet(primitiveTKS.name, newPrimitives);
+
+            // When, a tokensets from added token set is hydrated
+            const hydratedToken = designSystem.hydrateToken(
+                semanticTokens[index - 1],
+            );
+
+            // Then it returns a level 1 path, and the correct primitive
+            expect(hydratedToken.recursivePath).toStrictEqual(
+                primitiveTokenSetName +
+                    "/" +
+                    aliasTokenSetName +
+                    "/" +
+                    newPrimitives.tokens[index - 1].name,
+            );
+            expect(hydratedToken.relativePath).toStrictEqual(
+                aliasTokenSetName + "/" + newPrimitives.tokens[index - 1].name,
+            );
+            expect(hydratedToken.primitiveToken).toStrictEqual(
+                newPrimitives.tokens[index - 1],
+            );
+        },
+    );
 });
