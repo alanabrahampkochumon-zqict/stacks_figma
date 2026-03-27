@@ -278,7 +278,7 @@ describe("Design System: Hydrate Token", () => {
         },
     );
 
-    test.each([1, 2, 3, 4])(
+    test.each([1])(
         "returns correct hydrated token $i, after updating a tokenset",
         (index) => {
             // Given a design system

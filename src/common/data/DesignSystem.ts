@@ -151,6 +151,7 @@ export class DesignSystem {
             });
         });
     }
+    // TODO: Update group cache only while updating or adding groups
 
     /**
      * Recursively traverses through a tokens references, until a primitive token is retrieved, if it exists.
@@ -179,7 +180,8 @@ export class DesignSystem {
                 relativePath += `${nextTokenSet.tokenSet.name}/${nextTokenSet.token.name}`;
 
             fullPath = nextTokenSet.tokenSet.name + "/" + fullPath;
-
+            console.log("Cur Node", currentToken);
+            console.log("Next Node", nextTokenSet.token);
             visitedNode.add(currentToken);
 
             // Replace the current token as the primitive
@@ -263,11 +265,12 @@ export class DesignSystem {
                 this.#tokenReferenceCache.delete(token.uid);
             });
             newTokenSet.tokens.forEach((token) => {
-                (this.#groupCache.set(token.uid, token.name),
-                    this.#tokenReferenceCache.set(token.uid, {
-                        tokenSet: newTokenSet,
-                        token: token,
-                    }));
+                if (token.value?.entityType === "group")
+                    this.#groupCache.set(token.uid, token.name);
+                this.#tokenReferenceCache.set(token.uid, {
+                    tokenSet: newTokenSet,
+                    token: token,
+                });
             });
         } else if (updatePolicy === UpdatePolicy.INSERT)
             this.addTokenSet(newTokenSet, { sortToken, compareFn });
