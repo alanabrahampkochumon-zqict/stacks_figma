@@ -122,6 +122,7 @@ describe("Design System: Hydrate Token", () => {
                 primitiveTokens,
                 aliasTKS,
                 semanticTKS,
+                aliasTokens,
                 primitiveTokenSetName,
                 aliasTokenSetName,
                 semanticTokens,
@@ -148,7 +149,7 @@ describe("Design System: Hydrate Token", () => {
                     primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
-                aliasTokenSetName + "/" + primitiveTokens[index - 1].name,
+                aliasTokenSetName + "/" + aliasTokens[index - 1].name,
             );
             expect(hydratedToken.primitiveToken).toStrictEqual(
                 primitiveTokens[index - 1],
