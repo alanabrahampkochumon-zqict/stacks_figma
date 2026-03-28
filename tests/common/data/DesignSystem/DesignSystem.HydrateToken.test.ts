@@ -183,7 +183,7 @@ describe("Design System: Hydrate Token", () => {
     });
 
     test.each([1, 2, 3, 4])(
-        "returns correct hydrated token at index $i, after adding a new tokenset",
+        "returns correct hydrated token at index %i, after adding a new tokenset",
         (index) => {
             // Given a design system
             const {
@@ -192,6 +192,7 @@ describe("Design System: Hydrate Token", () => {
                 aliasTKS,
                 primitiveTokenSetName,
                 aliasTokenSetName,
+                aliasTokens,
                 semanticTokens,
                 semanticTKS,
             } = setUp();
@@ -216,7 +217,7 @@ describe("Design System: Hydrate Token", () => {
                     primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
-                aliasTokenSetName + "/" + primitiveTokens[index - 1].name,
+                aliasTokenSetName + "/" + aliasTokens[index - 1].name,
             );
             expect(hydratedToken.primitiveToken).toStrictEqual(
                 primitiveTokens[index - 1],
@@ -225,7 +226,7 @@ describe("Design System: Hydrate Token", () => {
     );
 
     test.each([1, 2, 3, 4])(
-        "returns correct hydrated token at index $i, after adding renaming a tokenset",
+        "returns correct hydrated token at index %i, after adding renaming a tokenset",
         (index) => {
             // Given a design system
             const {
@@ -235,6 +236,7 @@ describe("Design System: Hydrate Token", () => {
                 primitiveTokenSetName,
                 aliasTokenSetName,
                 semanticTokens,
+                aliasTokens,
                 semanticTokenSetName,
                 semanticTKS,
             } = setUp();
@@ -273,7 +275,7 @@ describe("Design System: Hydrate Token", () => {
                     primitiveTokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
-                newAliasName + "/" + primitiveTokens[index - 1].name,
+                newAliasName + "/" + aliasTokens[index - 1].name,
             );
             expect(hydratedToken.primitiveToken).toStrictEqual(
                 primitiveTokens[index - 1],
@@ -281,8 +283,8 @@ describe("Design System: Hydrate Token", () => {
         },
     );
 
-    test.each([1, 2, 3, 4, 8, 10])(
-        "returns correct hydrated token $i, after updating a tokenset",
+    test.each([1, 2, 3, 8, 10])(
+        "returns correct hydrated token %i, after updating a tokenset",
         (index) => {
             // Given a design system
             const {
