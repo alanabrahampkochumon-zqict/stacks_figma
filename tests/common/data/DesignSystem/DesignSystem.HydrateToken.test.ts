@@ -21,6 +21,7 @@ describe("Design System: Hydrate Token", () => {
         const aliasTokens = primitiveTokens.map((token) => {
             return {
                 ...token,
+                name: v4(),
                 uid: v4(),
                 reference: token.uid,
                 value: undefined,
@@ -29,6 +30,7 @@ describe("Design System: Hydrate Token", () => {
         const semanticTokens = aliasTokens.map((token) => {
             return {
                 ...token,
+                name: v4(),
                 uid: v4(),
                 reference: token.uid,
                 value: undefined,
@@ -278,7 +280,7 @@ describe("Design System: Hydrate Token", () => {
         },
     );
 
-    test.each([1])(
+    test.each([1, 2, 3, 4, 8, 10])(
         "returns correct hydrated token $i, after updating a tokenset",
         (index) => {
             // Given a design system
@@ -294,10 +296,12 @@ describe("Design System: Hydrate Token", () => {
                 primitiveTKS.name,
                 primitiveTKS.type,
                 primitiveTKS.level,
-                primitiveTKS.tokens.map((token) => ({
-                    ...token,
-                    name: v4(),
-                })),
+                primitiveTKS.tokens.map((token) => {
+                    return {
+                        ...token,
+                        name: v4(),
+                    };
+                }),
             );
 
             const designSystem = new DesignSystem("ds", [
@@ -325,7 +329,7 @@ describe("Design System: Hydrate Token", () => {
                     newPrimitives.tokens[index - 1].name,
             );
             expect(hydratedToken.relativePath).toStrictEqual(
-                aliasTokenSetName + "/" + newPrimitives.tokens[index - 1].name,
+                aliasTokenSetName + "/" + aliasTKS.tokens[index - 1].name,
             );
             expect(hydratedToken.primitiveToken).toStrictEqual(
                 newPrimitives.tokens[index - 1],

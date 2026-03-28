@@ -79,13 +79,6 @@ describe("Design Sytem Update TokenSet", () => {
             [tokenNode1, tokenNode2],
         );
 
-        const tokenSetSorted = new TokenSet(
-            tokenSets[0].name,
-            tokenSets[0].type,
-            tokenSets[0].level,
-            [tokenNode2, tokenNode1],
-        );
-
         const designSystem = new DesignSystem(dsName, tokenSets);
 
         // When tokenset is updated
@@ -93,7 +86,7 @@ describe("Design Sytem Update TokenSet", () => {
 
         // Then, the tokenset is updated
         expect(designSystem.getTokenSets()).toStrictEqual([
-            tokenSetSorted,
+            tokenSet,
             tokenSets[1],
         ]);
     });

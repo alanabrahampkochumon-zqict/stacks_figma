@@ -49,6 +49,20 @@ export function generateGroup(): Group {
     };
 }
 
+// const usedNames = new Set();
+// let index = 0;
+// const words = faker.word.words({ count: 5000 }).split(" ");
+// function generateUniqueName() {
+//     let name = words[index];
+//     index++;
+//     while (usedNames.has(name)) {
+//         name = words[index];
+//         index++;
+//         usedNames.add(name);
+//     }
+//     return name;
+// }
+
 /**
  * Generates a @see TokenNode for testing.
  *
@@ -88,7 +102,7 @@ export function generateTokenNode(
     const tokenParentId = parentId || Math.random() > 0.5 ? v4() : undefined;
 
     return {
-        name: tokenName,
+        name: v4(),
         uid: tokenId,
         value: tokenValue,
         parentId: tokenParentId,

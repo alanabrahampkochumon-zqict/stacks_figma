@@ -256,7 +256,7 @@ export class DesignSystem {
             const oldTokenSet = this._tokenSets[tokenSetIndex];
 
             this._tokenSets[tokenSetIndex] = newTokenSet;
-            this._tokenSets[tokenSetIndex].sort(compareFn);
+            if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
 
             // TODO: Implement a smarter update strategy if possible
             // Invalidate cache
