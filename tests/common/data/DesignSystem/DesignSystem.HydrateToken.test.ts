@@ -142,9 +142,9 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                primitiveTokenSetName +
+                aliasTokenSetName +
                     "/" +
-                    aliasTokenSetName +
+                    primitiveTokenSetName +
                     "/" +
                     primitiveTokens[index - 1].name,
             );
@@ -210,9 +210,9 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                primitiveTokenSetName +
+                aliasTokenSetName +
                     "/" +
-                    aliasTokenSetName +
+                    primitiveTokenSetName +
                     "/" +
                     primitiveTokens[index - 1].name,
             );
@@ -268,9 +268,9 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                newPrimitiveName +
+                newAliasName +
                     "/" +
-                    newAliasName +
+                    newPrimitiveName +
                     "/" +
                     primitiveTokens[index - 1].name,
             );
@@ -325,9 +325,9 @@ describe("Design System: Hydrate Token", () => {
 
             // Then it returns a level 1 path, and the correct primitive
             expect(hydratedToken.recursivePath).toStrictEqual(
-                primitiveTokenSetName +
+                aliasTokenSetName +
                     "/" +
-                    aliasTokenSetName +
+                    primitiveTokenSetName +
                     "/" +
                     newPrimitives.tokens[index - 1].name,
             );

@@ -179,7 +179,7 @@ export class DesignSystem {
             if (relativePath.length === 0)
                 relativePath += `${nextTokenSet.tokenSet.name}/${nextTokenSet.token.name}`;
 
-            fullPath = nextTokenSet.tokenSet.name + "/" + fullPath;
+            fullPath += nextTokenSet.tokenSet.name + "/";
             console.log("Cur Node", currentToken);
             console.log("Next Node", nextTokenSet.token);
             visitedNode.add(currentToken);
