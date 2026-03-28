@@ -102,7 +102,7 @@ export function generateTokenNode(
     const tokenParentId = parentId || Math.random() > 0.5 ? v4() : undefined;
 
     return {
-        name: v4(),
+        name: tokenName,
         uid: tokenId,
         value: tokenValue,
         parentId: tokenParentId,
