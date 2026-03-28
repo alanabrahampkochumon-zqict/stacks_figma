@@ -180,8 +180,6 @@ export class DesignSystem {
                 relativePath += `${nextTokenSet.tokenSet.name}/${nextTokenSet.token.name}`;
 
             fullPath += nextTokenSet.tokenSet.name + "/";
-            console.log("Cur Node", currentToken);
-            console.log("Next Node", nextTokenSet.token);
             visitedNode.add(currentToken);
 
             // Replace the current token as the primitive

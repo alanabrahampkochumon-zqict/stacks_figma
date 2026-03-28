@@ -312,9 +312,6 @@ describe("Design System: Hydrate Token", () => {
                 aliasTKS,
                 semanticTKS,
             ]);
-            console.log("Old Prim", primitiveTKS.tokens[index - 1]);
-            console.log("New Prim", newPrimitives.tokens[index - 1]);
-
             // After adding all token sets
             designSystem.updateTokenSet(primitiveTKS.name, newPrimitives);
 
