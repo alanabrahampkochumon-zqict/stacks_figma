@@ -376,6 +376,7 @@ export class DesignSystem {
         this._tokenSets = [];
         this.#groupCache.clear();
         this.#isHardened = false;
+        this.#tokenReferenceCache.clear();
     }
 
     /**
@@ -403,5 +404,19 @@ export class DesignSystem {
      *
      * @return The same token with reference replaced with a value.
      */
-    unlinkToken(token: TokenNode): TokenNode {}
+    unlinkToken(token: TokenNode): TokenNode {
+        const visited = new Set(); // To prevent any circular dependency
+        let currentToken: TokenNode | undefined = token;
+        while (!visited.has(currentToken) && currentToken?.reference) {
+            visited.add(currentToken);
+            currentToken = this.#tokenReferenceCache.get(
+                currentToken.reference,
+            )?.token;
+        }
+        if (currentToken) {
+            token.value = currentToken.value;
+            token.reference = undefined;
+        }
+        return token;
+    }
 }
