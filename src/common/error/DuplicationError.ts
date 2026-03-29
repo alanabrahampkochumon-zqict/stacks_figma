@@ -1,5 +1,5 @@
 /**
- * Reprsents a Duplication Error.
+ * Represents a Duplication Error.
  * @extends {Error}
  */
 export class DuplicationError extends Error {

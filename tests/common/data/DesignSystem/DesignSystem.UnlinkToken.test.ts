@@ -72,7 +72,7 @@ describe("Design System: Unlink Token", () => {
         // When unlinked
         const unlinked = designSystem.unlinkToken(level2Token);
 
-        // Then it returns the same tokenset
+        // Then it returns the same tokenset with primitive value
         expect(unlinked.reference).toBeUndefined();
         expect(unlinked.value).toStrictEqual(primitiveToken.value);
         expect(unlinked).toBe(level2Token); // Reference checking
@@ -85,7 +85,7 @@ describe("Design System: Unlink Token", () => {
         // When unlinked
         const unlinked = designSystem.unlinkToken(level3Token);
 
-        // Then it returns the same tokenset
+        // Then it returns the same tokenset with primitive value
         expect(unlinked.reference).toBeUndefined();
         expect(unlinked.value).toStrictEqual(primitiveToken.value);
         expect(unlinked).toBe(level3Token); // Reference checking
@@ -98,9 +98,19 @@ describe("Design System: Unlink Token", () => {
         // When unlinked
         const unlinked = designSystem.unlinkToken(level4Token);
 
-        // Then it returns the same tokenset
+        // Then it returns the same tokenset with primitive value
         expect(unlinked.reference).toBeUndefined();
         expect(unlinked.value).toStrictEqual(primitiveToken.value);
         expect(unlinked).toBe(level4Token); // Reference checking
+    });
+
+    test("throws error, when a token with no reference is passed-in", () => {
+        // Given a primitive token
+        const { level4Token, designSystem } = setUp();
+        level4Token.reference = v4()
+
+        // When unlinked
+        // Then it throws an error
+        const unlinked = designSystem.unlinkToken(level4Token);
     });
 });
