@@ -395,4 +395,13 @@ export class DesignSystem {
         Object.freeze(this._tokenSets);
         Object.freeze(this);
     }
+
+    /**
+     * Unlinks any reference to a @see {@link TokenNode} and hydrates it with the corresponding primitive value.
+     *
+     * @param token The token to unlink to a primitive.
+     *
+     * @return The same token with reference replaced with a value.
+     */
+    unlinkToken(token: TokenNode): TokenNode {}
 }
