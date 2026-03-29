@@ -107,10 +107,10 @@ describe("Design System: Unlink Token", () => {
     test("throws error, when a token with no reference is passed-in", () => {
         // Given a primitive token
         const { level4Token, designSystem } = setUp();
-        level4Token.reference = v4()
+        level4Token.reference = v4();
 
         // When unlinked
         // Then it throws an error
-        const unlinked = designSystem.unlinkToken(level4Token);
+        expect(() => designSystem.unlinkToken(level4Token)).toThrow();
     });
 });

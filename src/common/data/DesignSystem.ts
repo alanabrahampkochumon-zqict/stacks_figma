@@ -1,4 +1,5 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import { TokenMismatchError } from "../error/TokenMismatchError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { TokenComparator } from "./Token";
 import type { TokenNode } from "./TokenNode";
@@ -416,6 +417,10 @@ export class DesignSystem {
         if (currentToken) {
             token.value = currentToken.value;
             token.reference = undefined;
+        } else {
+            throw new TokenMismatchError(
+                "The token cannot be unlinked, as it does not reference a valid primtive.",
+            );
         }
         return token;
     }
