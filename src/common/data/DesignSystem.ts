@@ -44,7 +44,8 @@ type HydratedToken = {
 };
 
 // TODO: Add lookup caching using a map
-// TODO: Hydrate token
+// TODO: Add reference identity map update with init, add, delete, update and clear.
+// TODO: Add tokenReference caching when updating, deleting and clearing token.
 /**
  * The root container for a Design System.
  * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.
@@ -69,6 +70,9 @@ export class DesignSystem {
 
     /** @internal Internal cache for reference tokens. */
     #tokenReferenceCache: Map<string, { tokenSet: TokenSet; token: TokenNode }>;
+
+    /** @internal Caching store for reference dependency within the design system. */
+    #reverseTokenReferenceCache: Map<string, Set<TokenNode>>;
 
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.
@@ -257,7 +261,6 @@ export class DesignSystem {
             this._tokenSets[tokenSetIndex] = newTokenSet;
             if (sortToken) this._tokenSets[tokenSetIndex].sort(compareFn);
 
-            // TODO: Implement a smarter update strategy if possible
             // Invalidate cache
             oldTokenSet.tokens.forEach((token) => {
                 this.#groupCache.delete(token.uid);
@@ -419,7 +422,7 @@ export class DesignSystem {
             token.reference = undefined;
         } else {
             throw new TokenMismatchError(
-                "The token cannot be unlinked, as it does not reference a valid primtive.",
+                "The token cannot be unlinked, as it does not reference a valid primitive.",
             );
         }
         return token;
