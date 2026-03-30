@@ -100,10 +100,26 @@ export class DesignSystem {
                     this.#groupCache.set(token.uid, token.name),
                 );
             tokenSet.tokens.forEach((token) => {
+                // Cache the uid and token for forward referencing
                 this.#tokenReferenceCache.set(token.uid, {
                     tokenSet,
                     token,
                 });
+
+                // Cache the reference for reverse referencing
+                if (token.reference)
+                    if (this.#reverseTokenReferenceCache.has(token.reference))
+                        this.#reverseTokenReferenceCache
+                            .get(token.reference)
+                            ?.add(token);
+                    else {
+                        const cachedSet: Set<TokenNode> = new Set();
+                        cachedSet.add(token);
+                        this.#reverseTokenReferenceCache.set(
+                            token.reference,
+                            cachedSet,
+                        );
+                    }
             });
             // If the token has a reference push it to the appropriate cache entry
             // tok;
