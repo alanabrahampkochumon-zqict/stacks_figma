@@ -89,6 +89,7 @@ export class DesignSystem {
         this.#isHardened = false;
         this.#groupCache = new Map();
         this.#tokenReferenceCache = new Map();
+        this.#reverseTokenReferenceCache = new Map();
 
         for (const tokenSet of tokenSets) {
             this._tokenSets.push(tokenSet);
@@ -98,13 +99,14 @@ export class DesignSystem {
                 tokenSet.tokens.forEach((token) =>
                     this.#groupCache.set(token.uid, token.name),
                 );
-            else
-                tokenSet.tokens.forEach((token) => {
-                    this.#tokenReferenceCache.set(token.uid, {
-                        tokenSet,
-                        token,
-                    });
+            tokenSet.tokens.forEach((token) => {
+                this.#tokenReferenceCache.set(token.uid, {
+                    tokenSet,
+                    token,
                 });
+            });
+            // If the token has a reference push it to the appropriate cache entry
+            // tok;
         }
     }
 

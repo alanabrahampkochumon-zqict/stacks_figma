@@ -199,6 +199,38 @@ describe("Design System: Unlink Token", () => {
         expect(unlinked).toBe(level4Token); // Reference checking
     });
 
+    // TODO: Add back test after implementing reverse cache.
+    // test("returns non-primitive token, when a primitive is deleted", () => {
+    //     // Given a design system
+    //     const {
+    //         primitiveToken,
+    //         updatedPrimitiveToken,
+    //         level2Token,
+    //         level3Token,
+    //         level4Token,
+    //     } = setUp();
+    //     const primitiveTokenSet = new TokenSet("primitive", "number", 1, [
+    //         primitiveToken,
+    //     ]);
+    //     const designSystem = new DesignSystem("ds", [
+    //         primitiveTokenSet,
+    //         new TokenSet("level 2", "number", 2, [level2Token]),
+    //         new TokenSet("level 3", "number", 3, [level3Token]),
+    //         new TokenSet("level 4", "number", 4, [level4Token]),
+    //     ]);
+
+    //     // And a primitive is deleted
+    //     designSystem.removeTokenSet(primitiveTokenSet);
+
+    //     // When a level 4 token is unlinked
+    //     const unlinked = designSystem.unlinkToken(level4Token);
+
+    //     // Then it returns the same tokenset with primitive value
+    //     expect(unlinked.reference).toBeUndefined();
+    //     expect(unlinked.value).toStrictEqual(updatedPrimitiveToken.value);
+    //     expect(unlinked).toBe(level4Token); // Reference checking
+    // });
+
     test("throws error, when a token with no reference is passed-in", () => {
         // Given a primitive token
         const { level4Token, designSystem } = setUp();
