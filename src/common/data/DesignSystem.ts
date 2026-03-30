@@ -112,6 +112,10 @@ export class DesignSystem {
         }
     }
 
+    /**
+     * @interal Update the reverse reference token cache with the appropriate {@link TokenNode} entry.
+     * @param token The token to update the cache with
+     */
     #updateReverseReferenceCache(token: TokenNode) {
         // If the token has a reference push it to the appropriate cache entry
         if (token.reference)
@@ -175,6 +179,7 @@ export class DesignSystem {
                 tokenSet,
                 token,
             });
+            this.#updateReverseReferenceCache(token);
         });
     }
     // TODO: Update group cache only while updating or adding groups
