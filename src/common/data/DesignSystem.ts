@@ -54,7 +54,7 @@ type HydratedToken = {
  * **Architecture Note:**
  * This class acts as a Facade for managing design tokens across different levels
  * and categories. It enforces a unique naming constraint across all child sets.
- * * @category Core
+ * @category Core
  *
  * @property {string} name    The unique name of the design system.
  */
@@ -182,7 +182,6 @@ export class DesignSystem {
             this.#updateReverseReferenceCache(token);
         });
     }
-    // TODO: Update group cache only while updating or adding groups
 
     /**
      * Recursively traverses through a tokens references, until a primitive token is retrieved, if it exists.
@@ -442,6 +441,18 @@ export class DesignSystem {
             currentToken = this.#tokenReferenceCache.get(
                 currentToken.reference,
             )?.token;
+        }
+        // Update the current token set with the hydrated token
+        if (currentToken) {
+            const currentTokenSet = this.#tokenReferenceCache.get(
+                currentToken?.uid,
+            )?.tokenSet;
+            if (currentTokenSet) {
+                currentTokenSet?.updateToken(currentToken.uid, currentToken, {
+                    updatePolicy: UpdatePolicy.INSERT,
+                });
+                this.updateTokenSet(currentTokenSet?.name, currentTokenSet);
+            }
         }
         if (currentToken) {
             token.value = currentToken.value;
