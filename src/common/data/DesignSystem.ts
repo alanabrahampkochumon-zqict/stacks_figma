@@ -114,7 +114,7 @@ export class DesignSystem {
 
     /**
      * @interal Update the reverse reference token cache with the appropriate {@link TokenNode} entry.
-     * @param token The token to update the cache with
+     * @param token The token to update the cache with.
      */
     #updateReverseReferenceCache(token: TokenNode) {
         // If the token has a reference push it to the appropriate cache entry
@@ -259,6 +259,10 @@ export class DesignSystem {
             tokenSet.tokens.forEach((token) =>
                 this.#groupCache.delete(token.uid),
             );
+        tokenSet.tokens.forEach((token) => {
+            this.#reverseTokenReferenceCache.delete(token.uid);
+            this.#tokenReferenceCache.delete(token.uid);
+        });
     }
 
     /**
@@ -442,7 +446,7 @@ export class DesignSystem {
                 currentToken.reference,
             )?.token;
         }
-        
+
         // Update the current token set with the hydrated token
         if (currentToken) {
             const currentTokenSet = this.#tokenReferenceCache.get(
