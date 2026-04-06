@@ -199,6 +199,80 @@ describe("Design System: Unlink Token", () => {
         expect(unlinked).toBe(level4Token); // Reference checking
     });
 
+    test("updates the token in the design system, when level 3 token is unlinked", () => {
+        // Given a design system
+        const { primitiveToken, level2Token, level3Token, level4Token } =
+            setUp();
+        const level4TokenSet = new TokenSet("level 4", "number", 4, [
+            level4Token,
+        ]);
+        const designSystem = new DesignSystem("ds", [
+            new TokenSet("primitive", "number", 1, [primitiveToken]),
+            new TokenSet("level 2", "number", 2, [level2Token]),
+            new TokenSet("level 3", "number", 3, [level3Token]),
+            level4TokenSet,
+        ]);
+        // When a level 4 token is unlinked
+        designSystem.unlinkToken(level4Token);
+
+        const unlinkedToken = level4TokenSet.tokens[0];
+
+        // Then it returns the same tokenset with primitive value
+        expect(unlinkedToken.reference).toBeUndefined();
+        expect(unlinkedToken.value).toStrictEqual(primitiveToken.value);
+        expect(unlinkedToken).toBe(level4Token); // Reference checking
+    });
+
+    test("updates the token in the design system, when level 3 token is unlinked", () => {
+        // Given a design system
+        const { primitiveToken, level2Token, level3Token, level4Token } =
+            setUp();
+        const level3TokenSet = new TokenSet("level 3", "number", 3, [
+            level3Token,
+        ]);
+        const designSystem = new DesignSystem("ds", [
+            new TokenSet("primitive", "number", 1, [primitiveToken]),
+            new TokenSet("level 2", "number", 2, [level2Token]),
+            level3TokenSet,
+            new TokenSet("level 4", "number", 4, [level4Token]),
+        ]);
+
+        // When a level 4 token is unlinked
+        designSystem.unlinkToken(level3Token);
+
+        const unlinkedToken = level3TokenSet.tokens[0];
+
+        // Then it returns the same tokenset with primitive value
+        expect(unlinkedToken.reference).toBeUndefined();
+        expect(unlinkedToken.value).toStrictEqual(primitiveToken.value);
+        expect(unlinkedToken).toBe(level3Token); // Reference checking
+    });
+
+    test("updates the token in the design system, when level 2 token is unlinked", () => {
+        // Given a design system
+        const { primitiveToken, level2Token, level3Token, level4Token } =
+            setUp();
+        const level2TokenSet = new TokenSet("level 2", "number", 2, [
+            level2Token,
+        ]);
+        const designSystem = new DesignSystem("ds", [
+            new TokenSet("primitive", "number", 1, [primitiveToken]),
+            level2TokenSet,
+            new TokenSet("level 3", "number", 3, [level3Token]),
+            new TokenSet("level 4", "number", 4, [level4Token]),
+        ]);
+
+        // When a level 4 token is unlinked
+        designSystem.unlinkToken(level2Token);
+
+        const unlinkedToken = level2TokenSet.tokens[0];
+
+        // Then it returns the same tokenset with primitive value
+        expect(unlinkedToken.reference).toBeUndefined();
+        expect(unlinkedToken.value).toStrictEqual(primitiveToken.value);
+        expect(unlinkedToken).toBe(level2Token); // Reference checking
+    });
+
     // TODO: Add back test after implementing reverse cache.
     // test("returns non-primitive token, when a primitive is deleted", () => {
     //     // Given a design system

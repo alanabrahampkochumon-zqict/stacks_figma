@@ -442,6 +442,7 @@ export class DesignSystem {
                 currentToken.reference,
             )?.token;
         }
+        
         // Update the current token set with the hydrated token
         if (currentToken) {
             const currentTokenSet = this.#tokenReferenceCache.get(
