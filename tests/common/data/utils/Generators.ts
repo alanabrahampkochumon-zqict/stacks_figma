@@ -88,12 +88,16 @@ export function generateTokenNode(
     nodeType: ExtendedTokenTypes = "number",
     uid: string | undefined = undefined,
     parentId: string | undefined = undefined,
-    reference: boolean = false,
+    reference: string | undefined = undefined,
     modes: string[] | undefined = undefined,
 ): TokenNode {
     const tokenName = name || v4();
     const tokenId = uid || v4();
-    const tokenReference = reference === true ? v4() : undefined;
+    const tokenReference = reference
+        ? reference
+        : Math.random() > 0.5
+          ? v4()
+          : undefined;
     const tokenValue = !tokenReference
         ? type === "group"
             ? generateGroup()

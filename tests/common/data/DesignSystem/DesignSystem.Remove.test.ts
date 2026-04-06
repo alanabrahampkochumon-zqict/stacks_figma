@@ -2,6 +2,7 @@ import { DesignSystem } from "@src/common/data/DesignSystem";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { setUpDesignSystem } from "./DesignSystem.fixtures";
+import { generateTokenNode } from "../utils/Generators";
 
 describe("Design System Remove TokenSet", () => {
     test("removes tokenset, if token exists in the set", () => {
@@ -14,6 +15,12 @@ describe("Design System Remove TokenSet", () => {
 
         // Then, the tokenset is removed
         expect(designSystem.getTokenSets()).toStrictEqual([tokenSets[1]]);
+    });
+
+    test("removes and unlinks token set, if a primitive token is removed", () => {
+        const { dsName, tokenSets:[primitiveTokenSet] } = setUpDesignSystem();
+        const aliasTokens = primitiveTokenSet.tokens.map((token) => generateTokenNode(undefined, "token", "number", undefined, undefined, true))
+        const designSystem = new DesignSystem(dsName, [primitiveTokenSet]);
     });
 
     test("do not remove tokenset, if partial token (matching name) is passed in", () => {
