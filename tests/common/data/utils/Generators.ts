@@ -93,11 +93,7 @@ export function generateTokenNode(
 ): TokenNode {
     const tokenName = name || v4();
     const tokenId = uid || v4();
-    const tokenReference = reference
-        ? reference
-        : Math.random() > 0.5
-          ? v4()
-          : undefined;
+    const tokenReference = reference ? reference : undefined;
     const tokenValue = !tokenReference
         ? type === "group"
             ? generateGroup()

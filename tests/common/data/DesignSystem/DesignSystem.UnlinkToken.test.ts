@@ -13,7 +13,7 @@ describe("Design System: Unlink Token", () => {
             "number",
             undefined,
             undefined,
-            false,
+            undefined,
         );
         const updatedPrimitiveToken = generateTokenNode(
             undefined,
@@ -21,7 +21,7 @@ describe("Design System: Unlink Token", () => {
             "number",
             primitiveToken.uid,
             undefined,
-            false,
+            undefined,
         );
         const level2Token: TokenNode = {
             ...primitiveToken,
