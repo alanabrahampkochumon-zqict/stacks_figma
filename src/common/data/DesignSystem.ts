@@ -238,7 +238,9 @@ export class DesignSystem {
 
     /**
      * Get the index of a tokenset if it exists.
+     *
      * @param {string} tokenSetName The name of the token set to match.
+     *
      * @returns -1 if no match is found else index of tokenset
      */
     getIndex(tokenSetName: string) {
@@ -247,22 +249,31 @@ export class DesignSystem {
 
     /**
      * Remove a token set from the design system.
-     * @param {TokenSet} tokenSet The token set to be removed
+     *
+     * @param {TokenSet} tokenSet The token set to be removed.
      */
     removeTokenSet(tokenSet: TokenSet) {
         if (Object.isFrozen(this))
             throw new Error("Cannot modify a locked Design System.");
         this._tokenSets = this._tokenSets.filter((curTS) => curTS != tokenSet);
 
-        // Update the cache
+        tokenSet.tokens.forEach((token) => {
+            const referencingTokens =
+                this.#reverseTokenReferenceCache.get(token.uid) || new Set();
+            // Unlink the tokens
+            for (const refToken of referencingTokens) {
+                this.unlinkToken(refToken);
+            }
+            // Update the cache
+            this.#reverseTokenReferenceCache.delete(token.uid);
+            this.#tokenReferenceCache.delete(token.uid);
+        });
+
+        // Update the group cache
         if (tokenSet.type === "group")
             tokenSet.tokens.forEach((token) =>
                 this.#groupCache.delete(token.uid),
             );
-        tokenSet.tokens.forEach((token) => {
-            this.#reverseTokenReferenceCache.delete(token.uid);
-            this.#tokenReferenceCache.delete(token.uid);
-        });
     }
     // TODO: Add tests to ensure token set is removed from cache.
     // TODO: Unlink all associated tokens if a primitive or a token with reference is being removed.
