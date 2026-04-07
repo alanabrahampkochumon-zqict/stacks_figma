@@ -1,8 +1,8 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { setUpDesignSystem } from "./DesignSystem.fixtures";
 import { generateTokenNode } from "../utils/Generators";
+import { setUpDesignSystem } from "./DesignSystem.fixtures";
 
 describe("Design System Remove TokenSet", () => {
     test("removes tokenset, if token exists in the set", () => {
@@ -18,9 +18,37 @@ describe("Design System Remove TokenSet", () => {
     });
 
     test("removes and unlinks token set, if a primitive token is removed", () => {
-        const { dsName, tokenSets:[primitiveTokenSet] } = setUpDesignSystem();
-        const aliasTokens = primitiveTokenSet.tokens.map((token) => generateTokenNode(undefined, "token", "number", undefined, undefined, true))
-        const designSystem = new DesignSystem(dsName, [primitiveTokenSet]);
+        // Given a design system
+        const {
+            dsName,
+            tokenSets: [primitiveTokenSet],
+        } = setUpDesignSystem();
+        const aliasTokens = primitiveTokenSet.tokens.map((token) =>
+            generateTokenNode(
+                undefined,
+                "token",
+                "number",
+                undefined,
+                undefined,
+                token.uid,
+            ),
+        );
+        const aliasTokenSet = new TokenSet("tks", "number", 2, aliasTokens);
+        const designSystem = new DesignSystem(dsName, [
+            primitiveTokenSet,
+            aliasTokenSet,
+        ]);
+
+        // When a primitive token set is removed
+        designSystem.removeTokenSet(primitiveTokenSet);
+
+        // Then the dependent values are hydrated with primitive values
+        // Assumption: The ordering is not mutated by the design system, test or the intermediaries.
+        aliasTokenSet.tokens.forEach((token, index) => {
+            expect(token.value).toStrictEqual(
+                primitiveTokenSet.tokens[index].value,
+            );
+        });
     });
 
     test("do not remove tokenset, if partial token (matching name) is passed in", () => {
