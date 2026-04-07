@@ -43,9 +43,6 @@ type HydratedToken = {
     primitiveToken: TokenNode;
 };
 
-// TODO: Add lookup caching using a map
-// TODO: Add reference identity map update with init, add, delete, update and clear.
-// TODO: Add tokenReference caching when updating, deleting and clearing token.
 /**
  * The root container for a Design System.
  * Orchestrates multiple {@link TokenSet} collections and ensures global naming integrity.
