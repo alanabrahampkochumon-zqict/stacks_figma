@@ -17,7 +17,7 @@ describe("Design System Remove TokenSet", () => {
         expect(designSystem.getTokenSets()).toStrictEqual([tokenSets[1]]);
     });
 
-    test("removes and unlinks token set, if a primitive token is removed", () => {
+    test("removes and unlinks token set, when a primitive token is removed", () => {
         // Given a design system
         const {
             dsName,
@@ -51,7 +51,7 @@ describe("Design System Remove TokenSet", () => {
         });
     });
 
-    test("removes and unlinks token set, if a level 2 is removed", () => {
+    test("removes and unlinks token set, when a level 2 is removed", () => {
         // Given a design system
         const {
             dsName,
@@ -102,7 +102,38 @@ describe("Design System Remove TokenSet", () => {
         });
     });
 
-    test("do not remove tokenset, if partial token (matching name) is passed in", () => {
+    test("throws error, when non-primitive is hydrated after removing its referencing token  ", () => {
+        // Given a design system
+        const {
+            dsName,
+            tokenSets: [primitiveTokenSet],
+        } = setUpDesignSystem();
+        const aliasTokens = primitiveTokenSet.tokens.map((token) =>
+            generateTokenNode(
+                undefined,
+                "token",
+                "number",
+                undefined,
+                undefined,
+                token.uid,
+            ),
+        );
+        const aliasTokenSet = new TokenSet("tks", "number", 2, aliasTokens);
+        const designSystem = new DesignSystem(dsName, [
+            primitiveTokenSet,
+            aliasTokenSet,
+        ]);
+
+        // When a primitive token set is removed
+        designSystem.removeTokenSet(primitiveTokenSet);
+
+        // Then the dependent values are hydrated with primitive values
+        aliasTokenSet.tokens.forEach((token) => {
+            expect(() => designSystem.hydrateToken(token)).toThrow();
+        });
+    });
+
+    test("do not remove tokenset, when a partial token (matching name) is passed in", () => {
         // Given a non-empty token set
         const { dsName, tokenSets, tokenSet3 } = setUpDesignSystem();
         const designSystem = new DesignSystem(dsName, tokenSets);
@@ -114,7 +145,7 @@ describe("Design System Remove TokenSet", () => {
         expect(designSystem.getTokenSets()).toStrictEqual([...tokenSets]);
     });
 
-    test("do not remove tokenset, if non-existing is passed in", () => {
+    test("do not remove tokenset, when a non-existing is passed in", () => {
         // Given a non-empty token set
         const nonExistingTokenSet = new TokenSet(
             "non-existing",

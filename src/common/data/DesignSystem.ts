@@ -276,7 +276,6 @@ export class DesignSystem {
             );
     }
     // TODO: Add tests to ensure token set is removed from cache.
-    // TODO: Unlink all associated tokens if a primitive or a token with reference is being removed.
 
     /**
      * Update a tokenset with the given tokenset, if it exists.
