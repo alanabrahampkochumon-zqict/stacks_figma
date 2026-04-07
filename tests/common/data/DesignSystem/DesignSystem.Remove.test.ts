@@ -51,6 +51,57 @@ describe("Design System Remove TokenSet", () => {
         });
     });
 
+    test("removes and unlinks token set, if a level 2 is removed", () => {
+        // Given a design system
+        const {
+            dsName,
+            tokenSets: [primitiveTokenSet],
+        } = setUpDesignSystem();
+        const aliasTokens = primitiveTokenSet.tokens.map((token) =>
+            generateTokenNode(
+                undefined,
+                "token",
+                "number",
+                undefined,
+                undefined,
+                token.uid,
+            ),
+        );
+        const semanticTokens = aliasTokens.map((token) =>
+            generateTokenNode(
+                undefined,
+                "token",
+                "number",
+                undefined,
+                undefined,
+                token.uid,
+            ),
+        );
+        const aliasTokenSet = new TokenSet("tks", "number", 2, aliasTokens);
+        const semanticTokenSet = new TokenSet(
+            "tks2",
+            "number",
+            3,
+            semanticTokens,
+        );
+        const designSystem = new DesignSystem(dsName, [
+            primitiveTokenSet,
+            aliasTokenSet,
+            semanticTokenSet,
+        ]);
+
+        // When a primitive token set is removed
+        designSystem.removeTokenSet(aliasTokenSet);
+
+        // Then the dependent values are hydrated with primitive values
+        // Assumption: The ordering is not mutated by the design system, test or the intermediaries.
+        semanticTokenSet.tokens.forEach((token, index) => {
+            expect(token.value).toStrictEqual(
+                primitiveTokenSet.tokens[index].value,
+            );
+        });
+    });
+
     test("do not remove tokenset, if partial token (matching name) is passed in", () => {
         // Given a non-empty token set
         const { dsName, tokenSets, tokenSet3 } = setUpDesignSystem();
