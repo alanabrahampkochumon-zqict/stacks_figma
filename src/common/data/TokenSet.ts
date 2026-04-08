@@ -74,6 +74,10 @@ export class TokenSet {
     tokens: TokenNode[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, string>;
+    /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
+    // #modes: Map<string, Set<String>>;
+    /* Internal map for storing all modes to ensure data integrity. */
+    #modes: Set<String>;
 
     /**
      * @param {string} name          Unique identifier for the set.
@@ -100,6 +104,7 @@ export class TokenSet {
             );
 
         this.#tokenIDMap = new Map();
+        this.#modes = new Set();
         // Checks if any of the token set contains a unique id
         if (!this.checkAllTokenUniqueness(tokens))
             throw new DuplicationError(
@@ -113,11 +118,17 @@ export class TokenSet {
 
         // Removes any duplicate tokens.
         const duplicates = new Set();
-        for (const token of tokens)
+        for (const token of tokens) {
             if (!duplicates.has(token.name)) {
                 duplicates.add(token.name);
                 this.tokens.push(token);
             }
+            if (token.value?.entityType === "token") {
+                Object.keys(token.value.valueByMode).forEach((mode) => {
+                    this.#modes.add(mode);
+                });
+            }
+        }
     }
 
     /**
