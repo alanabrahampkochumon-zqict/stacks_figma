@@ -123,6 +123,7 @@ export class TokenSet {
                 duplicates.add(token.name);
                 this.tokens.push(token);
             }
+            // Add modes to cache
             if (token.value?.entityType === "token") {
                 Object.keys(token.value.valueByMode).forEach((mode) => {
                     this.#modes.add(mode);
@@ -136,8 +137,9 @@ export class TokenSet {
             const modes = Object.keys(value.valueByMode);
             if (modes.length < 0)
                 throw new Error("Token must have atleast one mode.");
+
             this.#modes.forEach((mode) => {
-                if (mode! in value.valueByMode) {
+                if (!(mode in value.valueByMode)) {
                     value.valueByMode[mode] = value.valueByMode[modes[0]];
                 }
             });

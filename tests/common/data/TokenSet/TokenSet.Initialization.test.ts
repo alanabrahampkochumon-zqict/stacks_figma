@@ -57,6 +57,42 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toStrictEqual(tokenType);
     });
 
+    test("adds additional modes, when a token with addtional mode is in the list", () => {
+        // Given a tokennode with additional modes
+        const name = "TokenSet";
+        const tokenType = "number";
+        const level = 1;
+        const tokens: TokenNode[] = [1, 2, 3].map(() =>
+            generateTokenNode(undefined, "token", tokenType),
+        );
+        if (tokens[2].value?.entityType === "token")
+            tokens[2].value.valueByMode = {
+                ...tokens[2].value.valueByMode,
+                "another-mode": 1234,
+                "3rd-mode": 443,
+            };
+
+        // When a tokenset is initialized
+        const tokenSet = new TokenSet(name, tokenType, level, tokens);
+
+        // Then, the all the modes are present in the other tokens
+        tokenSet.tokens.slice(0, 2).forEach((token) => {
+            if (token.value?.entityType !== "token") return expect.fail();
+            expect(Object.keys(token.value.valueByMode)).toContain(
+                "another-mode",
+            );
+            expect(Object.keys(token.value.valueByMode)).toContain("3rd-mode");
+
+            // And share the default value of the pre-existing mode
+            expect(token.value.valueByMode["another-mode"]).toStrictEqual(
+                token.value.valueByMode.default,
+            );
+            expect(token.value.valueByMode["3rd-mode"]).toStrictEqual(
+                token.value.valueByMode.default,
+            );
+        });
+    });
+
     test("removes non-unique duplicates, when initialized", () => {
         // Given a set of tokens with non-unique duplicates
         const level = 1;
