@@ -134,19 +134,6 @@ export class TokenSet {
         this.#modes.forEach((mode) => {
             this.#addModeToAllTokens(mode);
         });
-        // tokens.forEach((token) => {
-        //     const { value } = token;
-        //     if (value?.entityType !== "token") return;
-        //     const modes = Object.keys(value.valueByMode);
-        //     if (modes.length < 0)
-        //         throw new Error("Token must have atleast one mode.");
-
-        //     this.#modes.forEach((mode) => {
-        //         if (!(mode in value.valueByMode)) {
-        //             value.valueByMode[mode] = value.valueByMode[modes[0]];
-        //         }
-        //     });
-        // });
     }
 
     /**
@@ -157,6 +144,8 @@ export class TokenSet {
      *
      */
     #addModeToAllTokens(mode: string) {
+        this.#modes.add(mode); // Add the mode if it doesn't exists.
+
         this.tokens.forEach((token) => {
             const { value } = token;
             if (value?.entityType !== "token") return;
@@ -201,12 +190,17 @@ export class TokenSet {
             this.sort(compareFn);
         }
 
-        // if(token.value?.entityType !== "token")
-        //     return
-        // Object.keys(token.value.valueByMode).forEach(mode =>{
-        //     if(!(mode in this.#modes))
-        //         #addModeToAllGroup(mode)
-        // })
+        if (token.value?.entityType !== "token") return;
+        // Add a new mode from the token into the token group
+        const modes = Object.keys(token.value.valueByMode);
+        const { value } = token;
+        modes.forEach((mode) => {
+            if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
+        });
+        this.#modes.forEach((mode) => {
+            if (!(mode in modes))
+                value.valueByMode[mode] = value.valueByMode[modes[0]];
+        });
     }
 
     /**
