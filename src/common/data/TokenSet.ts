@@ -77,7 +77,7 @@ export class TokenSet {
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
     // #modes: Map<string, Set<String>>;
     /* Internal map for storing all modes to ensure data integrity. */
-    #modes: Set<String>;
+    #modes: Set<string>;
 
     /**
      * @param {string} name          Unique identifier for the set.
@@ -129,6 +129,19 @@ export class TokenSet {
                 });
             }
         }
+        // Add tests to ensure new modes are getting added
+        tokens.forEach((token) => {
+            const { value } = token;
+            if (value?.entityType !== "token") return;
+            const modes = Object.keys(value.valueByMode);
+            if (modes.length < 0)
+                throw new Error("Token must have atleast one mode.");
+            this.#modes.forEach((mode) => {
+                if (mode! in value.valueByMode) {
+                    value.valueByMode[mode] = value.valueByMode[modes[0]];
+                }
+            });
+        });
     }
 
     /**
