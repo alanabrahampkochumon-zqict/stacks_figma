@@ -4,6 +4,7 @@ import { createToken } from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
+import { generateTokenNode } from "../utils/Generators";
 
 // Regex
 // \{\s*type:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*name:\s*(.*)\s*\} -> createToken($3, $2, $1)
@@ -27,6 +28,95 @@ describe("TokenSet Add Tests", () => {
 
         // Then, the token is added to the set
         expect(tokenSet.tokens[0]).toStrictEqual(validToken);
+    });
+
+    test("modes get added to new token, when a token with only default mode is passed in", () => {
+        // Given a tokenset with more than 1 mode
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const modes = ["default", "small", "large"];
+        const tokens: TokenNode[] = [
+            generateTokenNode(
+                undefined,
+                "token",
+                type,
+                undefined,
+                undefined,
+                undefined,
+                modes,
+            ),
+        ];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token is added
+        const validToken = createTokenNode(
+            "50",
+            createToken({ [modes[0]]: 10 }, type),
+        );
+        tokenSet.addToken(validToken);
+
+        // Then, the added token has the existing modes
+        if (tokenSet.tokens[1].value?.entityType !== "token")
+            return expect.fail();
+        const value = tokenSet.tokens[1].value;
+        expect(Object.keys(value.valueByMode)).toContain(modes[0]);
+        expect(Object.keys(value.valueByMode)).toContain(modes[1]);
+        expect(Object.keys(value.valueByMode)).toContain(modes[2]);
+
+        // And their values default to default mode value
+        expect(value.valueByMode[modes[1]]).toStrictEqual(
+            value.valueByMode[modes[0]],
+        );
+        expect(value.valueByMode[modes[2]]).toStrictEqual(
+            value.valueByMode[modes[0]],
+        );
+    });
+
+    test("modes get added, when added token contains additional modes", () => {
+        // Given a tokenset
+        const name = "TokenSet";
+        const type = "number";
+        const level = 1;
+        const modes = ["default", "small", "large"];
+        const tokens: TokenNode[] = [
+            generateTokenNode(
+                undefined,
+                "token",
+                type,
+                undefined,
+                undefined,
+                undefined,
+                [modes[0]],
+            ),
+        ];
+        const tokenSet = new TokenSet(name, type, level, tokens);
+
+        // When a token with new mode(s) is added
+        const validToken = createTokenNode(
+            "50",
+            createToken(
+                { [modes[0]]: 5, [modes[1]]: 10, [modes[2]]: 15 },
+                type,
+            ),
+        );
+        tokenSet.addToken(validToken);
+
+        // Then, the existing token gets the new modes
+        if (tokenSet.tokens[0].value?.entityType !== "token")
+            return expect.fail();
+        const value = tokenSet.tokens[0].value;
+        expect(Object.keys(value.valueByMode)).toContain(modes[0]);
+        expect(Object.keys(value.valueByMode)).toContain(modes[1]);
+        expect(Object.keys(value.valueByMode)).toContain(modes[2]);
+
+        // And their values default to default mode value
+        expect(value.valueByMode[modes[1]]).toStrictEqual(
+            value.valueByMode[modes[0]],
+        );
+        expect(value.valueByMode[modes[2]]).toStrictEqual(
+            value.valueByMode[modes[0]],
+        );
     });
 
     test("group gets added, when a valid group is passed in", () => {
