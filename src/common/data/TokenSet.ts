@@ -263,6 +263,18 @@ export class TokenSet {
                     break;
             }
         if (sortToken) this.sort(compareFn);
+
+        // Add a new mode from the token into the token group
+        if (newToken.value?.entityType !== "token") return;
+        const modes = Object.keys(newToken.value.valueByMode);
+        const { value } = newToken;
+        modes.forEach((mode) => {
+            if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
+        });
+        this.#modes.forEach((mode) => {
+            if (!(mode in modes))
+                value.valueByMode[mode] = value.valueByMode[modes[0]];
+        });
     }
 
     /**
