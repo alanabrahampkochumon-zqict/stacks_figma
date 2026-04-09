@@ -278,6 +278,24 @@ export class TokenSet {
     }
 
     /**
+     * Remove a mode from the tokenset.
+     *
+     * @param mode The mode to remove.
+     *
+     * @throws @see {@link IllegalArgumentError} if the passed in mode does not exist on the tokenset.
+     */
+    removeMode(mode: string) {
+        if (!this.#modes.has(mode)) {
+            throw new IllegalArgumentError(`${mode} does not exist!`);
+        }
+        this.tokens.forEach((token) => {
+            if (token.value?.entityType === "token")
+                delete token.value.valueByMode[mode];
+        });
+        this.#modes.delete(mode);
+    }
+
+    /**
      * Re-orders the internal token collection.
      *
      * @param {TokenComparator} compareFn   The comparison logic. Defaults to a numeric-aware,
