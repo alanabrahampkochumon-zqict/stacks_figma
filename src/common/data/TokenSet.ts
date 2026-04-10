@@ -285,9 +285,13 @@ export class TokenSet {
      * @throws @see {@link IllegalArgumentError} if the passed in mode does not exist on the tokenset.
      */
     removeMode(mode: string) {
-        if (!this.#modes.has(mode)) {
+        if (!this.#modes.has(mode))
             throw new IllegalArgumentError(`${mode} does not exist!`);
-        }
+
+        if (this.#modes.size < 2)
+            throw new IllegalArgumentError(
+                `Cannot remove the default token mode. Consider removing the TokenSet if you need to remove the entire TokenSet.`,
+            );
         this.tokens.forEach((token) => {
             if (token.value?.entityType === "token")
                 delete token.value.valueByMode[mode];
