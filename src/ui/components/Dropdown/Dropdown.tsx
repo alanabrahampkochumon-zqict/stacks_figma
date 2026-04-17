@@ -1,7 +1,7 @@
-import ChevronDown from "@src/assets/icons/chevron-down.svg?react";
 import { cn } from "@src/lib/utils";
+import { Check, ChevronDown } from "lucide-react";
+import { DropdownMenu } from "radix-ui";
 import type { HTMLAttributes } from "react";
-import { OptionList } from "../OptionList/OptionList";
 import styles from "./Dropdown.module.css";
 
 type DropdownProps = {
@@ -18,19 +18,45 @@ function Dropdown({
     ...props
 }: DropdownProps) {
     return (
-        <OptionList.Root {...props}>
-            <OptionList.Trigger>
-                <button className={cn(styles.dropdown, "heading-h6")}>
+        <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+                <button
+                    className={cn(styles.dropdown, "heading-h6")}
+                    aria-label="Customise options"
+                >
                     {currentOption}
                     <ChevronDown />
                 </button>
-            </OptionList.Trigger>
-            <OptionList.Options
-                options={options}
-                onSelectionChange={onOptionChange}
-                selection={currentOption}
-            />
-        </OptionList.Root>
+            </DropdownMenu.Trigger>
+
+            <DropdownMenu.Portal>
+                <DropdownMenu.Content
+                    className={styles["dropdown-list"]}
+                    sideOffset={5}
+                >
+                    {options.map((option) => {
+                        return (
+                            <DropdownMenu.Item
+                                onClick={() => onOptionChange(option)}
+                                className={cn(
+                                    "body-small",
+                                    styles["dropdown-item"],
+                                )}
+                            >
+                                <span>{option}</span>
+                                {option === currentOption && (
+                                    <Check
+                                        height={20}
+                                        width={20}
+                                        className={cn(styles["chevron-down"])}
+                                    />
+                                )}
+                            </DropdownMenu.Item>
+                        );
+                    })}
+                </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+        </DropdownMenu.Root>
     );
 }
 

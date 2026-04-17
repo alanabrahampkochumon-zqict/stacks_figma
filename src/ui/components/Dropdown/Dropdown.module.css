@@ -2,8 +2,12 @@
 }
 
 .dropdown {
-    color: var(--clr-content-primary);
-    background-color: var(--clr-surface-transparent);
+    color: var(--clr-content-secondary);
+    background-color: var(--clr-surface-secondary);
+    background-color: red;
+    border-radius: var(--rounding-sm);
+    padding: var(--spacing-2xs) var(--spacing-lg) var(--spacing-xs)
+        var(--spacing-xl);
     border: none;
     outline: none;
     display: flex;
@@ -11,4 +15,15 @@
     padding: 0;
     align-items: center;
     width: 100%;
+}
+
+.dropdown-list {
+    background-color: var(--clr-surface-primary);
+}
+
+.dropdown-item {
+}
+
+.chevron-down {
+    padding-top: var(--spacing-xs);
 }
