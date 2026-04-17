@@ -4,17 +4,24 @@
 .dropdown {
     color: var(--clr-content-secondary);
     background-color: var(--clr-surface-secondary);
-    background-color: red;
     border-radius: var(--rounding-sm);
     padding: var(--spacing-2xs) var(--spacing-lg) var(--spacing-xs)
         var(--spacing-xl);
+    justify-self: start;
     border: none;
     outline: none;
     display: flex;
-    gap: 0.5rem;
-    padding: 0;
+    gap: var(--spacing-sm);
     align-items: center;
-    width: 100%;
+    transition: background-color var(--anim-ease-fast);
+}
+
+.dropdown:hover {
+    background-color: var(--clr-surface-tertiary);
+}
+
+.dropdown:focus {
+    outline: none;
 }
 
 .dropdown-list {
