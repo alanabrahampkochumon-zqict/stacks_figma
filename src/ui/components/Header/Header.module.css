@@ -1,14 +1,18 @@
 .base {
     width: 100%;
     display: grid;
-    padding: var(--spacing-md) var(--spacing-xl) var(--spacing-xs)
-        var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: 1px solid red;
     gap: 1rem;
     justify-content: space-between;
     align-items: center;
     grid-template-columns: repeat(3, 1fr);
 }
 
+.background {
+    background: var(--clr-surface-primary);
+    border: var(--border-hairline) solid var(--clr-border-primary);
+}
 .menu-button {
     justify-self: end;
 }

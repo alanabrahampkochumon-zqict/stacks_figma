@@ -13,11 +13,14 @@
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
-    transition: background-color var(--anim-ease-fast);
+    transition:
+        background-color var(--anim-ease-fast),
+        box-shadow var(--anim-ease-fast);
 }
 
 .dropdown:hover {
     background-color: var(--clr-surface-tertiary);
+    box-shadow: var(--shadow-xs);
 }
 
 .dropdown:focus {

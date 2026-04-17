@@ -1,19 +1,26 @@
 import MenuIcon from "@src/assets/icons/menu.svg?react";
+import { cn } from "@src/lib/utils";
 import { useState } from "react";
 import Dropdown from "../Dropdown/Dropdown";
 import IconButton from "../IconButton/IconButton";
 import OptionSelector from "../OptionSelector/OptionSelector";
 import styles from "./Header.module.css";
 
-function Header() {
-    const options = ["Stack Mode", "Canvas"]; // TODO: Hoist to constants file
+type HeaderParams = {
+    showBackground?: Boolean;
+};
+
+function Header({ showBackground = true }: HeaderParams) {
+    const options = ["Stack Mode", "Canvas", ""]; // TODO: Hoist to constants file
     const [selected, setSelected] = useState(options[0]);
 
     const categoryOptions = ["Typography", "Color", "Font-Family"];
     const [currentCategory, setCurrentCategory] = useState(categoryOptions[0]);
 
     return (
-        <header className={styles.base}>
+        <header
+            className={cn(styles.base, showBackground && styles.background)}
+        >
             <Dropdown
                 options={categoryOptions}
                 currentOption={currentCategory}
