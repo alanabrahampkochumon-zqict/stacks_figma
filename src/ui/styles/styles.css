@@ -1,6 +1,6 @@
 @font-face {
-    font-family: Satoshi;
-    src: url("../../assets/fonts/satoshi/Satoshi-Regular.otf")
+    font-family: "Plus Jakarta Sans";
+    src: url("../../assets/fonts/plus-jakarta-sans/Regular.ttf")
         format("opentype");
     font-weight: 400;
     font-style: normal;
@@ -8,50 +8,30 @@
 }
 
 @font-face {
-    font-family: Satoshi;
-    src: url("../../assets/fonts/satoshi/Satoshi-Medium.otf") format("opentype");
+    font-family: "Plus Jakarta Sans";
+    src: url("../../assets/fonts/plus-jakarta-sans/Medium.ttf")
+        format("opentype");
     font-weight: 500;
     font-style: normal;
     font-display: swap;
 }
 
 @font-face {
-    font-family: Satoshi;
-    src: url("../../assets/fonts/satoshi/Satoshi-Bold.otf") format("opentype");
+    font-family: "Plus Jakarta Sans";
+    src: url("../../assets/fonts/plus-jakarta-sans/Semibold.ttf")
+        format("opentype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Plus Jakarta Sans";
+    src: url("../../assets/fonts/plus-jakarta-sans/Bold.ttf") format("opentype");
     font-weight: 700;
     font-style: normal;
     font-display: swap;
 }
-
-@font-face {
-    font-family: Satoshi;
-    src: url("../../assets/fonts/satoshi/Satoshi-Black.otf") format("opentype");
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: Satoshi;
-    src: url("../../assets/fonts/satoshi/Satoshi-Regular.otf")
-        format("opentype");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: Satoshi;
-    src: url("../../assets/fonts/satoshi/Satoshi-Regular.otf")
-        format("opentype");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-/* 
-* {
-    font-family: "Satoshi", serif !important;
-} */
 
 :root {
     /* Primitives */
@@ -185,11 +165,14 @@
     --_p-160: 160px;
     --_p-1000: 1000px;
 
-    --_p-satoshi:
-        "Satoshi", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-        sans-serif;
-    /* TODO: Add Font Weights*/
+    --_p-jakarta-sans:
+        "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+        "Helvetica Neue", sans-serif;
+    --_p-bold: 700;
+    --_p-semibold: 600;
+    --_p-medium: 500;
+    --_p-regular: 400;
 
     /* Alias */
     --_a-clr-primary-50: var(--_p-clr-blue-50);
@@ -339,7 +322,7 @@
 
     /* Responsive */
     /* Font Family & Size */
-    --ff-primary: var(--_p-satoshi);
+    --ff-primary: var(--_p-jakarta-sans);
     --fs-xs: var(--_p-10);
     --fs-sm: var(--_p-14);
     --fs-md: var(--_p-16);
@@ -371,12 +354,10 @@
     --ls-tighter: -0.41;
 
     /* Font Weight */
-    --fw-normal: 400;
-    --fw-bold: 700;
-    --fw-light: 300;
-    --fw-semibold: 500;
+    --fw-normal: var(--_p-regular);
+    --fw-bold: var(--_p-bold);
+    --fw-semibold: var(--_p-medium);
     --ff-primary: var(--_p-satoshi), system-ui;
-    /* TODO: Add */
 
     /* Spacing */
     --spacing-none: var(--_p-0);

@@ -52,7 +52,6 @@ type TokenSetMergeOptions = {
  * Either a specific design token category or a structural 'group'.
  */
 type TokenSetType = ExtendedTokenTypes | "group";
-//TODO: Add cache for modes, + verifying modes exists across all the same members.
 /**
  * A strictly-typed collection of {@link TokenNode}s.
  * @remarks
