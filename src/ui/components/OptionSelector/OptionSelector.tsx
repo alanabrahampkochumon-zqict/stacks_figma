@@ -1,4 +1,5 @@
 import { cn } from "@src/lib/utils";
+import Stack from "../SVGIcons/Stack";
 import styles from "./OptionSelector.module.css";
 
 type OptionSelectorProps = {
@@ -40,6 +41,7 @@ function OptionItem({ value, selected, onSelected }: OptionItemProps) {
             )}
             onClick={() => onSelected()}
         >
+            <Stack stroke="var(--clr-content-secondary)" />
             {value}
         </div>
     );
