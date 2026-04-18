@@ -16,6 +16,8 @@
     border-radius: var(--rounding-md);
     color: var(--clr-content-tertiary);
     cursor: pointer;
+    display: inline-flex;
+    gap: var(--spacing-md);
 }
 
 .option-item-selected {

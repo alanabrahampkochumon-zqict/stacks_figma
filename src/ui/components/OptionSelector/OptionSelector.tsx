@@ -1,9 +1,10 @@
 import { cn } from "@src/lib/utils";
-import Stack from "../SVGIcons/Stack";
+import { motion } from "framer-motion";
+import type { ReactElement } from "react";
 import styles from "./OptionSelector.module.css";
 
 type OptionSelectorProps = {
-    options: string[];
+    options: OptionSelectOption[];
     selected: string;
     onSelectChange: (selection: string) => void;
 };
@@ -14,36 +15,40 @@ function OptionSelector({
     onSelectChange,
 }: OptionSelectorProps) {
     return (
-        <div className={styles.base}>
-            {options.map((option) => (
+        <motion.div layout className={styles.base}>
+            {options.map(({ icon, label }) => (
                 <OptionItem
-                    value={option}
-                    selected={option === selected}
-                    onSelected={() => onSelectChange(option)}
+                    icon={icon}
+                    value={label}
+                    selected={label === selected}
+                    onSelected={() => onSelectChange(label)}
                 />
             ))}
-        </div>
+        </motion.div>
     );
 }
 
 type OptionItemProps = {
+    icon: ReactElement<SVGSVGElement>;
     value: string;
     selected: boolean;
     onSelected: () => void;
 };
 
-function OptionItem({ value, selected, onSelected }: OptionItemProps) {
+function OptionItem({ icon, value, selected, onSelected }: OptionItemProps) {
     return (
-        <div
+        <motion.div
+            layout
             className={cn(
                 styles["option-item"],
+                "label-medium",
                 selected && styles["option-item-selected"],
             )}
             onClick={() => onSelected()}
         >
-            <Stack stroke="var(--clr-content-secondary)" />
-            {value}
-        </div>
+            {icon}
+            {selected && value}
+        </motion.div>
     );
 }
 
