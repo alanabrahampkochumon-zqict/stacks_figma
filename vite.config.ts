@@ -1,3 +1,4 @@
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import esbuild from "esbuild";
 import { copyFile, glob } from "fs/promises";
@@ -73,6 +74,12 @@ export default defineConfig(({ command }) => {
             },
         },
         plugins: [
+            tanstackRouter({
+                target: "react",
+                autoCodeSplitting: true,
+                routesDirectory: "./src/routes",
+                generatedRouteTree: "./src/routeTree.gen.ts",
+            }),
             react(),
             viteSingleFile(),
             patchCssModules(),

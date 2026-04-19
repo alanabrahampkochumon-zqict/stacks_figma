@@ -18,9 +18,7 @@ function EditorPage() {
             />
 
             <Header />
-            <section
-                style={{ width: "100%", height: "100%", background: "red" }}
-            >
+            <section>
                 <TypographyPanel />
             </section>
             {/* <Breadcrumb

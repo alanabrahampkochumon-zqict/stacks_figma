@@ -4,6 +4,7 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
+        "watch-routes": "tsr watch",
         "dev": "vite build --watch",
         "build": "vite build",
         "test": "vitest",
@@ -11,6 +12,8 @@
     },
     "dependencies": {
         "@svgr/core": "^8.1.0",
+        "@tanstack/react-router": "^1.168.23",
+        "@tanstack/react-router-devtools": "^1.166.13",
         "class-variance-authority": "^0.7.1",
         "lucide-react": "^1.8.0",
         "motion": "^12.38.0",
@@ -27,6 +30,7 @@
         "@faker-js/faker": "^10.3.0",
         "@figma/eslint-plugin-figma-plugins": "^1.0.0",
         "@figma/plugin-typings": "^1.123.0",
+        "@tanstack/router-plugin": "^1.167.22",
         "@types/node": "^24.10.1",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
