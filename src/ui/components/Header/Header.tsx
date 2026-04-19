@@ -1,5 +1,6 @@
-import MenuIcon from "@src/assets/icons/menu.svg?react";
+// import MenuIcon from "@src/assets/icons/menu.svg?react";
 import { cn } from "@src/lib/utils";
+import { MenuIcon } from "lucide-react";
 import { useState } from "react";
 import Dropdown from "../Dropdown/Dropdown";
 import IconButton from "../IconButton/IconButton";
@@ -51,7 +52,7 @@ function Header({ showBackground = true }: HeaderParams) {
                 className={styles["menu-button"]}
                 aria-description="menu"
             >
-                <MenuIcon />
+                <MenuIcon className="" size={16} />
             </IconButton>
         </header>
     );
