@@ -15,8 +15,5 @@
 }
 .menu-button {
     justify-self: end;
+    color: var(--clr-content-secondary);
 }
-/* 
-.base > * {
-    border: 2px solid lime;
-} */

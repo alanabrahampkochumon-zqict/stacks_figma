@@ -52,7 +52,7 @@ function Header({ showBackground = true }: HeaderParams) {
                 className={styles["menu-button"]}
                 aria-description="menu"
             >
-                <MenuIcon className="" size={16} />
+                <MenuIcon className="" size={20} />
             </IconButton>
         </header>
     );

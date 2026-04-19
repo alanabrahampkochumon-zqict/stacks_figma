@@ -1,7 +1,6 @@
 import DottedPattern from "@src/assets/dotted-pattern.svg?react";
-import Breadcrumb from "@src/ui/components/Breadcrumps/Breadcrumb";
-import ComponentTree from "@src/ui/components/ComponentTree/ComponentTree";
 import Header from "@src/ui/components/Header/Header";
+import TypographyPanel from "@src/ui/components/TypographyPanel/TypographyPanel";
 import styles from "./EditorPage.module.css";
 styles;
 
@@ -17,12 +16,18 @@ function EditorPage() {
                     height: "100%",
                 }}
             />
+
             <Header />
-            <Breadcrumb
+            <section
+                style={{ width: "100%", height: "100%", background: "red" }}
+            >
+                <TypographyPanel />
+            </section>
+            {/* <Breadcrumb
                 paths={samplePaths}
                 onPathClick={(path) => console.log(path)}
             />
-            <ComponentTree />
+            <ComponentTree /> */}
         </div>
     );
 }
