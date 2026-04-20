@@ -3,7 +3,16 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 const RootLayout = () => (
     <>
-        <div className="p-2 flex gap-2">
+        <div
+            style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                background: "gray",
+                padding: "12px",
+            }}
+        >
             <Link to="/" className="[&.active]:font-bold">
                 Home
             </Link>{" "}

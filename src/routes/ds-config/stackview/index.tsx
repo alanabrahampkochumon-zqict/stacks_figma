@@ -1,7 +1,8 @@
+import EditorPage from "@src/ui/features/ds-editor/EditorPage";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/ds-config/stackview/")({
-    component: Index,
+    component: EditorPage,
 });
 
 function Index() {

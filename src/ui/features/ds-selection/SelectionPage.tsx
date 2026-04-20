@@ -7,6 +7,7 @@ import { useState } from "react";
 import styles from "./SelectionPage.module.css";
 
 function SelectionPage() {
+    console.log(styles);
     const [inputText, setInputText] = useState("");
     return (
         <div className={styles.container}>

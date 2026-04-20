@@ -74,6 +74,7 @@ export default defineConfig(({ command }) => {
             },
         },
         plugins: [
+            patchCssModules(),
             tanstackRouter({
                 target: "react",
                 autoCodeSplitting: false,
@@ -82,7 +83,6 @@ export default defineConfig(({ command }) => {
             }),
             react(),
             viteSingleFile(),
-            patchCssModules(),
             svgr(),
             watchManifest(isProductionBuild),
             tsConfigPaths(),
