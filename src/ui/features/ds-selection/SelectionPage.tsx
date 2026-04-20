@@ -3,6 +3,7 @@ import illustration from "@src/assets/illustration_start.png";
 import allDesignSystemPresets from "@src/common/presets/AllPresets";
 import Button from "@src/ui/components/Button/Button";
 import DropdownField from "@src/ui/components/DropdownField/DropdownField";
+import SelectDemo from "@src/ui/components/Select/Select";
 import { useState } from "react";
 import styles from "./SelectionPage.module.css";
 
@@ -15,6 +16,7 @@ function SelectionPage() {
                 <img className={styles.logo} src={illustration} alt="Logo" />
             </div>
             <div className={styles.content}>
+                <SelectDemo />
                 <DropdownField
                     options={allDesignSystemPresets.map((ds) => ds.name)}
                     inputText={inputText}
