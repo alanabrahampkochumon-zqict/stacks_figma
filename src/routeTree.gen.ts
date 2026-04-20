@@ -9,48 +9,98 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DsConfigRouteImport } from './routes/ds-config'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as DsConfigTableviewIndexRouteImport } from './routes/ds-config/tableview/index'
+import { Route as DsConfigStackviewIndexRouteImport } from './routes/ds-config/stackview/index'
+import { Route as DsConfigCanvasviewIndexRouteImport } from './routes/ds-config/canvasview/index'
 
+const DsConfigRoute = DsConfigRouteImport.update({
+  id: '/ds-config',
+  path: '/ds-config',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutIndexRoute = AboutIndexRouteImport.update({
-  id: '/about/',
-  path: '/about/',
-  getParentRoute: () => rootRouteImport,
+const DsConfigTableviewIndexRoute = DsConfigTableviewIndexRouteImport.update({
+  id: '/tableview/',
+  path: '/tableview/',
+  getParentRoute: () => DsConfigRoute,
+} as any)
+const DsConfigStackviewIndexRoute = DsConfigStackviewIndexRouteImport.update({
+  id: '/stackview/',
+  path: '/stackview/',
+  getParentRoute: () => DsConfigRoute,
+} as any)
+const DsConfigCanvasviewIndexRoute = DsConfigCanvasviewIndexRouteImport.update({
+  id: '/canvasview/',
+  path: '/canvasview/',
+  getParentRoute: () => DsConfigRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about/': typeof AboutIndexRoute
+  '/ds-config': typeof DsConfigRouteWithChildren
+  '/ds-config/canvasview/': typeof DsConfigCanvasviewIndexRoute
+  '/ds-config/stackview/': typeof DsConfigStackviewIndexRoute
+  '/ds-config/tableview/': typeof DsConfigTableviewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutIndexRoute
+  '/ds-config': typeof DsConfigRouteWithChildren
+  '/ds-config/canvasview': typeof DsConfigCanvasviewIndexRoute
+  '/ds-config/stackview': typeof DsConfigStackviewIndexRoute
+  '/ds-config/tableview': typeof DsConfigTableviewIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about/': typeof AboutIndexRoute
+  '/ds-config': typeof DsConfigRouteWithChildren
+  '/ds-config/canvasview/': typeof DsConfigCanvasviewIndexRoute
+  '/ds-config/stackview/': typeof DsConfigStackviewIndexRoute
+  '/ds-config/tableview/': typeof DsConfigTableviewIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about/'
+  fullPaths:
+    | '/'
+    | '/ds-config'
+    | '/ds-config/canvasview/'
+    | '/ds-config/stackview/'
+    | '/ds-config/tableview/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about/'
+  to:
+    | '/'
+    | '/ds-config'
+    | '/ds-config/canvasview'
+    | '/ds-config/stackview'
+    | '/ds-config/tableview'
+  id:
+    | '__root__'
+    | '/'
+    | '/ds-config'
+    | '/ds-config/canvasview/'
+    | '/ds-config/stackview/'
+    | '/ds-config/tableview/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutIndexRoute: typeof AboutIndexRoute
+  DsConfigRoute: typeof DsConfigRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ds-config': {
+      id: '/ds-config'
+      path: '/ds-config'
+      fullPath: '/ds-config'
+      preLoaderRoute: typeof DsConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -58,19 +108,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about/': {
-      id: '/about/'
-      path: '/about'
-      fullPath: '/about/'
-      preLoaderRoute: typeof AboutIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/ds-config/tableview/': {
+      id: '/ds-config/tableview/'
+      path: '/tableview'
+      fullPath: '/ds-config/tableview/'
+      preLoaderRoute: typeof DsConfigTableviewIndexRouteImport
+      parentRoute: typeof DsConfigRoute
+    }
+    '/ds-config/stackview/': {
+      id: '/ds-config/stackview/'
+      path: '/stackview'
+      fullPath: '/ds-config/stackview/'
+      preLoaderRoute: typeof DsConfigStackviewIndexRouteImport
+      parentRoute: typeof DsConfigRoute
+    }
+    '/ds-config/canvasview/': {
+      id: '/ds-config/canvasview/'
+      path: '/canvasview'
+      fullPath: '/ds-config/canvasview/'
+      preLoaderRoute: typeof DsConfigCanvasviewIndexRouteImport
+      parentRoute: typeof DsConfigRoute
     }
   }
 }
 
+interface DsConfigRouteChildren {
+  DsConfigCanvasviewIndexRoute: typeof DsConfigCanvasviewIndexRoute
+  DsConfigStackviewIndexRoute: typeof DsConfigStackviewIndexRoute
+  DsConfigTableviewIndexRoute: typeof DsConfigTableviewIndexRoute
+}
+
+const DsConfigRouteChildren: DsConfigRouteChildren = {
+  DsConfigCanvasviewIndexRoute: DsConfigCanvasviewIndexRoute,
+  DsConfigStackviewIndexRoute: DsConfigStackviewIndexRoute,
+  DsConfigTableviewIndexRoute: DsConfigTableviewIndexRoute,
+}
+
+const DsConfigRouteWithChildren = DsConfigRoute._addFileChildren(
+  DsConfigRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutIndexRoute: AboutIndexRoute,
+  DsConfigRoute: DsConfigRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

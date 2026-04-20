@@ -7,8 +7,8 @@ const RootLayout = () => (
             <Link to="/" className="[&.active]:font-bold">
                 Home
             </Link>{" "}
-            <Link to="/about" className="[&.active]:font-bold">
-                About
+            <Link to="/ds-config" className="[&.active]:font-bold">
+                Config
             </Link>
         </div>
         <hr />
