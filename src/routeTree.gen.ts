@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as DsConfigRouteImport } from './routes/ds-config'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DsConfigIndexRouteImport } from './routes/ds-config/index'
 import { Route as DsConfigTableviewIndexRouteImport } from './routes/ds-config/tableview/index'
 import { Route as DsConfigStackviewIndexRouteImport } from './routes/ds-config/stackview/index'
 import { Route as DsConfigCanvasviewIndexRouteImport } from './routes/ds-config/canvasview/index'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DsConfigIndexRoute = DsConfigIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DsConfigRoute,
 } as any)
 const DsConfigTableviewIndexRoute = DsConfigTableviewIndexRouteImport.update({
   id: '/tableview/',
@@ -44,13 +50,14 @@ const DsConfigCanvasviewIndexRoute = DsConfigCanvasviewIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ds-config': typeof DsConfigRouteWithChildren
+  '/ds-config/': typeof DsConfigIndexRoute
   '/ds-config/canvasview/': typeof DsConfigCanvasviewIndexRoute
   '/ds-config/stackview/': typeof DsConfigStackviewIndexRoute
   '/ds-config/tableview/': typeof DsConfigTableviewIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/ds-config': typeof DsConfigRouteWithChildren
+  '/ds-config': typeof DsConfigIndexRoute
   '/ds-config/canvasview': typeof DsConfigCanvasviewIndexRoute
   '/ds-config/stackview': typeof DsConfigStackviewIndexRoute
   '/ds-config/tableview': typeof DsConfigTableviewIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ds-config': typeof DsConfigRouteWithChildren
+  '/ds-config/': typeof DsConfigIndexRoute
   '/ds-config/canvasview/': typeof DsConfigCanvasviewIndexRoute
   '/ds-config/stackview/': typeof DsConfigStackviewIndexRoute
   '/ds-config/tableview/': typeof DsConfigTableviewIndexRoute
@@ -68,6 +76,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/ds-config'
+    | '/ds-config/'
     | '/ds-config/canvasview/'
     | '/ds-config/stackview/'
     | '/ds-config/tableview/'
@@ -82,6 +91,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/ds-config'
+    | '/ds-config/'
     | '/ds-config/canvasview/'
     | '/ds-config/stackview/'
     | '/ds-config/tableview/'
@@ -108,6 +118,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ds-config/': {
+      id: '/ds-config/'
+      path: '/'
+      fullPath: '/ds-config/'
+      preLoaderRoute: typeof DsConfigIndexRouteImport
+      parentRoute: typeof DsConfigRoute
+    }
     '/ds-config/tableview/': {
       id: '/ds-config/tableview/'
       path: '/tableview'
@@ -133,12 +150,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface DsConfigRouteChildren {
+  DsConfigIndexRoute: typeof DsConfigIndexRoute
   DsConfigCanvasviewIndexRoute: typeof DsConfigCanvasviewIndexRoute
   DsConfigStackviewIndexRoute: typeof DsConfigStackviewIndexRoute
   DsConfigTableviewIndexRoute: typeof DsConfigTableviewIndexRoute
 }
 
 const DsConfigRouteChildren: DsConfigRouteChildren = {
+  DsConfigIndexRoute: DsConfigIndexRoute,
   DsConfigCanvasviewIndexRoute: DsConfigCanvasviewIndexRoute,
   DsConfigStackviewIndexRoute: DsConfigStackviewIndexRoute,
   DsConfigTableviewIndexRoute: DsConfigTableviewIndexRoute,
