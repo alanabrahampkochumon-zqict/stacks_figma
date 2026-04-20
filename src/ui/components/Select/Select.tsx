@@ -1,86 +1,94 @@
 import { cn } from "@src/lib/utils";
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
-import { Select } from "radix-ui";
-import * as React from "react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
+import { Select as RadixSelect } from "radix-ui";
+import { forwardRef, useState } from "react";
+import styles from "./Select.module.css";
 
-const SelectDemo = () => (
-    <Select.Root>
-        <Select.Trigger className="SelectTrigger" aria-label="Food">
-            <Select.Value placeholder="Select a fruit…" />
-            <Select.Icon className="SelectIcon">
-                <ChevronDownIcon />
-            </Select.Icon>
-        </Select.Trigger>
-        <Select.Portal>
-            <Select.Content className="SelectContent">
-                <Select.ScrollUpButton className="SelectScrollButton">
-                    <ChevronUpIcon />
-                </Select.ScrollUpButton>
-                <Select.Viewport className="SelectViewport">
-                    <Select.Group>
-                        <Select.Label className="SelectLabel">
-                            Fruits
-                        </Select.Label>
-                        <SelectItem value="apple">Apple</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="blueberry">Blueberry</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </Select.Group>
+type SelectProps = {
+    label?: string;
+    searchable?: boolean;
+    defaultOption?: string;
+    placeholder?: string;
+    options: string[];
+    onOptionChange: (option: string) => void;
+};
 
-                    <Select.Separator className="SelectSeparator" />
+const Select = ({
+    label,
+    defaultOption,
+    onOptionChange,
+    options,
+    searchable = true,
+}: SelectProps) => {
+    const [currentInput, setCurrentInput] = useState();
+    return (
+        <RadixSelect.Root>
+            <RadixSelect.Trigger
+                className={cn(styles.trigger, "body-medium")}
+                aria-label={label}
+            >
+                <RadixSelect.Value placeholder="RadixSelect a fruit…" />
+                <RadixSelect.Icon className="RadixSelectIcon">
+                    <ChevronDownIcon className={styles["chevron-down"]} />
+                </RadixSelect.Icon>
+            </RadixSelect.Trigger>
+            <RadixSelect.Portal>
+                <RadixSelect.Content
+                    className={styles["select-content"]}
+                    position="popper"
+                    side="bottom"
+                    style={{ width: "var(--radix-select-trigger-width)" }}
+                    onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                    <RadixSelect.Viewport className="RadixSelectViewport">
+                        <RadixSelect.Group>
+                            <RadixSelect.Label className="RadixSelectLabel">
+                                Fruits
+                            </RadixSelect.Label>
+                            <RadixSelectItem value="apple">
+                                Apple
+                            </RadixSelectItem>
+                            <RadixSelectItem value="banana">
+                                Banana
+                            </RadixSelectItem>
+                            <RadixSelectItem value="blueberry">
+                                Blueberry
+                            </RadixSelectItem>
+                            <RadixSelectItem value="grapes">
+                                Grapes
+                            </RadixSelectItem>
+                            <RadixSelectItem value="pineapple">
+                                Pineapple
+                            </RadixSelectItem>
+                        </RadixSelect.Group>
+                    </RadixSelect.Viewport>
+                    <RadixSelect.ScrollDownButton className="RadixSelectScrollButton">
+                        <ChevronDownIcon />
+                    </RadixSelect.ScrollDownButton>
+                </RadixSelect.Content>
+            </RadixSelect.Portal>
+        </RadixSelect.Root>
+    );
+};
 
-                    <Select.Group>
-                        <Select.Label className="SelectLabel">
-                            Vegetables
-                        </Select.Label>
-                        <SelectItem value="aubergine">Aubergine</SelectItem>
-                        <SelectItem value="broccoli">Broccoli</SelectItem>
-                        <SelectItem value="carrot" disabled>
-                            Carrot
-                        </SelectItem>
-                        <SelectItem value="courgette">Courgette</SelectItem>
-                        <SelectItem value="leek">Leek</SelectItem>
-                    </Select.Group>
-
-                    <Select.Separator className="SelectSeparator" />
-
-                    <Select.Group>
-                        <Select.Label className="SelectLabel">
-                            Meat
-                        </Select.Label>
-                        <SelectItem value="beef">Beef</SelectItem>
-                        <SelectItem value="chicken">Chicken</SelectItem>
-                        <SelectItem value="lamb">Lamb</SelectItem>
-                        <SelectItem value="pork">Pork</SelectItem>
-                    </Select.Group>
-                </Select.Viewport>
-                <Select.ScrollDownButton className="SelectScrollButton">
-                    <ChevronDownIcon />
-                </Select.ScrollDownButton>
-            </Select.Content>
-        </Select.Portal>
-    </Select.Root>
-);
-
-const SelectItem = React.forwardRef(
+const RadixSelectItem = forwardRef(
     (
-        { children, className, ...props }: Select.SelectItemProps,
+        { children, className, ...props }: RadixSelect.SelectItemProps,
         forwardedRef: React.Ref<HTMLDivElement> | undefined,
     ) => {
         return (
-            <Select.Item
-                className={cn("SelectItem", className)}
+            <RadixSelect.Item
+                className={cn("RadixSelectItem", className)}
                 {...props}
                 ref={forwardedRef}
             >
-                <Select.ItemText>{children}</Select.ItemText>
-                <Select.ItemIndicator className="SelectItemIndicator">
+                <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
+                <RadixSelect.ItemIndicator className="RadixSelectItemIndicator">
                     <CheckIcon />
-                </Select.ItemIndicator>
-            </Select.Item>
+                </RadixSelect.ItemIndicator>
+            </RadixSelect.Item>
         );
     },
 );
 
-export default SelectDemo;
+export default Select;
