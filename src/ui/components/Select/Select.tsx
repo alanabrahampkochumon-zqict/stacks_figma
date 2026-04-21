@@ -1,7 +1,7 @@
 import { cn } from "@src/lib/utils";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Select as RadixSelect } from "radix-ui";
-import { forwardRef, useState } from "react";
+import { forwardRef, type ReactNode } from "react";
 import styles from "./Select.module.css";
 
 type SelectProps = {
@@ -11,26 +11,17 @@ type SelectProps = {
     placeholder?: string;
     options: string[];
     onOptionChange: (option: string) => void;
+    trigger: ReactNode;
 };
 
-const Select = ({
-    label,
-    defaultOption,
-    onOptionChange,
-    options,
-    searchable = true,
-}: SelectProps) => {
-    const [currentInput, setCurrentInput] = useState();
+const Select = ({ label, onOptionChange, options, trigger }: SelectProps) => {
     return (
         <RadixSelect.Root>
             <RadixSelect.Trigger
                 className={cn(styles.trigger, "body-medium")}
                 aria-label={label}
             >
-                <RadixSelect.Value placeholder="RadixSelect a fruit…" />
-                <RadixSelect.Icon className="RadixSelectIcon">
-                    <ChevronDownIcon className={styles["chevron-down"]} />
-                </RadixSelect.Icon>
+                {trigger}
             </RadixSelect.Trigger>
             <RadixSelect.Portal>
                 <RadixSelect.Content
@@ -41,26 +32,16 @@ const Select = ({
                     onCloseAutoFocus={(e) => e.preventDefault()}
                 >
                     <RadixSelect.Viewport className="RadixSelectViewport">
-                        <RadixSelect.Group>
-                            <RadixSelect.Label className="RadixSelectLabel">
-                                Fruits
-                            </RadixSelect.Label>
-                            <RadixSelectItem value="apple">
-                                Apple
+                        {options.map((option) => (
+                            <RadixSelectItem
+                                value={option}
+                                onClick={() => {
+                                    onOptionChange(option);
+                                }}
+                            >
+                                {option}
                             </RadixSelectItem>
-                            <RadixSelectItem value="banana">
-                                Banana
-                            </RadixSelectItem>
-                            <RadixSelectItem value="blueberry">
-                                Blueberry
-                            </RadixSelectItem>
-                            <RadixSelectItem value="grapes">
-                                Grapes
-                            </RadixSelectItem>
-                            <RadixSelectItem value="pineapple">
-                                Pineapple
-                            </RadixSelectItem>
-                        </RadixSelect.Group>
+                        ))}
                     </RadixSelect.Viewport>
                     <RadixSelect.ScrollDownButton className="RadixSelectScrollButton">
                         <ChevronDownIcon />
