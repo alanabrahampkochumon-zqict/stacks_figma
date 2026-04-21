@@ -11,7 +11,7 @@ import {
 import { Description, FieldButton, FieldError, Label } from "../Form/Form";
 import { DropdownItem, DropdownListBox } from "../ListBox/ListBox";
 import { Popover } from "../Popover/Popover";
-import "./ComboBox.css";
+import styles from "./Combobox.module.css";
 
 export interface ComboBoxProps<
     T extends object,
@@ -38,9 +38,9 @@ export function ComboBox<
     return (
         <AriaComboBox {...props}>
             <Label>{label}</Label>
-            <div className="combobox-field">
+            <div className={styles["combobox-field"]}>
                 <Input
-                    className="react-aria-Input inset"
+                    className={styles["react-aria-input"]}
                     placeholder={placeholder}
                 />
                 <FieldButton>
@@ -52,7 +52,7 @@ export function ComboBox<
             )}
             {description && <Description>{description}</Description>}
             <FieldError>{errorMessage}</FieldError>
-            <Popover hideArrow className="combobox-popover">
+            <Popover hideArrow className={styles["combobox-popover"]}>
                 <ComboBoxListBox>{children}</ComboBoxListBox>
             </Popover>
         </AriaComboBox>
