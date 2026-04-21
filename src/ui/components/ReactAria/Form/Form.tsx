@@ -28,6 +28,6 @@ export function Description(props: TextProps) {
     return <Text slot="description" className="field-description" {...props} />;
 }
 
-export function FieldButton(props: ButtonProps) {
-    return <Button {...props} className="field-Button" />;
+export function FieldButton({ ...props }: ButtonProps) {
+    return <Button {...props} />;
 }

@@ -4,15 +4,49 @@
 }
 
 .combobox-field {
-    display: flex;
-    align-items: center;
-    height: var(--spacing-8);
     width: 100%;
+    display: flex;
+    padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-xs) 0;
+    align-items: center;
+    gap: var(--spacing-lg);
+
+    border-radius: var(--rounding-lg);
+    border: var(--border-hairline) solid var(--clr-border-primary);
+    background-color: var(--clr-surface-secondary);
+    transition:
+        background-color var(--anim-ease-superfast),
+        border-color var(--anim-ease-superfast);
+}
+
+.combobox-field:has(input:focus) {
+    background-color: var(--clr-surface-primary);
+    border-color: var(--clr-border-secondary);
+}
+
+.combobox-select {
+    display: flex;
+    width: 2rem;
+    padding: var(--spacing-xs);
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+    border-radius: var(--rounding-md);
+    background: var(--gradient-subtle-accent);
+}
+
+.chevron-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke-width: 1.5;
+    stroke: var(--clr-content-oncolor, #fff);
 }
 
 .react-aria-input {
-    width: 100%;
-    padding: 0 calc(var(--spacing-3) + var(--spacing-6)) 0 var(--spacing-3);
+    flex: 1;
+    color: var(--clr-content-secondary);
+    padding: var(--spacing-xs) 0;
+    padding-inline-start: var(--spacing-xl);
+    transition: border var(--anim-ease-fast);
 }
 
 .react-aria-combobox-value {

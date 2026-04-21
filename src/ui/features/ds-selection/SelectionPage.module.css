@@ -29,11 +29,7 @@
     justify-content: center;
     align-items: center;
     gap: var(--spacing-4xl);
-    background: linear-gradient(
-        153deg,
-        var(--colors-surface-primary, #fff),
-        var(--colors-surface-secondary, #f5f6f6)
-    );
+    background: var(--gradient-primary-light);
     border-radius: var(--rounding-3xl) 0 0 var(--rounding-3xl);
 }
 

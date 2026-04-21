@@ -423,6 +423,22 @@
         7px 81px 23px 0 rgba(0, 0, 0, 0), 5px 52px 21px 0 rgba(0, 0, 0, 0.01),
         3px 29px 18px 0 rgba(0, 0, 0, 0.04),
         1px 13px 13px 0 rgba(0, 0, 0, 0.06), 0 3px 7px 0 rgba(0, 0, 0, 0.07);
+
+    --gradient-subtle-accent: linear-gradient(
+        90deg,
+        var(--_a-clr-primary-600) 0%,
+        var(--_a-clr-primary-700) 101.34%
+    );
+    --gradient-subtle-accent: linear-gradient(
+        90deg,
+        var(--_a-clr-primary-600) 0%,
+        var(--_a-clr-primary-700) 101.34%
+    );
+    --gradient-primary-light: linear-gradient(
+        135deg,
+        var(--clr-surface-primary) 0%,
+        var(--clr-surface-secondary) 100%
+    );
 }
 
 *,
@@ -452,10 +468,25 @@ button {
     transition: all var(--anim-ease-superfast);
 }
 
+input {
+    border: none;
+    outline: none;
+    background-color: var(--clr-surface-transparent);
+}
+
 button:focus-visible,
 button:focus-within,
-button:focus {
+button:focus,
+input:focus,
+input:focus-visible,
+input:focus-within {
     outline: none;
+}
+
+input::placeholder {
+    width: 100%;
+    height: 100%;
+    color: var(--clr-content-placeholder);
 }
 
 button:hover {

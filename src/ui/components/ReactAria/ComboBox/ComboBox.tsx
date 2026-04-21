@@ -1,3 +1,4 @@
+import { cn } from "@src/lib/utils";
 import { ChevronDown } from "lucide-react";
 import {
     ComboBox as AriaComboBox,
@@ -38,13 +39,13 @@ export function ComboBox<
     return (
         <AriaComboBox {...props}>
             <Label>{label}</Label>
-            <div className={styles["combobox-field"]}>
+            <div className={cn(styles["combobox-field"], "body-medium")}>
                 <Input
                     className={styles["react-aria-input"]}
                     placeholder={placeholder}
                 />
-                <FieldButton>
-                    <ChevronDown />
+                <FieldButton className={styles["combobox-select"]}>
+                    <ChevronDown className={styles["chevron-icon"]} />
                 </FieldButton>
             </div>
             {props.selectionMode === "multiple" && (

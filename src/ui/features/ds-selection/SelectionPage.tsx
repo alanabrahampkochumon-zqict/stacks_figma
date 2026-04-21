@@ -32,37 +32,6 @@ function SelectionPage() {
                         <ComboBoxItem id={option}>{option}</ComboBoxItem>
                     ))}
                 </ComboBox>
-                {/* <SelectDemo
-                    options={options}
-                    defaultOption={options[0]}
-                    onOptionChange={(option) => console.log(option)}
-                    trigger={
-                        <>
-                            <div className={styles["search-input"]}>
-                                <input
-                                    list="design-system"
-                                    name="design-system"
-                                    id="design-system"
-                                    placeholder={
-                                        (options && options[0]) ||
-                                        "Select a design system"
-                                    }
-                                    className="label-medium"
-                                    value={inputText}
-                                    onChange={(event) =>
-                                        setInputText(event.target.value)
-                                    }
-                                />
-                                {inputText.length ? (
-                                    <XIcon onClick={() => setInputText("")} />
-                                ) : (
-                                    <ChevronDown />
-                                )}
-                            </div>
-                        </>
-                    }
-                /> */}
-                <ComboBox options={options} />
                 <DropdownField
                     options={allDesignSystemPresets.map((ds) => ds.name)}
                     inputText={inputText}
