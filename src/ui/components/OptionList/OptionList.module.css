@@ -4,6 +4,7 @@
 }
 
 .trigger {
+    --trigger-width: calc(100%);
 }
 
 /* Option Dropdown */
