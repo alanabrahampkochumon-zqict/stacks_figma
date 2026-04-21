@@ -6,6 +6,7 @@ import ComboBox from "@src/ui/components/ComboBox/ComboBox";
 import DropdownField from "@src/ui/components/DropdownField/DropdownField";
 import { useState } from "react";
 import styles from "./SelectionPage.module.css";
+import { ComboBoxItem } from "@src/ui/components/ReactAria/ComboBox/ComboBox";
 
 function SelectionPage() {
     console.log(styles);
@@ -17,6 +18,17 @@ function SelectionPage() {
                 <img className={styles.logo} src={illustration} alt="Logo" />
             </div>
             <div className={styles.content}>
+                <ComboBox
+                    label="Favorite Animal"
+                    placeholder="Select an animal"
+                >
+                    <ComboBoxItem>Aardvark</ComboBoxItem>
+                    <ComboBoxItem>Cat</ComboBoxItem>
+                    <ComboBoxItem>Dog</ComboBoxItem>
+                    <ComboBoxItem>Kangaroo</ComboBoxItem>
+                    <ComboBoxItem>Panda</ComboBoxItem>
+                    <ComboBoxItem>Snake</ComboBoxItem>
+                </ComboBox>
                 {/* <SelectDemo
                     options={options}
                     defaultOption={options[0]}
