@@ -4,6 +4,10 @@
     isolation: isolate;
 }
 
+.combo-box-label {
+    color: var(--clr-content-primary);
+}
+
 /* TODO: Add gradient animation */
 .combobox-field {
     width: 100%;
