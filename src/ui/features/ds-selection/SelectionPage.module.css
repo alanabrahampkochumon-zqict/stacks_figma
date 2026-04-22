@@ -40,5 +40,5 @@
 .button-container {
     width: 100%;
     display: grid;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }

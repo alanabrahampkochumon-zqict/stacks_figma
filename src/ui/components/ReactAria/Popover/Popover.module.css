@@ -1,0 +1,6 @@
+.popover {
+    background-color: var(--clr-surface-primary);
+    box-shadow: var(--shadow-md);
+    margin-top: var(--spacing-md);
+    border-radius: var(--rounding-xl);
+}

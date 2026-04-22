@@ -4,7 +4,7 @@ import {
     OverlayArrow,
     type PopoverProps as AriaPopoverProps,
 } from "react-aria-components/Popover";
-import "./Popover.css";
+import styles from "./Popover.module.css";
 
 export interface PopoverProps extends Omit<AriaPopoverProps, "children"> {
     children: React.ReactNode;
@@ -15,7 +15,7 @@ export function Popover({ children, hideArrow, ...props }: PopoverProps) {
     return (
         <AriaPopover
             {...props}
-            className={clsx("react-aria-Popover", props.className)}
+            className={clsx(styles.popover, props.className)}
         >
             {({ trigger }) => (
                 <>
