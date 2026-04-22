@@ -2,7 +2,6 @@ import ArrowRight from "@src/assets/icons/arrow-right.svg?react";
 import illustration from "@src/assets/illustration_start.png";
 import allDesignSystemPresets from "@src/common/presets/AllPresets";
 import Button from "@src/ui/components/Button/Button";
-import DropdownField from "@src/ui/components/DropdownField/DropdownField";
 import {
     ComboBox,
     ComboBoxItem,
@@ -27,16 +26,12 @@ function SelectionPage() {
                     placeholder="Select a design system"
                     value={currentSelection}
                     onChange={(value) => setCurrentSelection(value?.toString())}
+                    className={styles["design-system-combobox"]}
                 >
                     {options.map((option) => (
                         <ComboBoxItem id={option}>{option}</ComboBoxItem>
                     ))}
                 </ComboBox>
-                <DropdownField
-                    options={allDesignSystemPresets.map((ds) => ds.name)}
-                    inputText={inputText}
-                    setInputText={setInputText}
-                />
                 <div className={styles["button-container"]}>
                     <Button variant="primary">
                         <span>Get started</span>

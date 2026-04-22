@@ -12,6 +12,10 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
+.design-system-combobox {
+    width: 100%;
+}
+
 .logo-container {
     display: flex;
     justify-content: center;

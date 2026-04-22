@@ -2,6 +2,9 @@
     color: var(--text-color);
     width: calc(var(--spacing) * 50);
     isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
 }
 
 .combo-box-label {
