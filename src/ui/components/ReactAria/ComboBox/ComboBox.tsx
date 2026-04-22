@@ -37,7 +37,10 @@ export function ComboBox<
     ...props
 }: ComboBoxProps<T, M>) {
     return (
-        <AriaComboBox {...props}>
+        <AriaComboBox
+            {...props}
+            className={cn(props.className, styles["react-aria"])}
+        >
             <Label>{label}</Label>
             <div className={cn(styles["combobox-field"], "body-medium")}>
                 <Input

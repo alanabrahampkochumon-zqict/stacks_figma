@@ -317,6 +317,9 @@
     --clr-overlay-light-800: var(--_a-clr-white-alpha-800);
     --clr-overlay-light-900: var(--_a-clr-white-alpha-900);
 
+    /* Gradient Mix colors */
+    --clr-gradient-highlight-mix: #4d1ecb;
+
     /* Responsive */
     /* Font Family & Size */
     --fs-2xs: var(--_p-10);
@@ -438,6 +441,12 @@
         135deg,
         var(--clr-surface-primary) 0%,
         var(--clr-surface-secondary) 100%
+    );
+    --gradient-highlight: linear-gradient(
+        -90deg,
+        var(--clr-surface-accent) 0%,
+        var(--clr-gradient-highlight-mix) 48%,
+        var(--clr-surface-information-solid) 100%
     );
 }
 

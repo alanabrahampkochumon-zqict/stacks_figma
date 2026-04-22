@@ -1,8 +1,10 @@
-.react-aria {
+.combobox {
     color: var(--text-color);
     width: calc(var(--spacing) * 50);
+    isolation: isolate;
 }
 
+/* TODO: Add gradient animation */
 .combobox-field {
     width: 100%;
     display: flex;
@@ -11,16 +13,30 @@
     gap: var(--spacing-lg);
 
     border-radius: var(--rounding-lg);
-    border: var(--border-hairline) solid var(--clr-border-primary);
-    background-color: var(--clr-surface-secondary);
+    border: var(--border-hairline) solid transparent;
+    background-color: var(--clr-surface-tertiary);
     transition:
         background-color var(--anim-ease-superfast),
         border-color var(--anim-ease-superfast);
+
+    background-image:
+        linear-gradient(
+            var(--clr-surface-tertiary),
+            var(--clr-surface-tertiary)
+        ),
+        var(--clr-border-secondary);
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    position: relative;
 }
 
 .combobox-field:has(input:focus) {
     background-color: var(--clr-surface-primary);
     border-color: var(--clr-border-secondary);
+    border-color: transparent;
+    background-image:
+        linear-gradient(var(--clr-surface-primary), var(--clr-surface-primary)),
+        var(--gradient-highlight);
 }
 
 .combobox-select {
