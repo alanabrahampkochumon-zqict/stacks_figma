@@ -1,7 +1,7 @@
 .base {
     display: flex;
-    min-height: var(--min-interactive-size);
-    padding: 0 var(--spacing-xl);
+    /* min-height: var(--min-interactive-size); */
+    padding: var(--spacing-lg) var(--spacing-xl);
     gap: var(--spacing-md);
     justify-content: center;
     align-items: center;

@@ -32,10 +32,7 @@ function SelectionPage() {
                     ))}
                 </ComboBox>
                 <div className={styles["button-container"]}>
-                    <Button variant="primary">
-                        <span>Get started</span>
-                        {/* <ArrowRight height={16} width={16} strokeWidth={1.5} /> */}
-                    </Button>
+                    <Button variant="primary">Get started</Button>
                     <Button variant="secondary">Create from scratch</Button>
                 </div>
             </div>
