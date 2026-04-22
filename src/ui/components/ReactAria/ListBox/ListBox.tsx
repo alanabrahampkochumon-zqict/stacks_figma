@@ -60,7 +60,14 @@ export function DropdownItem(props: ListBoxItemProps) {
             {composeRenderProps(props.children, (children, { isSelected }) => (
                 <>
                     {typeof children === "string" ? (
-                        <Text slot="label" className={cn("body-medium")}>
+                        <Text
+                            slot="label"
+                            className={cn(
+                                "body-medium",
+                                styles["item-label"],
+                                isSelected && styles["item-label-selected"],
+                            )}
+                        >
                             {children}
                         </Text>
                     ) : (

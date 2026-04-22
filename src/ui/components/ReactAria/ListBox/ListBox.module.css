@@ -19,6 +19,14 @@
     background-color: var(--clr-surface-secondary);
 }
 
+.item-label {
+    color: var(--clr-content-tertiary);
+}
+
+.item-label-selected {
+    color: var(--clr-content-primary);
+}
+
 .check-icon {
     size: 2.5rem;
     stroke-width: 1.5;
