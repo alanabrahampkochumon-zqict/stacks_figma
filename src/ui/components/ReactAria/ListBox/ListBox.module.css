@@ -1,0 +1,26 @@
+.dropdown-listbox {
+}
+
+.dropdown-item {
+    background-color: var(--clr-surface-primary);
+    border-bottom: var(--border-hairline) solid var(--clr-border-primary);
+
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md)
+        var(--spacing-xl);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    cursor: pointer;
+
+    transition: background-color var(--anim-ease-superfast);
+}
+
+.dropdown-item:hover {
+    background-color: var(--clr-surface-secondary);
+}
+
+.check-icon {
+    size: 2.5rem;
+    stroke-width: 1.5;
+    color: var(--clr-content-accent);
+}

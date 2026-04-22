@@ -3,4 +3,5 @@
     box-shadow: var(--shadow-md);
     margin-top: var(--spacing-md);
     border-radius: var(--rounding-xl);
+    overflow: hidden;
 }

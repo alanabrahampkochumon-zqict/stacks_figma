@@ -1,18 +1,17 @@
+import { cn } from "@src/lib/utils";
 import { Check } from "lucide-react";
 import {
     ListBox as AriaListBox,
     ListBoxItem as AriaListBoxItem,
-    ListBoxLoadMoreItem as AriaListBoxLoadMoreItem,
     ListBoxSection as AriaListBoxSection,
     Header,
     type ListBoxItemProps,
-    type ListBoxLoadMoreItemProps,
     type ListBoxProps,
     type ListBoxSectionProps,
 } from "react-aria-components/ListBox";
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
 import { Text } from "../Content/Content";
-import "./ListBox.css";
+import styles from "./ListBox.module.css";
 
 export function ListBox<T extends object>({
     children,
@@ -45,7 +44,7 @@ export function ListBoxSection<T extends object>(
 }
 
 export function DropdownListBox<T extends object>(props: ListBoxProps<T>) {
-    return <AriaListBox {...props} className="dropdown-listbox" />;
+    return <AriaListBox {...props} className={styles["dropdown-listbox"]} />;
 }
 
 export function DropdownItem(props: ListBoxItemProps) {
@@ -53,15 +52,21 @@ export function DropdownItem(props: ListBoxItemProps) {
         props.textValue ||
         (typeof props.children === "string" ? props.children : undefined);
     return (
-        <ListBoxItem {...props} textValue={textValue} className="dropdown-item">
+        <ListBoxItem
+            {...props}
+            textValue={textValue}
+            className={styles["dropdown-item"]}
+        >
             {composeRenderProps(props.children, (children, { isSelected }) => (
                 <>
-                    {isSelected && <Check />}
                     {typeof children === "string" ? (
-                        <Text slot="label">{children}</Text>
+                        <Text slot="label" className={cn("body-medium")}>
+                            {children}
+                        </Text>
                     ) : (
                         children
                     )}
+                    {isSelected && <Check className={styles["check-icon"]} />}
                 </>
             ))}
         </ListBoxItem>
