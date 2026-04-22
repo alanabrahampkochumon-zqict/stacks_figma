@@ -1,3 +1,4 @@
+import { cn } from "@src/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import styles from "./Button.module.css";
@@ -35,7 +36,13 @@ function Button({
     ...props
 }: ButtonProps) {
     return (
-        <button className={buttonVariants({ variant, className })} {...props} />
+        <button
+            className={cn(
+                buttonVariants({ variant, className }),
+                "label-medium",
+            )}
+            {...props}
+        />
     );
 }
 

@@ -4,19 +4,13 @@
     display: flex;
     min-height: var(--min-interactive-size);
     padding: 0 var(--spacing-xl);
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     justify-content: center;
     align-items: center;
     border-radius: var(--rounding-lg);
     border: none;
     cursor: pointer;
     transition: all ease-out 150ms;
-
-    font-family: var(--ff-primary);
-    font-size: var(--fs-md);
-    font-weight: var(--fw-semibold); /* FIXME: Font weight not proper */
-    line-height: var(--lh-md); /* 100% */
-    letter-spacing: var(--ls-normal);
 }
 
 .base:disabled {
