@@ -4,4 +4,63 @@
     margin-top: var(--spacing-md);
     border-radius: var(--rounding-xl);
     overflow: hidden;
+
+    transition:
+        transform var(--anim-ease-normal),
+        opacity var(--anim-ease-normal);
+
+    &[data-trigger="MenuTrigger"],
+    &[data-trigger="SubmenuTrigger"] {
+        padding: 0;
+    }
+
+    &[data-entering],
+    &[data-exiting] {
+        transform: var(--origin);
+        opacity: 0;
+    }
+
+    &[data-placement="top"] {
+        --origin: translateY(8px);
+
+        &:has(.react-aria-OverlayArrow) {
+            margin-bottom: 6px;
+        }
+    }
+
+    &[data-placement="bottom"] {
+        --origin: translateY(-8px);
+
+        &:has(.react-aria-OverlayArrow) {
+            margin-top: 6px;
+        }
+
+        .react-aria-OverlayArrow svg {
+            transform: rotate(180deg);
+        }
+    }
+
+    &[data-placement="right"] {
+        --origin: translateX(-8px);
+
+        &:has(.react-aria-OverlayArrow) {
+            margin-left: 6px;
+        }
+
+        .react-aria-OverlayArrow svg {
+            transform: rotate(90deg);
+        }
+    }
+
+    &[data-placement="left"] {
+        --origin: translateX(8px);
+
+        &:has(.react-aria-OverlayArrow) {
+            margin-right: 6px;
+        }
+
+        .react-aria-OverlayArrow svg {
+            transform: rotate(-90deg);
+        }
+    }
 }
