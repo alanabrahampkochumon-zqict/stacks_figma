@@ -1,4 +1,3 @@
-import ArrowRight from "@src/assets/icons/arrow-right.svg?react";
 import illustration from "@src/assets/illustration_start.png";
 import allDesignSystemPresets from "@src/common/presets/AllPresets";
 import Button from "@src/ui/components/Button/Button";
@@ -35,7 +34,7 @@ function SelectionPage() {
                 <div className={styles["button-container"]}>
                     <Button variant="primary">
                         <span>Get started</span>
-                        <ArrowRight />
+                        {/* <ArrowRight height={16} width={16} strokeWidth={1.5} /> */}
                     </Button>
                     <Button variant="secondary">Create from scratch</Button>
                 </div>

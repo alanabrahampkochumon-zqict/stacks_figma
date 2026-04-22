@@ -1,5 +1,3 @@
-/* Button.module.css */
-
 .base {
     display: flex;
     min-height: var(--min-interactive-size);
