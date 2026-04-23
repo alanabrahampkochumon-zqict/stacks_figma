@@ -11,7 +11,7 @@ import { Button } from "../Button/Button";
 import { Description, FieldError, Label } from "../Form/Form";
 import { DropdownItem, DropdownListBox } from "../ListBox/ListBox";
 import { Popover } from "../Popover/Popover";
-
+import styles from "./Select.module.css";
 export interface SelectProps<
     T extends object,
     M extends "single" | "multiple",
@@ -37,13 +37,13 @@ export function Select<
     return (
         <AriaSelect {...props}>
             {label && <Label>{label}</Label>}
-            <Button>
+            <Button variant="unstyled" className={styles.trigger}>
                 <SelectValue />
                 <ChevronDown />
             </Button>
             {description && <Description>{description}</Description>}
             <FieldError>{errorMessage}</FieldError>
-            <Popover hideArrow className="select-popover">
+            <Popover hideArrow>
                 <SelectListBox items={items}>{children}</SelectListBox>
             </Popover>
         </AriaSelect>

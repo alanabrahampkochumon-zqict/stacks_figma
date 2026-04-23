@@ -1,0 +1,12 @@
+.button-base {
+    outline: none;
+    background-color: transparent;
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+}
+
+.button-base:active,
+.button-base:focus {
+    outline: none;
+}

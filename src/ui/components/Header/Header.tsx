@@ -33,20 +33,6 @@ function Header({ showBackground = true }: HeaderParams) {
 
     const categoryOptions = ["Typography", "Color", "Font-Family"];
     const [currentCategory, setCurrentCategory] = useState(categoryOptions[0]);
-    {
-        /* <Select
-                value={currentCategory}
-                onChange={(value) =>
-                    setCurrentCategory(value?.toString() || categoryOptions[0])
-                }
-            >
-                {categoryOptions.map((option) => (
-                    <SelectItem id={option}>{option}</SelectItem>
-                ))}
-                <SelectItem id="add-new-item">Add</SelectItem>{" "}
-                {/** TODO: Check for pattern and update accordingly
-            </Select> */
-    }
     return (
         <header
             className={cn(styles.base, showBackground && styles.background)}
