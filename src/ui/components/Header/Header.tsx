@@ -5,6 +5,7 @@ import { useState } from "react";
 import Dropdown from "../Dropdown/Dropdown";
 import IconButton from "../IconButton/IconButton";
 import OptionSelector from "../OptionSelector/OptionSelector";
+import { Select, SelectItem } from "../ReactAria/Select/Select";
 import LayerIcon from "../SVGIcons/LayerIcon";
 import LayoutIcon from "../SVGIcons/LayoutIcon";
 import StackIcon from "../SVGIcons/StackIcon";
@@ -38,6 +39,14 @@ function Header({ showBackground = true }: HeaderParams) {
         <header
             className={cn(styles.base, showBackground && styles.background)}
         >
+            <Select label="Favorite Animal">
+                <SelectItem>Aardvark</SelectItem>
+                <SelectItem>Cat</SelectItem>
+                <SelectItem>Dog</SelectItem>
+                <SelectItem>Kangaroo</SelectItem>
+                <SelectItem>Panda</SelectItem>
+                <SelectItem>Snake</SelectItem>
+            </Select>
             <Dropdown
                 options={categoryOptions}
                 currentOption={currentCategory}
