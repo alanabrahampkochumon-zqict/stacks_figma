@@ -4,6 +4,15 @@
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
+
+    &[data-variant="unstyled"] {
+    }
+
+    &[data-variant="primary"] {
+    }
+
+    &[data-variant="secondary"] {
+    }
 }
 
 .button-base:active,

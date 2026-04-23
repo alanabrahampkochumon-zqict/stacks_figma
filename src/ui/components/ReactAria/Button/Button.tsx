@@ -15,11 +15,14 @@ interface ButtonProps extends RACButtonProps {
     variant?: "primary" | "secondary" | "quiet" | "unstyled";
 }
 
-export function Button(props: ButtonProps) {
+export function Button({ className, ...props }: ButtonProps) {
     return (
         <RACButton
             {...props}
-            className={cn(styles["button-base"])}
+            className={cn(
+                props.variant != "unstyled" && styles["button-base"],
+                className,
+            )}
             data-variant={props.variant || "primary"}
         >
             {composeRenderProps(props.children, (children, { isPending }) => (

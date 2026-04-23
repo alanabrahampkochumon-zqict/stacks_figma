@@ -490,6 +490,7 @@ input:focus,
 input:focus-visible,
 input:focus-within {
     outline: none;
+    border: none;
 }
 
 input::placeholder {

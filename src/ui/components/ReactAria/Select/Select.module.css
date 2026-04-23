@@ -1,3 +1,24 @@
 .trigger {
-    border: 1px solid green;
+    background-color: var(--clr-surface-tertiary);
+    padding: var(--spacing-2xs) var(--spacing-md) var(--spacing-xs)
+        var(--spacing-lg);
+    cursor: pointer;
+    border-radius: var(--rounding-md);
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+
+    transition: background-color var(--anim-ease-superfast);
+
+    &[data-hovered="true"] {
+        background-color: var(--clr-surface-secondary);
+        filter: none;
+    }
+
+    &[data-focused="true"],
+    :focus,
+    :focus-within,
+    :focus-visible {
+        outline: none;
+    }
 }
