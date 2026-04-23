@@ -10,7 +10,7 @@ import { routeTree } from "../routeTree.gen";
 import "./styles/styles.css";
 
 const memoryHistory = createMemoryHistory({
-    initialEntries: ["/"],
+    initialEntries: ["/ds-config"], // TODO: Update to root route
 });
 
 const router = createRouter({ routeTree, history: memoryHistory });

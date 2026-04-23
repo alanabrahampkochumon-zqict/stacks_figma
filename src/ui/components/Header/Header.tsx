@@ -2,7 +2,6 @@
 import { cn } from "@src/lib/utils";
 import { MenuIcon } from "lucide-react";
 import { useState } from "react";
-import Dropdown from "../Dropdown/Dropdown";
 import IconButton from "../IconButton/IconButton";
 import OptionSelector from "../OptionSelector/OptionSelector";
 import { Select, SelectItem } from "../ReactAria/Select/Select";
@@ -34,24 +33,40 @@ function Header({ showBackground = true }: HeaderParams) {
 
     const categoryOptions = ["Typography", "Color", "Font-Family"];
     const [currentCategory, setCurrentCategory] = useState(categoryOptions[0]);
-
+    {
+        /* <Select
+                value={currentCategory}
+                onChange={(value) =>
+                    setCurrentCategory(value?.toString() || categoryOptions[0])
+                }
+            >
+                {categoryOptions.map((option) => (
+                    <SelectItem id={option}>{option}</SelectItem>
+                ))}
+                <SelectItem id="add-new-item">Add</SelectItem>{" "}
+                {/** TODO: Check for pattern and update accordingly
+            </Select> */
+    }
     return (
         <header
             className={cn(styles.base, showBackground && styles.background)}
         >
-            <Select label="Favorite Animal">
-                <SelectItem>Aardvark</SelectItem>
-                <SelectItem>Cat</SelectItem>
-                <SelectItem>Dog</SelectItem>
-                <SelectItem>Kangaroo</SelectItem>
-                <SelectItem>Panda</SelectItem>
-                <SelectItem>Snake</SelectItem>
+            <Select
+                value={currentCategory}
+                onChange={(value) =>
+                    setCurrentCategory(value?.toString() || categoryOptions[0])
+                }
+            >
+                {categoryOptions.map((option) => (
+                    <SelectItem id={option}>{option}</SelectItem>
+                ))}
+                <SelectItem id="add-new-item">Add</SelectItem>
             </Select>
-            <Dropdown
+            {/* <Dropdown
                 options={categoryOptions}
                 currentOption={currentCategory}
                 onOptionChange={setCurrentCategory}
-            />
+            /> */}
             <OptionSelector
                 options={options}
                 selected={selected}
