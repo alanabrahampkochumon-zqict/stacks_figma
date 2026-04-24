@@ -10,6 +10,8 @@ import svgr from "vite-plugin-svgr";
 import tsConfigPaths from "vite-tsconfig-paths";
 import tsConfig from "./tsconfig.json";
 
+import sassDts from "vite-plugin-sass-dts";
+
 async function rebuildMain(
     isProductionBuild: boolean = false,
 ): Promise<esbuild.BuildContext> {
@@ -73,7 +75,15 @@ export default defineConfig(({ command }) => {
                 "@src": path.resolve(__dirname, "./src"),
             },
         },
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    additionalData: `@use "@src/ui/styles/styles.scss" as *`,
+                },
+            },
+        },
         plugins: [
+            sassDts(),
             patchCssModules(),
             tanstackRouter({
                 target: "react",

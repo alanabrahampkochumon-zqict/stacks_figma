@@ -4,7 +4,8 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite build --watch",
+        "scss-types": "npx typed-scss-modules src --watch",
+        "dev": "npm run scss-types && vite build --watch",
         "build": "vite build",
         "test": "vitest",
         "debug": "vitest --inspect-brk --no-file-parallelism"
@@ -44,6 +45,8 @@
         "eslint-plugin-react-refresh": "^0.4.24",
         "globals": "^16.5.0",
         "rollup-plugin-postcss": "^4.0.2",
+        "sass": "^1.99.0",
+        "typed-scss-modules": "^8.1.1",
         "typescript": "~5.9.3",
         "typescript-eslint": "^8.48.0",
         "vite": "^7.3.1",

@@ -1,0 +1,15 @@
+export declare const base: string;
+export declare const bodyLarge: string;
+export declare const bodyMedium: string;
+export declare const bodySmall: string;
+export declare const bodyXsmall: string;
+export declare const headingH1: string;
+export declare const headingH2: string;
+export declare const headingH3: string;
+export declare const headingH4: string;
+export declare const headingH5: string;
+export declare const headingH6: string;
+export declare const labelLarge: string;
+export declare const labelMedium: string;
+export declare const labelSmall: string;
+export declare const labelXsmall: string;
