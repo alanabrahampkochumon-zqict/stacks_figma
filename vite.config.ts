@@ -78,7 +78,7 @@ export default defineConfig(({ command }) => {
         css: {
             preprocessorOptions: {
                 scss: {
-                    additionalData: `@use "@src/ui/styles/styles.scss" as *`,
+                    additionalData: `@use "@src/ui/styles/styles.scss" as *;`,
                 },
             },
         },
