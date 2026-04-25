@@ -12,7 +12,7 @@ import { Button } from "../Button/Button";
 import { Description, FieldError, Label } from "../Form/Form";
 import { DropdownItem, DropdownListBox } from "../ListBox/ListBox";
 import { Popover } from "../Popover/Popover";
-import styles from "./Select.module.css";
+import styles from "./Select.module.scss";
 export interface SelectProps<
     T extends object,
     M extends "single" | "multiple",

@@ -8,8 +8,7 @@ import { Select, SelectItem } from "../ReactAria/Select/Select";
 import LayerIcon from "../SVGIcons/LayerIcon";
 import LayoutIcon from "../SVGIcons/LayoutIcon";
 import StackIcon from "../SVGIcons/StackIcon";
-import styles from "./Header.module.css";
-
+import styles from "./Header.module.scss";
 type HeaderParams = {
     showBackground?: Boolean;
 };

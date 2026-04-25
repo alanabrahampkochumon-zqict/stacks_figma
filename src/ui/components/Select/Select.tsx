@@ -2,7 +2,7 @@ import { cn } from "@src/lib/utils";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { Select as RadixSelect } from "radix-ui";
 import { forwardRef, type ReactNode } from "react";
-import styles from "./Select.module.css";
+import styles from "./Select.module.scss";
 
 type SelectProps = {
     label?: string;

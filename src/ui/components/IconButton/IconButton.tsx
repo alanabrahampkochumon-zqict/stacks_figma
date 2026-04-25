@@ -1,6 +1,6 @@
 import { cn } from "@src/lib/utils";
 import { type ButtonHTMLAttributes } from "react";
-import styles from "./IconButton.module.css";
+import styles from "./IconButton.module.scss";
 
 type IconButtonProps = {} & ButtonHTMLAttributes<HTMLButtonElement>;
 
