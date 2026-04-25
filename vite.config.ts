@@ -81,6 +81,9 @@ export default defineConfig(({ command }) => {
                     additionalData: `@use "@src/ui/styles/styles.scss" as *;`,
                 },
             },
+            modules: {
+                localsConvention: "camelCase", // TODO: Change to camel case only after refactoring.
+            },
         },
         plugins: [
             sassDts(),

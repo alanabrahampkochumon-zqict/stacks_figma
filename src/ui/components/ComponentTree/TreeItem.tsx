@@ -18,8 +18,8 @@ function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
             <>
                 <ChevronRightIcon
                     className={cn(
-                        styles["group-icon"],
-                        item.value.expanded && styles["group-icon-expanded"],
+                        styles.groupIcon,
+                        item.value.expanded && styles.groupIconExpanded,
                     )}
                     height={14}
                     width={14}
@@ -43,7 +43,7 @@ function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
                 return (
                     <>
                         <AlignLeftIcon
-                            className={styles["group-icon"]}
+                            className={styles.groupIcon}
                             height={18}
                             width={18}
                         />
@@ -54,7 +54,7 @@ function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
                 return (
                     <>
                         <HashTagIcon
-                            className={styles["group-icon"]}
+                            className={styles.groupIcon}
                             height={14}
                             width={14}
                         />
@@ -65,7 +65,7 @@ function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
                 return (
                     <>
                         <ToggleIcon
-                            className={styles["group-icon"]}
+                            className={styles.groupIcon}
                             height={16}
                             width={16}
                         />
@@ -76,7 +76,7 @@ function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
                 return (
                     <>
                         <span
-                            className={styles["color-icon"]}
+                            className={styles.colorIcon}
                             style={{
                                 backgroundColor: Object.values(
                                     value.valueByMode,

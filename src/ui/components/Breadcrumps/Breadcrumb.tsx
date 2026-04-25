@@ -27,7 +27,7 @@ function Breadcrumb({
                         className={cn(
                             "label-small",
                             styles.path,
-                            index === paths.length - 1 && styles["path-active"],
+                            index === paths.length - 1 && styles.pathActive,
                         )}
                     >
                         {path}

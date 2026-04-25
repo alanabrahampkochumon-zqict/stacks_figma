@@ -31,7 +31,7 @@ function Dropdown({
 
             <DropdownMenu.Portal>
                 <DropdownMenu.Content
-                    className={styles["dropdown-list"]}
+                    className={styles.dropdownList}
                     sideOffset={5}
                 >
                     {options.map((option) => {
@@ -40,7 +40,7 @@ function Dropdown({
                                 onClick={() => onOptionChange(option)}
                                 className={cn(
                                     "body-small",
-                                    styles["dropdown-item"],
+                                    styles.dropdownItem,
                                 )}
                             >
                                 <span>{option}</span>
@@ -48,7 +48,7 @@ function Dropdown({
                                     <Check
                                         height={20}
                                         width={20}
-                                        className={cn(styles["chevron-down"])}
+                                        className={cn(styles.chevronDown)}
                                     />
                                 )}
                             </DropdownMenu.Item>
