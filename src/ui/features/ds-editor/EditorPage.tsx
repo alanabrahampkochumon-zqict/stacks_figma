@@ -1,7 +1,7 @@
 import DottedPattern from "@src/assets/dotted-pattern.svg?react";
 import Header from "@src/ui/components/Header/Header";
 import TypographyPanel from "@src/ui/components/TypographyPanel/TypographyPanel";
-import styles from "./EditorPage.module.css";
+import styles from "./EditorPage.module.scss";
 styles;
 
 function EditorPage() {

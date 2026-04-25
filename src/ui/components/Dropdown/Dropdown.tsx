@@ -2,7 +2,7 @@ import { cn } from "@src/lib/utils";
 import { Check, ChevronDown } from "lucide-react";
 import { DropdownMenu } from "radix-ui";
 import type { HTMLAttributes } from "react";
-import styles from "./Dropdown.module.css";
+import styles from "./Dropdown.module.scss";
 
 type DropdownProps = {
     options: string[];

@@ -3,7 +3,7 @@ import { createToken } from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { OlHTMLAttributes } from "react";
-import styles from "./ComponentTree.module.css";
+import styles from "./ComponentTree.module.scss";
 import TreeItem from "./TreeItem";
 
 type ComponentTreeProps = {} & OlHTMLAttributes<HTMLOListElement>;

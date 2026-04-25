@@ -11,7 +11,7 @@ import {
 } from "react-aria-components/ListBox";
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
 import { Text } from "../Content/Content";
-import styles from "./ListBox.module.css";
+import styles from "./ListBox.module.scss";
 
 export function ListBox<T extends object>({
     children,

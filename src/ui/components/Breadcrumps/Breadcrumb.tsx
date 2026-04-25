@@ -1,7 +1,7 @@
 import ChevronRightIcon from "@src/assets/icons/chevron-right.svg?react";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes } from "react";
-import styles from "./Breadcrumb.module.css";
+import styles from "./Breadcrumb.module.scss";
 
 type BreadcrumbProps = {
     paths: string[];

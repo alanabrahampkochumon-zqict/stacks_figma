@@ -1,7 +1,7 @@
 import { cn } from "@src/lib/utils";
 import { motion } from "framer-motion";
 import type { ReactElement } from "react";
-import styles from "./OptionSelector.module.css";
+import styles from "./OptionSelector.module.scss";
 
 type OptionSelectorProps = {
     options: OptionSelectOption[];

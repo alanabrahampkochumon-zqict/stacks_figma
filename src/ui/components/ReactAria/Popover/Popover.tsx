@@ -4,7 +4,7 @@ import {
     OverlayArrow,
     type PopoverProps as AriaPopoverProps,
 } from "react-aria-components/Popover";
-import styles from "./Popover.module.css";
+import styles from "./Popover.module.scss";
 
 export interface PopoverProps extends Omit<AriaPopoverProps, "children"> {
     children: React.ReactNode;

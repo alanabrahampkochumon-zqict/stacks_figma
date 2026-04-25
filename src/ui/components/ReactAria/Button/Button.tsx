@@ -5,7 +5,7 @@ import {
     type ButtonProps as RACButtonProps,
 } from "react-aria-components/Button";
 import { composeRenderProps } from "react-aria-components/composeRenderProps";
-import styles from "./Button.module.css";
+import styles from "./Button.module.scss";
 
 interface ButtonProps extends RACButtonProps {
     /**

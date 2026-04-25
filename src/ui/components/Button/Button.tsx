@@ -1,7 +1,7 @@
 import { cn } from "@src/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import styles from "./Button.module.css";
+import styles from "./Button.module.scss";
 
 export type ButtonVariant =
     | "Primary"

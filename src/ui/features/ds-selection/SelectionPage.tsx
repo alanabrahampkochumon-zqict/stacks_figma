@@ -6,7 +6,7 @@ import {
     ComboBoxItem,
 } from "@src/ui/components/ReactAria/ComboBox/ComboBox";
 import { useState } from "react";
-import styles from "./SelectionPage.module.css";
+import styles from "./SelectionPage.module.scss";
 
 function SelectionPage() {
     const [inputText, setInputText] = useState("");

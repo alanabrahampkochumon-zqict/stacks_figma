@@ -1,7 +1,7 @@
 import ChevronDown from "@src/assets/icons/chevron-down.svg?react";
 import Close from "@src/assets/icons/close.svg?react";
 import { OptionList } from "../OptionList/OptionList";
-import styles from "./DropdownField.module.css";
+import styles from "./DropdownField.module.scss";
 
 export type DropdownFieldProps = {
     inputText: string;

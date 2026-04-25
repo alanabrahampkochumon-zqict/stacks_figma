@@ -5,7 +5,7 @@ import ToggleIcon from "@src/assets/icons/toggle.svg?react";
 import type { TokenNode } from "@src/common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes, JSX } from "react";
-import styles from "./TreeItem.module.css";
+import styles from "./TreeItem.module.scss";
 
 type TreeItemProps = {
     item: TokenNode;

@@ -12,7 +12,7 @@ import {
 import { Description, FieldButton, FieldError, Label } from "../Form/Form";
 import { DropdownItem, DropdownListBox } from "../ListBox/ListBox";
 import { Popover } from "../Popover/Popover";
-import styles from "./Combobox.module.css";
+import styles from "./Combobox.module.scss";
 
 export interface ComboBoxProps<
     T extends object,

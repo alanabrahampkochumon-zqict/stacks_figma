@@ -1,7 +1,7 @@
 import Check from "@src/assets/icons/check.svg?react";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes, LiHTMLAttributes, ReactNode } from "react";
-import styles from "./OptionList.module.css";
+import styles from "./OptionList.module.scss";
 
 type RootProps = {
     children: ReactNode;
