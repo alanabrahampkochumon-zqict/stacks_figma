@@ -41,7 +41,6 @@ function OptionItem({ icon, value, selected, onSelected }: OptionItemProps) {
             layout
             className={cn(
                 styles.optionItem,
-                "label-medium",
                 selected && styles.optionItemSelected,
             )}
             onClick={() => onSelected()}

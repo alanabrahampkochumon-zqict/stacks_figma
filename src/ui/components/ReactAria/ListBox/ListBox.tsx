@@ -63,7 +63,6 @@ export function DropdownItem(props: ListBoxItemProps) {
                         <Text
                             slot="label"
                             className={cn(
-                                "body-medium",
                                 styles.itemLabel,
                                 isSelected && styles.itemLabelSelected,
                             )}

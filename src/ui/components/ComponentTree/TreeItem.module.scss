@@ -1,4 +1,6 @@
 .base {
+    @extend .label-small !optional;
+
     display: flex;
     padding: var(--spacing-md) var(--spacing-xs) var(--spacing-md)
         var(--spacing-2xs);

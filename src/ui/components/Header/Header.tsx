@@ -47,11 +47,6 @@ function Header({ showBackground = true }: HeaderParams) {
                 ))}
                 <SelectItem id="add-new-item">Add</SelectItem>
             </Select>
-            {/* <Dropdown
-                options={categoryOptions}
-                currentOption={currentCategory}
-                onOptionChange={setCurrentCategory}
-            /> */}
             <OptionSelector
                 options={options}
                 selected={selected}

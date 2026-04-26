@@ -1,4 +1,6 @@
 .base {
+    @extend .label-medium !optional;
+
     display: inline-flex;
     padding: var(--spacing-sm);
     align-items: center;

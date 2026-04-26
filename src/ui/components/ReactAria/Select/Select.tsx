@@ -1,4 +1,3 @@
-import { cn } from "@src/lib/utils";
 import { ChevronDown } from "lucide-react";
 import {
     Select as AriaSelect,
@@ -38,10 +37,7 @@ export function Select<
     return (
         <AriaSelect {...props}>
             {label && <Label>{label}</Label>}
-            <Button
-                variant="unstyled"
-                className={cn("heading-h6", styles.trigger)}
-            >
+            <Button variant="unstyled" className={styles.trigger}>
                 <SelectValue />
                 <ChevronDown />
             </Button>

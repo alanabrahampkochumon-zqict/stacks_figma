@@ -1,4 +1,6 @@
 .combobox {
+    @extend .body-medium !optional;
+
     color: var(--text-color);
     width: calc(var(--spacing) * 50);
     isolation: isolate;
@@ -9,6 +11,7 @@
 }
 
 .combo-box-label {
+    @extend .label-medium !optional;
     color: var(--clr-content-primary);
 }
 

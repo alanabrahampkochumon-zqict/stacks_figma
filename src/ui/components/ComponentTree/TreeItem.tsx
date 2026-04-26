@@ -30,7 +30,7 @@ function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
     } else content = getTreeItem(item) || <></>;
 
     return (
-        <li {...props} className={cn(styles.base, "label-small", className)}>
+        <li {...props} className={cn(styles.base, className)}>
             {content}
         </li>
     );

@@ -37,10 +37,7 @@ function Button({
 }: ButtonProps) {
     return (
         <button
-            className={cn(
-                buttonVariants({ variant, className }),
-                "label-medium",
-            )}
+            className={cn(buttonVariants({ variant, className }))}
             {...props}
         />
     );

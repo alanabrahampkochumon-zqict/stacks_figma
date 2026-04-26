@@ -1,4 +1,5 @@
 .trigger {
+    @extend .heading-h6 !optional;
     background-color: var(--clr-surface-tertiary);
     padding: var(--spacing-2xs) var(--spacing-md) var(--spacing-xs)
         var(--spacing-lg);

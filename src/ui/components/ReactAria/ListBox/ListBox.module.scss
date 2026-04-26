@@ -21,6 +21,7 @@
 }
 
 .item-label {
+    @extend .body-medium !optional;
     color: var(--clr-content-tertiary);
 }
 

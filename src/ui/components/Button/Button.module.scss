@@ -1,4 +1,6 @@
 .base {
+    @extend .label-medium !optional;
+
     display: flex;
     /* min-height: var(--min-interactive-size); */
     padding: var(--spacing-lg) var(--spacing-xl);

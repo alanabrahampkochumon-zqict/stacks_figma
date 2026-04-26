@@ -41,10 +41,8 @@ export function ComboBox<
             {...props}
             className={cn(props.className, styles.combobox)}
         >
-            <Label className={cn("label-medium", styles.comboBoxLabel)}>
-                {label}
-            </Label>
-            <div className={cn(styles.comboboxField, "body-medium")}>
+            <Label className={styles.comboBoxLabel}>{label}</Label>
+            <div className={styles.comboboxField}>
                 <Input
                     className={styles.reactAriaInput}
                     placeholder={placeholder}
