@@ -20,7 +20,7 @@ export function Button({ className, ...props }: ButtonProps) {
         <RACButton
             {...props}
             className={cn(
-                props.variant != "unstyled" && styles["button-base"],
+                props.variant != "unstyled" && styles.buttonBase,
                 className,
             )}
             data-variant={props.variant || "primary"}

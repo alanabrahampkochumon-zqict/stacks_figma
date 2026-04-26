@@ -75,17 +75,17 @@ function OptionListItem({
     return (
         <li
             className={cn(
-                styles["list-item"],
+                styles.listItem,
                 "label-medium",
-                disabled && styles["list-item-disabled"],
-                selected && styles["list-item-selected"],
+                disabled && styles.listItemDisabled,
+                selected && styles.listItemSelected,
             )}
             value={value}
             {...props}
             aria-disabled={disabled}
         >
             {children}
-            {selected && <Check className={styles["check-icon"]} />}
+            {selected && <Check className={styles.checkIcon} />}
         </li>
     );
 }

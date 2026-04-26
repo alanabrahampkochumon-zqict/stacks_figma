@@ -44,7 +44,7 @@ export function ListBoxSection<T extends object>(
 }
 
 export function DropdownListBox<T extends object>(props: ListBoxProps<T>) {
-    return <AriaListBox {...props} className={styles["dropdown-listbox"]} />;
+    return <AriaListBox {...props} className={styles.dropdownItem} />;
 }
 
 export function DropdownItem(props: ListBoxItemProps) {
@@ -55,7 +55,7 @@ export function DropdownItem(props: ListBoxItemProps) {
         <ListBoxItem
             {...props}
             textValue={textValue}
-            className={styles["dropdown-item"]}
+            className={styles.dropdownItem}
         >
             {composeRenderProps(props.children, (children, { isSelected }) => (
                 <>
@@ -64,8 +64,8 @@ export function DropdownItem(props: ListBoxItemProps) {
                             slot="label"
                             className={cn(
                                 "body-medium",
-                                styles["item-label"],
-                                isSelected && styles["item-label-selected"],
+                                styles.itemLabel,
+                                isSelected && styles.itemLabelSelected,
                             )}
                         >
                             {children}
@@ -73,7 +73,7 @@ export function DropdownItem(props: ListBoxItemProps) {
                     ) : (
                         children
                     )}
-                    {isSelected && <Check className={styles["check-icon"]} />}
+                    {isSelected && <Check className={styles.checkIcon} />}
                 </>
             ))}
         </ListBoxItem>

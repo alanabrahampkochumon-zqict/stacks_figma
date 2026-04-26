@@ -25,7 +25,7 @@ const Select = ({ label, onOptionChange, options, trigger }: SelectProps) => {
             </RadixSelect.Trigger>
             <RadixSelect.Portal>
                 <RadixSelect.Content
-                    className={styles["select-content"]}
+                    className={styles.selectContent}
                     position="popper"
                     side="bottom"
                     style={{ width: "var(--radix-select-trigger-width)" }}

@@ -39,18 +39,18 @@ export function ComboBox<
     return (
         <AriaComboBox
             {...props}
-            className={cn(props.className, styles["combobox"])}
+            className={cn(props.className, styles.combobox)}
         >
-            <Label className={cn("label-medium", styles["combo-box-label"])}>
+            <Label className={cn("label-medium", styles.comboBoxLabel)}>
                 {label}
             </Label>
-            <div className={cn(styles["combobox-field"], "body-medium")}>
+            <div className={cn(styles.comboboxField, "body-medium")}>
                 <Input
-                    className={styles["react-aria-input"]}
+                    className={styles.reactAriaInput}
                     placeholder={placeholder}
                 />
-                <FieldButton className={styles["combobox-select"]}>
-                    <ChevronDown className={styles["chevron-icon"]} />
+                <FieldButton className={styles.comboboxSelect}>
+                    <ChevronDown className={styles.chevronIcon} />
                 </FieldButton>
             </div>
             {props.selectionMode === "multiple" && (
@@ -58,7 +58,7 @@ export function ComboBox<
             )}
             {description && <Description>{description}</Description>}
             <FieldError>{errorMessage}</FieldError>
-            <Popover hideArrow className={styles["combobox-popover"]}>
+            <Popover hideArrow className={styles.comboboxPopover}>
                 <ComboBoxListBox>{children}</ComboBoxListBox>
             </Popover>
         </AriaComboBox>

@@ -25,7 +25,7 @@ function DropdownField({
                     Design System
                 </label>
                 <OptionList.Trigger>
-                    <div className={styles["search-input"]}>
+                    <div className={styles.searchInput}>
                         <input
                             list="design-system"
                             name="design-system"

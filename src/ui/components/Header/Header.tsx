@@ -57,10 +57,7 @@ function Header({ showBackground = true }: HeaderParams) {
                 selected={selected}
                 onSelectChange={setSelected}
             />
-            <IconButton
-                className={styles["menu-button"]}
-                aria-description="menu"
-            >
+            <IconButton className={styles.menuButton} aria-description="menu">
                 <MenuIcon className="" size={20} />
             </IconButton>
         </header>

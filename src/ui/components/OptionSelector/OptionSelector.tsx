@@ -40,9 +40,9 @@ function OptionItem({ icon, value, selected, onSelected }: OptionItemProps) {
         <motion.div
             layout
             className={cn(
-                styles["option-item"],
+                styles.optionItem,
                 "label-medium",
-                selected && styles["option-item-selected"],
+                selected && styles.optionItemSelected,
             )}
             onClick={() => onSelected()}
         >
