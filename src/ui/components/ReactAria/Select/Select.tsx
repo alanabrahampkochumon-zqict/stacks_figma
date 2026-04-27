@@ -38,7 +38,7 @@ export function Select<
         <AriaSelect {...props}>
             {label && <Label>{label}</Label>}
             <Button variant="unstyled" className={styles.trigger}>
-                <SelectValue />
+                <SelectValue className={"heading-h6"} />
                 <ChevronDown />
             </Button>
             {description && <Description>{description}</Description>}
