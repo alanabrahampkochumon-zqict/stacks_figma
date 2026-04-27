@@ -74,6 +74,8 @@ export function validateToken(
                     !!token.match(/^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i)
                         ?.length,
             );
+        case "typography":
+        // TODO: V
         case "gradient":
         // TODO: Implementation
         case "box-shadow":
