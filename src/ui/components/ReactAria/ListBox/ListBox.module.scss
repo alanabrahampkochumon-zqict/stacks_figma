@@ -16,6 +16,10 @@
     transition: background-color var(--anim-ease-superfast);
 }
 
+.dropdown-item-focus {
+    border: 1px solid red;
+}
+
 .dropdown-item:focus,
 .dropdown-item:focus-visible,
 .dropdown-item:focus-within {
