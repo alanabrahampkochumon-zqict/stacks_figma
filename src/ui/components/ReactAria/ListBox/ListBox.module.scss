@@ -16,6 +16,13 @@
     transition: background-color var(--anim-ease-superfast);
 }
 
+.dropdown-item:focus,
+.dropdown-item:focus-visible,
+.dropdown-item:focus-within {
+    outline: none;
+    border: none;
+}
+
 .dropdown-item:hover {
     background-color: var(--clr-surface-secondary);
 }
