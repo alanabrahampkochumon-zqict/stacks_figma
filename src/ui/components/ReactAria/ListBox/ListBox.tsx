@@ -44,7 +44,7 @@ export function ListBoxSection<T extends object>(
 }
 
 export function DropdownListBox<T extends object>(props: ListBoxProps<T>) {
-    return <AriaListBox {...props} className={styles.dropdownItem} />;
+    return <AriaListBox {...props} className={styles.dropdownListbox} />;
 }
 
 export function DropdownItem(props: ListBoxItemProps) {
