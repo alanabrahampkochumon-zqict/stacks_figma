@@ -1,5 +1,7 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
+import type { ReferenceID } from "./ReferenceID";
 import type { TokenNode } from "./TokenNode";
+import type { TypographyToken } from "./TypographyToken";
 
 /**
  * Basic Design System token categories.
@@ -7,6 +9,13 @@ import type { TokenNode } from "./TokenNode";
  * @category Constants
  */
 export const basicTokens = ["number", "string", "boolean", "color"] as const;
+
+export type BasicTokenMap = {
+    number: number | ReferenceID;
+    string: string | ReferenceID;
+    boolean: boolean | ReferenceID;
+    color: string | ReferenceID;
+};
 
 /**
  * Primitive token types used for standard values.
@@ -28,6 +37,16 @@ export const extendedTokens = [
     "box-shadow",
     "gradient",
 ] as const;
+
+export type ExtendedTokenMap = BasicTokenMap & {
+    typography: TypographyToken | ReferenceID;
+    sizing: string | ReferenceID;
+    spacing: string | ReferenceID;
+    animation: any | ReferenceID; // TODO: Update to use a specific class
+    cornerRadius: string | ReferenceID;
+    boxShadow: any | ReferenceID; // TODO: Update to use a specific class
+    gradient: any | ReferenceID; // TODO: Update to use a specific class
+};
 
 /**
  * Union type of all supported token categories.

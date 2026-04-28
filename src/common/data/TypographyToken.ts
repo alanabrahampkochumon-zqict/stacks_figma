@@ -3,7 +3,7 @@ import type { ReferenceID } from "./ReferenceID";
 /**
  * Define a typography token.
  */
-class TypographyToken {
+export class TypographyToken {
     fontFamily: string | ReferenceID;
     fontSize: number | ReferenceID;
     fontWeight: string | ReferenceID;
@@ -31,7 +31,7 @@ class TypographyToken {
 /**
  * Complete list of all font decoration.
  */
-const FontDecoration = {
+export const FontDecoration = {
     None: "None",
     Underline: "Underline",
     LineThrough: "LineThrough",
