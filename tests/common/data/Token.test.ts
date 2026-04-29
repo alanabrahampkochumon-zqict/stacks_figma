@@ -1,3 +1,4 @@
+import { generateReferenceID } from "@src/common/data/ReferenceID";
 import {
     createToken,
     EXTENDED_TOKENS,
@@ -114,6 +115,12 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "number",
         },
+        {
+            name: "number validation: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
+            type: "number",
+        },
 
         // String validation
         {
@@ -132,6 +139,12 @@ describe("Token Validator Tests", () => {
             name: "string validation: non-string",
             input: { default: 5 },
             expected: false,
+            type: "string",
+        },
+        {
+            name: "string validation: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
             type: "string",
         },
 
@@ -166,6 +179,12 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "sizing",
         },
+        {
+            name: "sizing validation: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
+            type: "sizing",
+        },
 
         // Spacing Validation
         {
@@ -196,6 +215,12 @@ describe("Token Validator Tests", () => {
             name: "spacing validation: string",
             input: { default: "fff" },
             expected: false,
+            type: "spacing",
+        },
+        {
+            name: "spacing validation: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
             type: "spacing",
         },
 
@@ -230,6 +255,12 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "cornerRadius",
         },
+        {
+            name: "corner radius validation: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
+            type: "cornerRadius",
+        },
 
         // Boolean validation
         {
@@ -260,6 +291,12 @@ describe("Token Validator Tests", () => {
             name: "boolean validation: string",
             input: { default: "test" },
             expected: false,
+            type: "boolean",
+        },
+        {
+            name: "boolean validation: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
             type: "boolean",
         },
 
@@ -336,7 +373,13 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "color",
         },
-        // TODO: Test other types like gradient and box-shadow
+        {
+            name: "color: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
+            type: "color",
+        },
+        // TODO: Test other types like gradient, box-shadow, typography etc.
     ];
 
     test.each(testCases)(
