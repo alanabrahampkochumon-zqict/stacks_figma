@@ -1,7 +1,6 @@
-import type { ExtendedTokenTypes } from "@src/common/data/Token";
 import {
     createToken,
-    extendedTokens,
+    EXTENDED_TOKENS,
     isValidExtendedToken,
     isValidLevel,
     validateToken,
@@ -10,7 +9,7 @@ import {
 import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
-    test.each(extendedTokens)("returns true, if token is %s", (token) => {
+    test.each(EXTENDED_TOKENS)("returns true, if token is %s", (token) => {
         // Given a valid extended token
         // Then, validation returns true
         expect(isValidExtendedToken(token)).toStrictEqual(true);

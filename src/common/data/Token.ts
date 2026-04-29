@@ -9,10 +9,12 @@ import { TypographyToken } from "./TypographyToken";
  *
  * @category Constants
  */
-// export const basicTokens = ["number", "string", "boolean", "color"] as const;
+
+// TODO: Add getGroupName
+// TODO: Add getTokenValue/getTokenValueByMode helpers
 
 /**
- * Primitive token types used for standard values.
+ * Primitive token types used for validationa and node classfication.
  */
 export type BasicTokenMap = {
     number: number | ReferenceID;
@@ -20,27 +22,16 @@ export type BasicTokenMap = {
     boolean: boolean | ReferenceID;
     color: string | ReferenceID;
 };
-
 /**
- * Primitive token types used for standard values.
- */
-// export type BasicTokenTypes = (typeof basicTokens)[number];
-
-/**
- * Complete list of supported token categories, including layout and effects.
- *
+ * List of basic token types.
  * @category Constants
  */
-// export const extendedTokens = [
-//     ...basicTokens,
-//     "typography",
-//     "sizing",
-//     "spacing",
-//     "animation",
-//     "corner-radius",
-//     "box-shadow",
-//     "gradient",
-// ] as const;
+export const BASIC_TOKENS: (keyof BasicTokenMap)[] = [
+    "number",
+    "string",
+    "boolean",
+    "color",
+] as const;
 
 /**
  * Union type of all supported token categories and their respective value types.
@@ -55,6 +46,21 @@ export type ExtendedTokenMap = BasicTokenMap & {
     boxShadow: any | ReferenceID; // TODO: Update to use a specific class
     gradient: any | ReferenceID; // TODO: Update to use a specific class
 };
+
+/**
+ * Complete list of supported token categories, including effects.
+ * @category Constants
+ */
+export const EXTENDED_TOKENS: (keyof ExtendedTokenMap)[] = [
+    ...BASIC_TOKENS,
+    "typography",
+    "sizing",
+    "spacing",
+    "animation",
+    "cornerRadius",
+    "boxShadow",
+    "gradient",
+] as const;
 
 /**
  * Union type of all supported token categories.
