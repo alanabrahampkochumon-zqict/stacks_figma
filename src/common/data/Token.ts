@@ -1,7 +1,7 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import type { ReferenceID } from "./ReferenceID";
+import { generateReferenceID, type ReferenceID } from "./ReferenceID";
 import type { TokenNode } from "./TokenNode";
-import type { TypographyToken } from "./TypographyToken";
+import { TypographyToken } from "./TypographyToken";
 
 /**
  * Basic Design System token categories.
@@ -40,10 +40,10 @@ export const extendedTokens = [
 
 export type ExtendedTokenMap = BasicTokenMap & {
     typography: TypographyToken | ReferenceID;
-    sizing: string | ReferenceID;
-    spacing: string | ReferenceID;
+    sizing: number | ReferenceID;
+    spacing: number | ReferenceID;
     animation: any | ReferenceID; // TODO: Update to use a specific class
-    cornerRadius: string | ReferenceID;
+    cornerRadius: number | ReferenceID;
     boxShadow: any | ReferenceID; // TODO: Update to use a specific class
     gradient: any | ReferenceID; // TODO: Update to use a specific class
 };
@@ -148,17 +148,18 @@ export type Token = {
 };
 
 /**
- * Factory function to initialize a validated {@link Token}.
+ * Initialize a validated {@link Token}.
  *
- * @param {Record<string, any>} valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
- * @param {ExtendedTokenTypes} type         The type of token. See {@link TokenType} and {@link ExtendedTokenType}.
+ * @param valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
+ * @param type        The type of token. @see {@link BasicTokenMap} and {@link ExtendedTokenMap}.
  *
- * @returns {Token} A frozen-ready token object.
+ * @returns A frozen-ready token object.
+ *
  * @throws {IllegalArgumentError} If `valueByMode` is empty or if `type` is not a valid {@link ExtendedTokenTypes}.
  */
-export function createToken(
-    valueByMode: Record<string, any>,
-    type: ExtendedTokenTypes,
+export function createToken<K extends keyof ExtendedTokenMap>(
+    type: K,
+    valueByMode: Record<string, ExtendedTokenMap[K]>,
 ): Token {
     if (!valueByMode || !Object.values(valueByMode).length)
         throw new IllegalArgumentError("Token must have atleast one value");
@@ -170,6 +171,16 @@ export function createToken(
         entityType: "token",
     };
 }
+const typeToken = new TypographyToken(
+    generateReferenceID(),
+    generateReferenceID(),
+    generateReferenceID(),
+    generateReferenceID(),
+    generateReferenceID(),
+    generateReferenceID(),
+);
+createToken("typography", { default: typeToken });
+createToken("cornerRadius", { default: 5 });
 
 /**
  * Comparator definition used by {@link TokenNode}.
