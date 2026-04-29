@@ -1,6 +1,6 @@
 import typia from "typia";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { type ReferenceID } from "./ReferenceID";
+import { isReferenceID, type ReferenceID } from "./ReferenceID";
 import type { TokenNode } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
@@ -98,17 +98,25 @@ export function validateToken(
         case "sizing":
         case "spacing":
         case "cornerRadius":
-            return tokens.every((token) => typeof token === "number");
+            return tokens.every(
+                (token) => typeof token === "number" || isReferenceID(token),
+            );
         case "string":
-            return tokens.every((token) => typeof token === "string");
+            return tokens.every(
+                (token) => typeof token === "string" || isReferenceID(token),
+            );
         case "boolean":
-            return tokens.every((token) => typeof token === "boolean");
+            return tokens.every(
+                (token) => typeof token === "boolean" || isReferenceID(token),
+            );
         case "color":
             return tokens.every(
                 (token) =>
-                    typeof token === "string" &&
-                    !!token.match(/^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i)
-                        ?.length,
+                    (typeof token === "string" &&
+                        !!token.match(
+                            /^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i,
+                        )?.length) ||
+                    isReferenceID(token),
             );
         case "typography":
         // TODO: V

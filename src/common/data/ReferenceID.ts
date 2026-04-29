@@ -13,7 +13,7 @@ export const ReferenceIDPrefix = "reference_";
  * @returns True if the id is {@link ReferenceID} else False.
  */
 export function isReferenceID(id: string): id is ReferenceID {
-    return id.startsWith(ReferenceIDPrefix);
+    return typeof id === "string" && id.startsWith(ReferenceIDPrefix);
 }
 
 /**
