@@ -5,6 +5,7 @@ import {
     isValidLevel,
     validateToken,
     validLevels,
+    type ExtendedTokenMap,
 } from "@src/common/data/Token";
 import { describe, expect, test } from "vitest";
 
@@ -48,7 +49,7 @@ describe("Token Initialization Tests", () => {
         const tokenValue = { default: "#fff", dark: "#000" };
         const tokenType = "color";
 
-        const token = createToken(tokenValue, tokenType);
+        const token = createToken(tokenType, tokenValue);
 
         // Then, a valid token is returned
         expect(token.valueByMode).toStrictEqual(tokenValue);
@@ -62,16 +63,16 @@ describe("Token Initialization Tests", () => {
         const tokenType = "color";
 
         // Then, an error is thrown
-        expect(() => createToken(tokenValue, tokenType)).toThrow();
+        expect(() => createToken(tokenType, tokenValue)).toThrow();
     });
 
     test("throws error, when passed in invalid type", () => {
         // When a token is created with invalid type
         const tokenValue = { default: "#fff", dark: "#000" };
-        const tokenType = "invalid token type" as ExtendedTokenTypes;
+        const tokenType = "invalid token type" as keyof ExtendedTokenMap;
 
         // Then, an error is thrown
-        expect(() => createToken(tokenValue, tokenType)).toThrow();
+        expect(() => createToken(tokenType, tokenValue)).toThrow();
     });
 });
 
@@ -80,7 +81,7 @@ describe("Token Validator Tests", () => {
         name: string;
         input: any;
         expected: boolean;
-        type: ExtendedTokenTypes;
+        type: keyof ExtendedTokenMap;
     }[] = [
         // Number validation
         {
@@ -203,31 +204,31 @@ describe("Token Validator Tests", () => {
             name: "corner radius validation: floating point number",
             input: { default: 12.7 },
             expected: true,
-            type: "corner-radius",
+            type: "cornerRadius",
         },
         {
             name: "corner radius validation: integral number",
             input: { default: 5 },
             expected: true,
-            type: "corner-radius",
+            type: "cornerRadius",
         },
         {
             name: "corner radius validation: negative number",
             input: { default: -5 },
             expected: true,
-            type: "corner-radius",
+            type: "cornerRadius",
         },
         {
             name: "corner radius validation: string number",
             input: { default: "5" },
             expected: false,
-            type: "corner-radius",
+            type: "cornerRadius",
         },
         {
             name: "corner radius validation: string",
             input: { default: "fff" },
             expected: false,
-            type: "corner-radius",
+            type: "cornerRadius",
         },
 
         // Boolean validation
@@ -353,7 +354,7 @@ describe("Token Validator Tests", () => {
         name: string;
         input: any;
         expected: boolean;
-        type: ExtendedTokenTypes;
+        type: keyof ExtendedTokenMap;
     }[] = [
         {
             name: "tokens are of same type",

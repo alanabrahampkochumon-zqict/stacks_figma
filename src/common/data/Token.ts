@@ -88,7 +88,7 @@ export function isValidExtendedToken(input: string): boolean {
  */
 export function validateToken(
     tokenValuesByMode: Record<string, any>,
-    tokenType: ExtendedTokenTypes,
+    tokenType: keyof ExtendedTokenMap,
 ): boolean {
     if (!tokenValuesByMode) return false;
     const tokens = Object.values(tokenValuesByMode);
@@ -97,7 +97,7 @@ export function validateToken(
         case "number":
         case "sizing":
         case "spacing":
-        case "corner-radius":
+        case "cornerRadius":
             return tokens.every((token) => typeof token === "number");
         case "string":
             return tokens.every((token) => typeof token === "string");
@@ -114,7 +114,7 @@ export function validateToken(
         // TODO: V
         case "gradient":
         // TODO: Implementation
-        case "box-shadow":
+        case "boxShadow":
         // TODO: Implementation
         case "animation":
         // TODO: Implementation
