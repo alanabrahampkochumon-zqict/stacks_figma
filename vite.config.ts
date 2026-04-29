@@ -1,4 +1,5 @@
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import UnpluginTypia from "@typia/unplugin/vite";
 import react from "@vitejs/plugin-react";
 import esbuild from "esbuild";
 import { copyFile, glob } from "fs/promises";
@@ -94,6 +95,7 @@ export default defineConfig(({ command }) => {
                 routesDirectory: "./src/routes",
                 generatedRouteTree: "./src/routeTree.gen.ts",
             }),
+            UnpluginTypia({}),
             react(),
             viteSingleFile(),
             svgr(),

@@ -3,7 +3,7 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { ExtendedTokenTypes, Levels, TokenComparator } from "./Token";
 import {
-    extendedTokens,
+    EXTENDED_TOKENS,
     isValidExtendedToken,
     isValidLevel,
     validateToken,
@@ -401,7 +401,7 @@ export class TokenSet {
         // Parent Token Type validation
         if (!(tokenType === "group" || isValidExtendedToken(tokenType)))
             throw new IllegalArgumentError(
-                `Invalid token type: Type must be in ${extendedTokens}`,
+                `Invalid token type: Type must be in ${EXTENDED_TOKENS}`,
             );
 
         // Token Type validation
