@@ -1,5 +1,5 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { generateReferenceID, type ReferenceID } from "./ReferenceID";
+import { type ReferenceID } from "./ReferenceID";
 import type { TokenNode } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
@@ -136,14 +136,13 @@ export function isValidLevel(level: number): boolean {
  * Use the {@link createToken} factory function to ensure schema integrity.
  * @see {@link TokenNode} for the tree-structure representation.
  *
- * @typedef {Object} Token
- * @property {Record<string, any>} valueByMode   Map of mode keys to their respective values. Example: {dark: "#111", light: "eee"}
- * @property {ExtendedTokenTypes} type           The type of token. For details, see {@link ExtendedTokenTypes}
- * @property {"token"} entityType                Internal discriminator used to identify this as a token.
+ * @property valueByMode Map of mode keys to their respective values. Example: {dark: "#111", light: "eee"}
+ * @property type        The type of token. For details, see {@link ExtendedTokenTypes}
+ * @property entityType  Internal discriminator used to identify this as a token.
  */
-export type Token = {
-    valueByMode: Record<string, any>;
-    type: ExtendedTokenTypes;
+export type Token<K extends keyof ExtendedTokenMap> = {
+    type: K;
+    valueByMode: Record<string, ExtendedTokenMap[K]>;
     entityType: "token";
 };
 
@@ -160,7 +159,7 @@ export type Token = {
 export function createToken<K extends keyof ExtendedTokenMap>(
     type: K,
     valueByMode: Record<string, ExtendedTokenMap[K]>,
-): Token {
+): Token<K> {
     if (!valueByMode || !Object.values(valueByMode).length)
         throw new IllegalArgumentError("Token must have atleast one value");
     if (!isValidExtendedToken(type))
@@ -171,16 +170,6 @@ export function createToken<K extends keyof ExtendedTokenMap>(
         entityType: "token",
     };
 }
-const typeToken = new TypographyToken(
-    generateReferenceID(),
-    generateReferenceID(),
-    generateReferenceID(),
-    generateReferenceID(),
-    generateReferenceID(),
-    generateReferenceID(),
-);
-createToken("typography", { default: typeToken });
-createToken("cornerRadius", { default: 5 });
 
 /**
  * Comparator definition used by {@link TokenNode}.
