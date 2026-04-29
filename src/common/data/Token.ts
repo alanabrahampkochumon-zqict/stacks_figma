@@ -1,3 +1,4 @@
+import typia from "typia";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { type ReferenceID } from "./ReferenceID";
 import type { TokenNode } from "./TokenNode";
@@ -57,8 +58,11 @@ export type ExtendedTokenTypes = (typeof extendedTokens)[number];
 /**
  * Validator to check if a string is a member of {@link ExtendedTokenTypes}.
  */
-export function isValidExtendedToken(token: string): boolean {
-    return (extendedTokens as readonly string[]).includes(token);
+// export function isValidExtendedToken(token: string): boolean {
+//     return (extendedTokens as readonly string[]).includes(token);
+// }
+export function isValidExtendedToken(input: string): boolean {
+    return typia.createIs<keyof ExtendedTokenMap>()(input);
 }
 
 /**
