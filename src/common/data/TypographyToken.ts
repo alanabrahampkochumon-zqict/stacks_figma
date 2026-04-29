@@ -1,4 +1,4 @@
-import type { ReferenceID } from "./ReferenceID";
+import { isReferenceID, type ReferenceID } from "./ReferenceID";
 
 /**
  * Define a typography token.
@@ -26,6 +26,53 @@ export class TypographyToken {
         this.letterSpacing = letterSpacing;
         this.fontDecoration = fontDecoration;
     }
+
+    static validate(token: TypographyToken): boolean {
+        if (!(token instanceof TypographyToken)) return false;
+        if (
+            !(
+                typeof token.fontFamily === "string" ||
+                isReferenceID(token.fontFamily)
+            )
+        )
+            return false;
+        if (
+            !(
+                typeof token.fontSize === "number" ||
+                isReferenceID(token.fontSize)
+            )
+        )
+            return false;
+        if (
+            !(
+                typeof token.fontWeight === "string" ||
+                isReferenceID(token.fontWeight)
+            )
+        )
+            return false;
+        if (
+            !(
+                typeof token.lineHeight === "number" ||
+                isReferenceID(token.lineHeight)
+            )
+        )
+            return false;
+        if (
+            !(
+                typeof token.letterSpacing === "number" ||
+                isReferenceID(token.letterSpacing)
+            )
+        )
+            return false;
+
+        if (
+            !(
+                isValidFontDecoration(token.fontDecoration) ||
+                isReferenceID(token.fontDecoration)
+            )
+        )
+            return false;
+    }
 }
 
 /**
@@ -36,3 +83,7 @@ export const FontDecoration = {
     Underline: "Underline",
     LineThrough: "LineThrough",
 } as const;
+
+function isValidFontDecoration(fontDecoration: any): boolean {
+    return Object.values(FontDecoration).includes(fontDecoration);
+}
