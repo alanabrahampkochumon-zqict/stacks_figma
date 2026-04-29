@@ -9,8 +9,11 @@ import { TypographyToken } from "./TypographyToken";
  *
  * @category Constants
  */
-export const basicTokens = ["number", "string", "boolean", "color"] as const;
+// export const basicTokens = ["number", "string", "boolean", "color"] as const;
 
+/**
+ * Primitive token types used for standard values.
+ */
 export type BasicTokenMap = {
     number: number | ReferenceID;
     string: string | ReferenceID;
@@ -21,24 +24,28 @@ export type BasicTokenMap = {
 /**
  * Primitive token types used for standard values.
  */
-export type BasicTokenTypes = (typeof basicTokens)[number];
+// export type BasicTokenTypes = (typeof basicTokens)[number];
 
 /**
  * Complete list of supported token categories, including layout and effects.
  *
  * @category Constants
  */
-export const extendedTokens = [
-    ...basicTokens,
-    "typography",
-    "sizing",
-    "spacing",
-    "animation",
-    "corner-radius",
-    "box-shadow",
-    "gradient",
-] as const;
+// export const extendedTokens = [
+//     ...basicTokens,
+//     "typography",
+//     "sizing",
+//     "spacing",
+//     "animation",
+//     "corner-radius",
+//     "box-shadow",
+//     "gradient",
+// ] as const;
 
+/**
+ * Union type of all supported token categories and their respective value types.
+ * Used for validation and node classification.
+ */
 export type ExtendedTokenMap = BasicTokenMap & {
     typography: TypographyToken | ReferenceID;
     sizing: number | ReferenceID;
@@ -53,7 +60,7 @@ export type ExtendedTokenMap = BasicTokenMap & {
  * Union type of all supported token categories.
  * Used for validation and node classification.
  */
-export type ExtendedTokenTypes = (typeof extendedTokens)[number];
+// export type ExtendedTokenTypes = (typeof extendedTokens)[number];
 
 /**
  * Validator to check if a string is a member of {@link ExtendedTokenTypes}.
@@ -118,8 +125,6 @@ export const validLevels = [1, 2, 3, 4] as const;
 
 /**
  * Type definition for Design System level.
- *
- * @typedef {Levels}
  */
 export type Levels = (typeof validLevels)[number];
 
