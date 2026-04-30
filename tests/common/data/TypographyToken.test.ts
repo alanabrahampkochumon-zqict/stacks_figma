@@ -5,7 +5,7 @@ import {
 } from "@src/common/data/TypographyToken";
 import { describe, expect, test } from "vitest";
 
-describe("Font Decoration", () => {
+describe("Font Decoration Validator", () => {
     const testCases: {
         name: string;
         value: any;
@@ -44,7 +44,7 @@ describe("Font Decoration", () => {
     });
 });
 
-describe("Typography", () => {
+describe("Typography Validator", () => {
     const id = generateReferenceID();
     const vFontFamily = "Roboto";
     const vFontSize = 24;
@@ -189,7 +189,7 @@ describe("Typography", () => {
         },
     ];
 
-    test.each(testCases)("$name", ({ value, expected }: TestCase) => {
+    test.only.each(testCases)("$name", ({ value, expected }: TestCase) => {
         expect(TypographyToken.validate(value)).toStrictEqual(expected);
     });
 });

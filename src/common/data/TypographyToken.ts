@@ -29,50 +29,27 @@ export class TypographyToken {
 
     static validate(token: any): boolean {
         if (!(token instanceof TypographyToken)) return false;
-        if (
-            !(
-                typeof token.fontFamily === "string" ||
-                isReferenceID(token.fontFamily)
-            )
-        )
-            return false;
-        if (
-            !(
-                typeof token.fontSize === "number" ||
-                isReferenceID(token.fontSize)
-            )
-        )
-            return false;
-        if (
-            !(
-                typeof token.fontWeight === "string" ||
-                isReferenceID(token.fontWeight)
-            )
-        )
-            return false;
-        if (
-            !(
-                typeof token.lineHeight === "number" ||
-                isReferenceID(token.lineHeight)
-            )
-        )
-            return false;
-        if (
-            !(
-                typeof token.letterSpacing === "number" ||
-                isReferenceID(token.letterSpacing)
-            )
-        )
-            return false;
 
-        if (
-            !(
-                isValidFontDecoration(token.fontDecoration) ||
-                isReferenceID(token.fontDecoration)
-            )
-        )
-            return false;
-        return true;
+        const schema = {
+            fontFamily: "string",
+            fontSize: "number",
+            fontWeight: "string",
+            lineHeight: "number",
+            letterSpacing: "number",
+        };
+
+        const validationResult = Object.entries(schema).every(
+            ([key, value]) =>
+                typeof token[key as keyof typeof schema] === value ||
+                isReferenceID(token[key as keyof typeof schema]),
+        );
+
+        if (!validationResult) return false;
+
+        return (
+            isValidFontDecoration(token.fontDecoration) ||
+            isReferenceID(token.fontDecoration)
+        );
     }
 }
 
