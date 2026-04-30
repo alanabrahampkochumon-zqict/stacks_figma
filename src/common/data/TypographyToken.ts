@@ -27,7 +27,7 @@ export class TypographyToken {
         this.fontDecoration = fontDecoration;
     }
 
-    static validate(token: TypographyToken): boolean {
+    static validate(token: any): boolean {
         if (!(token instanceof TypographyToken)) return false;
         if (
             !(
@@ -72,6 +72,7 @@ export class TypographyToken {
             )
         )
             return false;
+        return true;
     }
 }
 
@@ -84,6 +85,6 @@ export const FontDecoration = {
     LineThrough: "LineThrough",
 } as const;
 
-function isValidFontDecoration(fontDecoration: any): boolean {
+export function isValidFontDecoration(fontDecoration: any): boolean {
     return Object.values(FontDecoration).includes(fontDecoration);
 }
