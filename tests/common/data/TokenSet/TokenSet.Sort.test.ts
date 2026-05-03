@@ -12,44 +12,44 @@ describe("TokenSet Sorting Tests", () => {
         const tokens = [
             createTokenNode(
                 "size-100",
-                createToken({ default: 10 }, tokenType),
+                createToken(tokenType, { default: 10 }),
                 "1",
             ),
             createTokenNode(
                 "size-150",
-                createToken({ default: 15 }, tokenType),
+                createToken(tokenType, { default: 15 }),
                 "2",
             ),
             createTokenNode(
                 "size-0",
-                createToken({ default: 0 }, tokenType),
+                createToken(tokenType, { default: 0 }),
                 "3",
             ),
             createTokenNode(
                 "size-50",
-                createToken({ default: 5 }, tokenType),
+                createToken(tokenType, { default: 5 }),
                 "4",
             ),
         ];
         const sortedTokens = [
             createTokenNode(
                 "size-0",
-                createToken({ default: 0 }, tokenType),
+                createToken(tokenType, { default: 0 }),
                 "3",
             ),
             createTokenNode(
                 "size-50",
-                createToken({ default: 5 }, tokenType),
+                createToken(tokenType, { default: 5 }),
                 "4",
             ),
             createTokenNode(
                 "size-100",
-                createToken({ default: 10 }, tokenType),
+                createToken(tokenType, { default: 10 }),
                 "1",
             ),
             createTokenNode(
                 "size-150",
-                createToken({ default: 15 }, tokenType),
+                createToken(tokenType, { default: 15 }),
                 "2",
             ),
         ];
@@ -70,44 +70,44 @@ describe("TokenSet Sorting Tests", () => {
         const tokens = [
             createTokenNode(
                 "size-100",
-                createToken({ default: 55 }, tokenType),
+                createToken(tokenType, { default: 55 }),
                 "1",
             ),
             createTokenNode(
                 "size-150",
-                createToken({ default: 35 }, tokenType),
+                createToken(tokenType, { default: 35 }),
                 "2",
             ),
             createTokenNode(
                 "size-0",
-                createToken({ default: 100 }, tokenType),
+                createToken(tokenType, { default: 100 }),
                 "3",
             ),
             createTokenNode(
                 "size-50",
-                createToken({ default: 50 }, tokenType),
+                createToken(tokenType, { default: 50 }),
                 "4",
             ),
         ];
         const sortedTokens = [
             createTokenNode(
                 "size-150",
-                createToken({ default: 35 }, tokenType),
+                createToken(tokenType, { default: 35 }),
                 "2",
             ),
             createTokenNode(
                 "size-50",
-                createToken({ default: 50 }, tokenType),
+                createToken(tokenType, { default: 50 }),
                 "4",
             ),
             createTokenNode(
                 "size-100",
-                createToken({ default: 55 }, tokenType),
+                createToken(tokenType, { default: 55 }),
                 "1",
             ),
             createTokenNode(
                 "size-0",
-                createToken({ default: 100 }, tokenType),
+                createToken(tokenType, { default: 100 }),
                 "3",
             ),
         ];
@@ -116,6 +116,7 @@ describe("TokenSet Sorting Tests", () => {
         // When sort function is called on it with a comparator
         tokenSet.sort(
             (a, b) =>
+                Object.values(a.value.entityType == "token" && a)
                 Object.values(
                     a.value?.entityType === "token" && a.value.valueByMode,
                 )[0] -

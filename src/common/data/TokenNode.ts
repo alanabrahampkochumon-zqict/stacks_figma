@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import type { Group } from "./Group";
-import type { Token } from "./Token";
+import type { ExtendedTokenMap, Token } from "./Token";
 
 /**
  * The atomic unit of the Design System tree.
@@ -34,10 +34,10 @@ import type { Token } from "./Token";
  *     reference: "uuid-123"
  * };
  */
-export type TokenNode = {
+export type TokenNode<K extends keyof ExtendedTokenMap> = {
     name: string;
     uid: string;
-    value?: Group | Token | undefined;
+    value?: Group | Token<K> | undefined;
     parentId?: string | undefined;
     reference?: string | undefined;
 };

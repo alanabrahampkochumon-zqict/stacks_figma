@@ -92,7 +92,6 @@ export function validateToken(
 ): boolean {
     if (!tokenValuesByMode) return false;
     const tokens = Object.values(tokenValuesByMode);
-
     switch (tokenType) {
         case "number":
         case "sizing":
@@ -202,4 +201,7 @@ export function createToken<K extends keyof ExtendedTokenMap>(
 /**
  * Comparator definition used by {@link TokenNode}.
  */
-export type TokenComparator = (a: TokenNode, b: TokenNode) => number;
+export type TokenComparator<K extends keyof ExtendedTokenMap> = (
+    a: TokenNode<K>,
+    b: TokenNode<K>,
+) => number;
