@@ -1,7 +1,7 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { TokenMismatchError } from "../error/TokenMismatchError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
-import type { TokenComparator } from "./Token";
+import type { ExtendedTokenMap, TokenComparator } from "./Token";
 import type { TokenNode } from "./TokenNode";
 import { TokenSet } from "./TokenSet";
 
@@ -11,10 +11,10 @@ import { TokenSet } from "./TokenSet";
  * @property {?boolean} sortToken                 Whether to re-sort the collection after the operation.
  * @property {?TokenComparator} compareFn         Custom sorting logic. Defaults to alphanumeric by name.
  */
-type DesignSystemAddOptions = {
+type DesignSystemAddOptions<K extends keyof ExtendedTokenMap> = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator;
+    compareFn?: TokenComparator<K>;
 };
 
 /**
@@ -23,10 +23,10 @@ type DesignSystemAddOptions = {
  * @property {?boolean} sortToken         Whether to re-sort the collection after the operation.
  * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type DesignSystemUpdateOptions = {
+type DesignSystemUpdateOptions<K extends keyof ExtendedTokenMap> = {
     updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator;
+    compareFn?: TokenComparator<K>;
 };
 
 /**
@@ -37,10 +37,10 @@ type DesignSystemUpdateOptions = {
  *                                      For example: `semantic/button.danger` -> `alias/danger.500`.
  * @property {TokenNode} primitiveToken The primitive token node.
  */
-type HydratedToken = {
+type HydratedToken<K extends keyof ExtendedTokenMap> = {
     recursivePath: string;
     relativePath: string;
-    primitiveToken: TokenNode;
+    primitiveToken: TokenNode<K>;
 };
 
 /**
@@ -69,7 +69,7 @@ export class DesignSystem {
     #tokenReferenceCache: Map<string, { tokenSet: TokenSet; token: TokenNode }>;
 
     /** @internal Caching store for reference dependency within the design system. */
-    #reverseTokenReferenceCache: Map<string, Set<TokenNode>>;
+    #reverseTokenReferenceCache: Map<string, Set<TokenNode<any>>>;
 
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.

@@ -1,7 +1,8 @@
 import { DuplicationError } from "../error/DuplicationError";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
-import type { ExtendedTokenTypes, Levels, TokenComparator } from "./Token";
+import type { Group } from "./Group";
+import type { ExtendedTokenMap, Levels, TokenComparator } from "./Token";
 import {
     EXTENDED_TOKENS,
     isValidExtendedToken,
@@ -17,10 +18,10 @@ import { createTokenNode, type TokenNode } from "./TokenNode";
  * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
  * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type TokenSetUpdateOptions = {
+type TokenSetUpdateOptions<K extends keyof ExtendedTokenMap> = {
     updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator;
+    compareFn?: TokenComparator<K>;
 };
 
 /**
@@ -29,10 +30,10 @@ type TokenSetUpdateOptions = {
  * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
  * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type TokenSetAddOptions = {
+type TokenSetAddOptions<K extends keyof ExtendedTokenMap> = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator;
+    compareFn?: TokenComparator<K>;
 };
 
 /**
@@ -41,17 +42,17 @@ type TokenSetAddOptions = {
  * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
  * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type TokenSetMergeOptions = {
+type TokenSetMergeOptions<K extends keyof ExtendedTokenMap> = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator;
+    compareFn?: TokenComparator<K>;
 };
 
 /**
  * The allowed schema types for a {@link TokenSet}.
  * Either a specific design token category or a structural 'group'.
  */
-type TokenSetType = ExtendedTokenTypes | "group";
+type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
 /**
  * A strictly-typed collection of {@link TokenNode}s.
  * @remarks
@@ -66,11 +67,11 @@ type TokenSetType = ExtendedTokenTypes | "group";
  * @property {Levels} level         The elevation/hierarchy level (1-4). @see {@link Levels}.
  * @property {TokenNode[]} tokens   The internal collection of nodes..
  */
-export class TokenSet {
+export class TokenSet<K extends keyof ExtendedTokenMap> {
     name: string;
     type: TokenSetType;
     level: Levels;
-    tokens: TokenNode[];
+    tokens: TokenNode<K>[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, string>;
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
@@ -91,7 +92,7 @@ export class TokenSet {
         name: string,
         type: TokenSetType = "number",
         level: Levels = 1,
-        tokens: TokenNode[] = [],
+        tokens: TokenNode<K>[] = [],
     ) {
         if (!name)
             throw new IllegalArgumentError(
@@ -168,12 +169,12 @@ export class TokenSet {
      * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
      */
     addToken(
-        token: TokenNode,
+        token: TokenNode<K>,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
             compareFn,
-        }: TokenSetAddOptions = {},
+        }: TokenSetAddOptions<K> = {},
     ) {
         this._validateToken([token], this.type);
         const tokenIndex = this.getTokenIndex(token.uid);
@@ -225,7 +226,7 @@ export class TokenSet {
      * Remove a token from the set.
      * @param {TokenNode} token The token node to remove.
      */
-    removeToken(token: TokenNode) {
+    removeToken(token: TokenNode<K>) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
@@ -242,12 +243,12 @@ export class TokenSet {
      */
     updateToken(
         tokenId: string,
-        newToken: TokenNode,
+        newToken: TokenNode<K>,
         {
             updatePolicy = UpdatePolicy.INSERT,
             sortToken = false,
             compareFn = undefined,
-        }: TokenSetUpdateOptions = {},
+        }: TokenSetUpdateOptions<K> = {},
     ) {
         this._validateToken([newToken], this.type);
 
@@ -305,7 +306,7 @@ export class TokenSet {
      *                                      case-insensitive alphanumeric sort (e.g., "red-10" comes before "red-20").
      */
     sort(
-        compareFn: TokenComparator = (a, b) =>
+        compareFn: TokenComparator<K> = (a, b) =>
             a.name.localeCompare(b.name, undefined, {
                 numeric: true, // Treat numerics inside string as numbers
                 sensitivity: "base",
@@ -325,12 +326,12 @@ export class TokenSet {
      * @throws {IllegalArgumentError} If architectural metadata (name/type/level) does not match.
      */
     mergeTokenSet(
-        tokenSet: TokenSet,
+        tokenSet: TokenSet<K>,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
             compareFn,
-        }: TokenSetMergeOptions = {},
+        }: TokenSetMergeOptions<K> = {},
     ) {
         if (
             this.name !== tokenSet.name ||
@@ -368,13 +369,15 @@ export class TokenSet {
      * @throws {SyntaxError} If the string is not valid JSON.
      * @throws {IllegalArgumentError} If the hydrated data fails level or type validation.
      */
-    static fromJson(jsonString: string): TokenSet {
+    static fromJson<K extends keyof ExtendedTokenMap>(
+        jsonString: string,
+    ): TokenSet<K> {
         const data = JSON.parse(jsonString);
         return new TokenSet(
             data?.name,
             data?.type,
             data?.level,
-            data?.tokens?.map((token: TokenNode) =>
+            data?.tokens?.map((token: TokenNode<K>) =>
                 createTokenNode(
                     token?.name,
                     token?.value,
@@ -397,9 +400,14 @@ export class TokenSet {
      *
      * @throws {IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
-    private _validateToken(tokens: TokenNode[], tokenType: TokenSetType) {
+    private _validateToken(tokens: TokenNode<K>[], tokenType: TokenSetType) {
         // Parent Token Type validation
-        if (!(tokenType === "group" || isValidExtendedToken(tokenType)))
+        if (
+            !(
+                tokenType === "group" ||
+                isValidExtendedToken(tokenType.toString())
+            )
+        )
             throw new IllegalArgumentError(
                 `Invalid token type: Type must be in ${EXTENDED_TOKENS}`,
             );
@@ -450,12 +458,13 @@ export class TokenSet {
      * @param {string} token The name to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    checkTokenUniqueness(token: TokenNode): boolean {
+    checkTokenUniqueness(token: TokenNode<K>): boolean {
         if (
             this.#tokenIDMap.has(token.name) &&
             this.#tokenIDMap.get(token.name) !== token.uid
         )
             return false;
+
         this.#tokenIDMap.set(token.name, token.uid);
         return true;
     }
@@ -469,7 +478,7 @@ export class TokenSet {
      * @param {TokenNode[]} tokens The set of tokens to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
+    checkAllTokenUniqueness(tokens: TokenNode<K>[]): boolean {
         for (const { name, uid } of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
             if (

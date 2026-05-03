@@ -42,6 +42,18 @@ export type TokenNode<K extends keyof ExtendedTokenMap> = {
     reference?: string | undefined;
 };
 
+// export function getGroup<K extends keyof ExtendedTokenMap>(
+//     value: Group | Token<K>,
+// ): Group | undefined {
+//     return value.entityType === "group" ? value : undefined;
+// }
+
+// export function getToken<K extends keyof ExtendedTokenMap>(
+//     value: Group | Token<K>,
+// ): Token<K> | undefined {
+//     return value.entityType === "token" ? value : undefined;
+// }
+
 /**
  * Factory to create and initialize a {@link TokenNode}.
  * @remarks
@@ -58,13 +70,13 @@ export type TokenNode<K extends keyof ExtendedTokenMap> = {
  * @throws {@link IllegalArgumentError}
  * Thrown if both `value` and `reference` are undefined, as the node would have no data.
  */
-export function createTokenNode(
+export function createTokenNode<K extends keyof ExtendedTokenMap>(
     name: string,
-    value: Group | Token | undefined,
+    value: Group | Token<K> | undefined,
     uid: string | undefined = undefined,
     parentId: string | undefined = undefined,
     reference: string | undefined = undefined,
-): TokenNode {
+): TokenNode<K> {
     if (!value && !reference)
         throw new IllegalArgumentError(
             "Both value and reference cannot be undefined.",
@@ -76,5 +88,5 @@ export function createTokenNode(
         value: reference ? undefined : value,
         reference: reference,
         parentId: parentId,
-    } as TokenNode;
+    } as TokenNode<K>;
 }
