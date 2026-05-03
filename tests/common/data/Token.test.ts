@@ -8,6 +8,7 @@ import {
     validLevels,
     type ExtendedTokenMap,
 } from "@src/common/data/Token";
+import { TypographyToken } from "@src/common/data/TypographyToken";
 import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
@@ -378,6 +379,51 @@ describe("Token Validator Tests", () => {
             input: { default: generateReferenceID() },
             expected: true,
             type: "color",
+        },
+        {
+            name: "typography: TypographyToken instance",
+            input: {
+                default: new TypographyToken(
+                    "Roboto",
+                    12,
+                    "Bold",
+                    1.5,
+                    -0.23,
+                    "LineThrough",
+                ),
+            },
+            expected: true,
+            type: "typography",
+        },
+        {
+            name: "typography: UIDReference",
+            input: { default: generateReferenceID() },
+            expected: true,
+            type: "typography",
+        },
+        {
+            name: "typography: number",
+            input: { default: 5 },
+            expected: false,
+            type: "typography",
+        },
+        {
+            name: "typography: string",
+            input: { default: "typography" },
+            expected: false,
+            type: "typography",
+        },
+        {
+            name: "typography: number",
+            input: { default: 5 },
+            expected: false,
+            type: "typography",
+        },
+        {
+            name: "typography: empty object",
+            input: { default: {} as TypographyToken },
+            expected: false,
+            type: "typography",
         },
         // TODO: Test other types like gradient, box-shadow, typography etc.
     ];

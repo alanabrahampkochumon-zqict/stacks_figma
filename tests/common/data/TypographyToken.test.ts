@@ -189,7 +189,7 @@ describe("Typography Validator", () => {
         },
     ];
 
-    test.only.each(testCases)("$name", ({ value, expected }: TestCase) => {
+    test.each(testCases)("$name", ({ value, expected }: TestCase) => {
         expect(TypographyToken.validate(value)).toStrictEqual(expected);
     });
 });

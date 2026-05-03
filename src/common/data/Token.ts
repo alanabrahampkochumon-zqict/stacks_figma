@@ -119,7 +119,12 @@ export function validateToken(
                     isReferenceID(token),
             );
         case "typography":
-        // TODO: V
+            return tokens.every(
+                (token) =>
+                    (token instanceof TypographyToken &&
+                        TypographyToken.validate(token)) ||
+                    isReferenceID(token),
+            );
         case "gradient":
         // TODO: Implementation
         case "boxShadow":
