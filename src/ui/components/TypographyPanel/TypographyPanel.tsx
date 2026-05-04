@@ -1,4 +1,4 @@
-import type { TokenNode } from "@src/common/data/TokenNode";
+import type { TokenNode_depr } from "@src/common/data/TokenNode";
 import type { TokenSet } from "@src/common/data/TokenSet";
 import { cn } from "@src/lib/utils";
 import { TYPE_PANGRAM } from "@src/ui/utils/Constants";
@@ -21,7 +21,7 @@ function TypographyPanel({
     if (tokenSet && tokenSet.type !== "typography")
         return <p>Invalid tokenset passed into typography panel.</p>;
     const [selectedTypeStyle, setselectedTypeStyle] = useState<
-        TokenNode | undefined
+        TokenNode_depr | undefined
     >(undefined);
 
     return (

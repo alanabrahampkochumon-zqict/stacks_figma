@@ -10,7 +10,7 @@ import {
     validateToken,
     validLevels,
 } from "./Token";
-import { createTokenNode, type TokenNode } from "./TokenNode";
+import { createTokenNode, type TokenNode_depr } from "./TokenNode";
 
 /**
  * Options for updating the contents of a {@link TokenSet}.
@@ -54,7 +54,7 @@ type TokenSetMergeOptions<K extends keyof ExtendedTokenMap> = {
  */
 type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
 /**
- * A strictly-typed collection of {@link TokenNode}s.
+ * A strictly-typed collection of {@link TokenNode_depr}s.
  * @remarks
  * **Invariants:**
  * - All nodes in a set must share the same `type`.
@@ -71,7 +71,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
     name: string;
     type: TokenSetType;
     level: Levels;
-    tokens: TokenNode<K>[];
+    tokens: TokenNode_depr<K>[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, string>;
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
@@ -83,7 +83,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
      * @param {string} name          Unique identifier for the set.
      * @param {TokenSetType} type    The expected type for all member tokens (Default: "number").
      * @param {Levels} level         The architectural level (Default: 1).
-     * @param {TokenNode[]} tokens   Initial members (validated upon construction).
+     * @param {TokenNode_depr[]} tokens   Initial members (validated upon construction).
      *
      * @throws {IllegalArgumentError} If name is empty or initial tokens fail type validation.
      * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
@@ -92,7 +92,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
         name: string,
         type: TokenSetType = "number",
         level: Levels = 1,
-        tokens: TokenNode<K>[] = [],
+        tokens: TokenNode_depr<K>[] = [],
     ) {
         if (!name)
             throw new IllegalArgumentError(
@@ -140,7 +140,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
      * Add the given mode to all the TokenNode instances that are "token" type.
      *
      * @param mode The mode to add.
-     * @remarks "group" {@link TokenNode} don't have a `valueByMode` and hence are **not considered**.
+     * @remarks "group" {@link TokenNode_depr} don't have a `valueByMode` and hence are **not considered**.
      *
      */
     #addModeToAllTokens(mode: string) {
@@ -162,14 +162,14 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
     /**
      * Add a node to the set while enforcing type consistency.
      *
-     * @param {TokenNode} token              The node to insert.
+     * @param {TokenNode_depr} token              The node to insert.
      * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
      */
     addToken(
-        token: TokenNode<K>,
+        token: TokenNode_depr<K>,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
@@ -224,9 +224,9 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
 
     /**
      * Remove a token from the set.
-     * @param {TokenNode} token The token node to remove.
+     * @param {TokenNode_depr} token The token node to remove.
      */
-    removeToken(token: TokenNode<K>) {
+    removeToken(token: TokenNode_depr<K>) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
@@ -236,14 +236,14 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
      * **Important:** If the token is not in the tokenset, it will added a per option.updatePolicy.
      *
      * @param {string} tokenId               The unique identifier of the token.
-     * @param {TokenNode} newToken           The token to update.
+     * @param {TokenNode_depr} newToken           The token to update.
      * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      */
     updateToken(
         tokenId: string,
-        newToken: TokenNode<K>,
+        newToken: TokenNode_depr<K>,
         {
             updatePolicy = UpdatePolicy.INSERT,
             sortToken = false,
@@ -377,7 +377,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
             data?.name,
             data?.type,
             data?.level,
-            data?.tokens?.map((token: TokenNode<K>) =>
+            data?.tokens?.map((token: TokenNode_depr<K>) =>
                 createTokenNode(
                     token?.name,
                     token?.value,
@@ -395,12 +395,15 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
      * Type must be the same among all the tokens and the parent token type.
      *
      * @private
-     * @param {TokenNode[]} tokens The tokens to validate.
+     * @param {TokenNode_depr[]} tokens The tokens to validate.
      * @param {TokenSetType} tokenType The parent token type to use for validation.
      *
      * @throws {IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
-    private _validateToken(tokens: TokenNode<K>[], tokenType: TokenSetType) {
+    private _validateToken(
+        tokens: TokenNode_depr<K>[],
+        tokenType: TokenSetType,
+    ) {
         // Parent Token Type validation
         if (
             !(
@@ -458,7 +461,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
      * @param {string} token The name to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    checkTokenUniqueness(token: TokenNode<K>): boolean {
+    checkTokenUniqueness(token: TokenNode_depr<K>): boolean {
         if (
             this.#tokenIDMap.has(token.name) &&
             this.#tokenIDMap.get(token.name) !== token.uid
@@ -475,10 +478,10 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
      * - A token is considered unique if it has the same name and ID.
      * - A token with same name but different ID will is not unique.
      *
-     * @param {TokenNode[]} tokens The set of tokens to validate.
+     * @param {TokenNode_depr[]} tokens The set of tokens to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    checkAllTokenUniqueness(tokens: TokenNode<K>[]): boolean {
+    checkAllTokenUniqueness(tokens: TokenNode_depr<K>[]): boolean {
         for (const { name, uid } of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
             if (

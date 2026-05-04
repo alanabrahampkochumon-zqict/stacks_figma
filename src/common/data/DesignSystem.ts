@@ -2,7 +2,7 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { TokenMismatchError } from "../error/TokenMismatchError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { ExtendedTokenMap, TokenComparator } from "./Token";
-import type { TokenNode } from "./TokenNode";
+import type { TokenNode_depr } from "./TokenNode";
 import { TokenSet } from "./TokenSet";
 
 /**
@@ -30,7 +30,7 @@ type DesignSystemUpdateOptions<K extends keyof ExtendedTokenMap> = {
 };
 
 /**
- * Token type returned after hydrating a reference {@link TokenNode}.
+ * Token type returned after hydrating a reference {@link TokenNode_depr}.
  * @property {string} recursivePath     The entire path that was traversed to get to the primitive.
  *                                      For example: `semantic/button.danger` -> `alias/primitives/red.600`.
  * @property {string} relativePath      The first path that was traversed to get to the primitive.
@@ -40,7 +40,7 @@ type DesignSystemUpdateOptions<K extends keyof ExtendedTokenMap> = {
 type HydratedToken<K extends keyof ExtendedTokenMap> = {
     recursivePath: string;
     relativePath: string;
-    primitiveToken: TokenNode<K>;
+    primitiveToken: TokenNode_depr<K>;
 };
 
 /**
@@ -66,10 +66,13 @@ export class DesignSystem {
     #groupCache: Map<string, string>;
 
     /** @internal Internal cache for reference tokens. */
-    #tokenReferenceCache: Map<string, { tokenSet: TokenSet; token: TokenNode }>;
+    #tokenReferenceCache: Map<
+        string,
+        { tokenSet: TokenSet; token: TokenNode_depr }
+    >;
 
     /** @internal Caching store for reference dependency within the design system. */
-    #reverseTokenReferenceCache: Map<string, Set<TokenNode<any>>>;
+    #reverseTokenReferenceCache: Map<string, Set<TokenNode_depr<any>>>;
 
     /**
      * @param name         Unique name identifier for the Design System. Must not be empty.
@@ -110,10 +113,10 @@ export class DesignSystem {
     }
 
     /**
-     * @interal Update the reverse reference token cache with the appropriate {@link TokenNode} entry.
+     * @interal Update the reverse reference token cache with the appropriate {@link TokenNode_depr} entry.
      * @param token The token to update the cache with.
      */
-    #updateReverseReferenceCache(token: TokenNode) {
+    #updateReverseReferenceCache(token: TokenNode_depr) {
         // If the token has a reference push it to the appropriate cache entry
         if (token.reference)
             if (this.#reverseTokenReferenceCache.has(token.reference))
@@ -121,7 +124,7 @@ export class DesignSystem {
                     .get(token.reference)
                     ?.add(token);
             else {
-                const cachedSet: Set<TokenNode> = new Set();
+                const cachedSet: Set<TokenNode_depr> = new Set();
                 cachedSet.add(token);
                 this.#reverseTokenReferenceCache.set(
                     token.reference,
@@ -185,7 +188,7 @@ export class DesignSystem {
      * @param referenceToken The `reference token` to hydate with value.
      * @throws {@link IllegalArgumentError} If the passed in token is a primitive (i.e, There is no reference identifier.)
      */
-    hydrateToken(referenceToken: TokenNode): HydratedToken {
+    hydrateToken(referenceToken: TokenNode_depr): HydratedToken {
         if (!referenceToken.reference)
             throw new IllegalArgumentError(
                 "Primitive token cannot be hydrated",
@@ -364,7 +367,7 @@ export class DesignSystem {
 
     /**
      * Serializes the entire Design System into a JSON string.
-     * Includes all nested {@link TokenSet} and {@link TokenNode} data.
+     * Includes all nested {@link TokenSet} and {@link TokenNode_depr} data.
      */
     toJson(): string {
         return JSON.stringify({
@@ -440,15 +443,15 @@ export class DesignSystem {
     }
 
     /**
-     * Unlinks any reference to a @see {@link TokenNode} and hydrates it with the corresponding primitive value.
+     * Unlinks any reference to a @see {@link TokenNode_depr} and hydrates it with the corresponding primitive value.
      *
      * @param token The token to unlink to a primitive.
      *
      * @return The same token with reference replaced with a value.
      */
-    unlinkToken(token: TokenNode): TokenNode {
+    unlinkToken(token: TokenNode_depr): TokenNode_depr {
         const visited = new Set(); // To prevent any circular dependency
-        let currentToken: TokenNode | undefined = token;
+        let currentToken: TokenNode_depr | undefined = token;
         while (!visited.has(currentToken) && currentToken?.reference) {
             visited.add(currentToken);
             currentToken = this.#tokenReferenceCache.get(

@@ -1,7 +1,7 @@
 import typia from "typia";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { isReferenceID, type ReferenceID } from "./ReferenceID";
-import type { TokenNode } from "./TokenNode";
+import type { TokenNode_depr } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
 /**
@@ -161,7 +161,7 @@ export function isValidLevel(level: number): boolean {
  * @remarks
  * **Important:** Do not instantiate this object manually.
  * Use the {@link createToken} factory function to ensure schema integrity.
- * @see {@link TokenNode} for the tree-structure representation.
+ * @see {@link TokenNode_depr} for the tree-structure representation.
  *
  * @property valueByMode Map of mode keys to their respective values. Example: {dark: "#111", light: "eee"}
  * @property type        The type of token. For details, see {@link ExtendedTokenTypes}
@@ -199,9 +199,9 @@ export function createToken<K extends keyof ExtendedTokenMap>(
 }
 
 /**
- * Comparator definition used by {@link TokenNode}.
+ * Comparator definition used by {@link TokenNode_depr}.
  */
 export type TokenComparator<K extends keyof ExtendedTokenMap> = (
-    a: TokenNode<K>,
-    b: TokenNode<K>,
+    a: TokenNode_depr<K>,
+    b: TokenNode_depr<K>,
 ) => number;

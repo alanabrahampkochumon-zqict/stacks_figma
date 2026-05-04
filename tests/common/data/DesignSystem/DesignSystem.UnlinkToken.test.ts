@@ -1,5 +1,5 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
-import type { TokenNode } from "@src/common/data/TokenNode";
+import type { TokenNode_depr } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
@@ -23,21 +23,21 @@ describe("Design System: Unlink Token", () => {
             undefined,
             undefined,
         );
-        const level2Token: TokenNode = {
+        const level2Token: TokenNode_depr = {
             ...primitiveToken,
             name: v4(),
             uid: v4(),
             reference: primitiveToken.uid,
             value: undefined,
         };
-        const level3Token: TokenNode = {
+        const level3Token: TokenNode_depr = {
             ...level2Token,
             name: v4(),
             uid: v4(),
             reference: level2Token.uid,
             value: undefined,
         };
-        const level4Token: TokenNode = {
+        const level4Token: TokenNode_depr = {
             ...level3Token,
             name: v4(),
             uid: v4(),

@@ -34,7 +34,49 @@ import type { ExtendedTokenMap, Token } from "./Token";
  *     reference: "uuid-123"
  * };
  */
-export type TokenNode<K extends keyof ExtendedTokenMap> = {
+/**
+ * Base node for defining properties that a Node must have.
+ */
+type BasicNode = {
+    name: string;
+    uid: string;
+};
+
+/**
+ * Node representing Group/Folder.
+ */
+type GroupNode = {
+    entityType: "group";
+    expanded: boolean;
+} & BasicNode;
+
+/**
+ * Node representing a Concrete Token.
+ */
+type ValueNode<K extends keyof ExtendedTokenMap> = {
+    entityType: "token";
+    type: K;
+    valueByMode: Record<string, ExtendedTokenMap[K]>;
+} & BasicNode;
+
+/**
+ * Node representing a Reference Token
+ */
+type ReferenceNode = {
+    entityType: "reference";
+    referenceId: string;
+    value: unknown;
+} & BasicNode;
+
+/**
+ * Unified TokenNode type.
+ */
+export type TokenNode<K extends keyof ExtendedTokenMap> =
+    | GroupNode
+    | ValueNode<K>
+    | ReferenceNode;
+
+export type TokenNode_depr<K extends keyof ExtendedTokenMap> = {
     name: string;
     uid: string;
     value?: Group | Token<K> | undefined;
@@ -55,7 +97,7 @@ export type TokenNode<K extends keyof ExtendedTokenMap> = {
 // }
 
 /**
- * Factory to create and initialize a {@link TokenNode}.
+ * Factory to create and initialize a {@link TokenNode_depr}.
  * @remarks
  * **Priority Logic:** If both `value` and `reference` are provided, `reference` takes
  * precedence and the resulting node's `value` will be set to `undefined`.
@@ -76,7 +118,7 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
     uid: string | undefined = undefined,
     parentId: string | undefined = undefined,
     reference: string | undefined = undefined,
-): TokenNode<K> {
+): TokenNode_depr<K> {
     if (!value && !reference)
         throw new IllegalArgumentError(
             "Both value and reference cannot be undefined.",
@@ -88,5 +130,42 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
         value: reference ? undefined : value,
         reference: reference,
         parentId: parentId,
-    } as TokenNode<K>;
+    } as TokenNode_depr<K>;
+}
+
+//TODO: Add tests
+export function createValueNode<K extends keyof ExtendedTokenMap>(
+    name: string,
+    valueByMode: Record<string, ExtendedTokenMap[K]>,
+    uid: string | undefined,
+): ValueNode<K> {
+    return {
+        name,
+        uid: uid || uuidv4(),
+        valueByMode: valueByMode,
+    } as ValueNode<K>;
+}
+
+export function createGroupNode(
+    name: string,
+    expanded: boolean = false,
+    uid: string | undefined,
+): GroupNode {
+    return {
+        name,
+        expanded,
+        uid,
+    } as GroupNode;
+}
+
+export function createReferenceNode(
+    name: string,
+    referenceId: string,
+    uid: string | undefined,
+): ReferenceNode {
+    return {
+        name,
+        uid,
+        referenceId,
+    } as ReferenceNode;
 }

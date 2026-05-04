@@ -3,7 +3,10 @@ import {
     type ExtendedTokenTypes,
     type Levels,
 } from "@src/common/data/Token";
-import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
+import {
+    createTokenNode,
+    type TokenNode_depr,
+} from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { generateTokenNode } from "../utils/Generators";
@@ -46,7 +49,7 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode[] = [];
+        const tokens: TokenNode_depr[] = [];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // Then, the object contains the correct name and empty tokens
@@ -62,7 +65,7 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode[] = [1, 2, 3].map(() =>
+        const tokens: TokenNode_depr[] = [1, 2, 3].map(() =>
             generateTokenNode(undefined, "token", tokenType),
         );
         if (tokens[2].value?.entityType === "token")
@@ -124,7 +127,7 @@ describe("TokenSet Intialization Tests", () => {
 
         const { colorTokens, numberTokens } = setUpTokens();
 
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             ...colorTokens.slice(0, 3),
             ...numberTokens.slice(0, 3),
         ];
@@ -150,7 +153,7 @@ describe("TokenSet Intialization Tests", () => {
         const name = "TokenSet";
         const tokenType: ExtendedTokenTypes = "number";
         const level = 1;
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             createTokenNode(
                 "color-50",
                 createToken({ default: "#ffffff" }, tokenType),

@@ -1,4 +1,4 @@
-import type { TokenNode } from "@src/common/data/TokenNode";
+import type { TokenNode_depr } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { generateTokenNode } from "../utils/Generators";
@@ -10,7 +10,7 @@ describe("TokenSet: Remove Mode", () => {
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             generateTokenNode(
                 undefined,
                 "token",
@@ -42,7 +42,7 @@ describe("TokenSet: Remove Mode", () => {
         const type = "number";
         const level = 1;
         const modes = ["default"];
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             generateTokenNode(
                 undefined,
                 "token",
@@ -66,7 +66,7 @@ describe("TokenSet: Remove Mode", () => {
         const type = "number";
         const level = 1;
         const modes = ["default"];
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             generateTokenNode(
                 undefined,
                 "token",

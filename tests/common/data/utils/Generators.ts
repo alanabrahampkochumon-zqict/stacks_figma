@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import type { Group } from "@src/common/data/Group";
 import type { ExtendedTokenTypes, Token } from "@src/common/data/Token";
-import type { TokenNode } from "@src/common/data/TokenNode";
+import type { TokenNode_depr } from "@src/common/data/TokenNode";
 import { v4 } from "uuid";
 
 function _generateTokenByType(
@@ -64,7 +64,7 @@ export function generateGroup(): Group {
 // }
 
 /**
- * Generates a @see TokenNode for testing.
+ * Generates a @see TokenNode_depr for testing.
  *
  * @export
  * @param {(string | undefined)} [name=undefined] The name of the generated token node.
@@ -80,7 +80,7 @@ export function generateGroup(): Group {
  * @param {boolean} [reference=false] A flag, whether to have a reference.
  *                                    <p>Note: Setting a flag will make value undefined.</p>
  * @param {(string[] | undefined)} [modes=undefined] The modes to use for generating @see Token. Not applicable for @see Group.
- * @returns {[TokenNode, json]} The generated token node and its string representation.
+ * @returns {[TokenNode_depr, json]} The generated token node and its string representation.
  */
 export function generateTokenNode(
     name: string | undefined = undefined,
@@ -90,7 +90,7 @@ export function generateTokenNode(
     parentId: string | undefined = undefined,
     reference: string | undefined = undefined,
     modes: string[] | undefined = undefined,
-): TokenNode {
+): TokenNode_depr {
     const tokenName = name || v4();
     const tokenId = uid || v4();
     const tokenReference = reference ? reference : undefined;

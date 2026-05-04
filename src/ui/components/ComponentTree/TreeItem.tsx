@@ -2,13 +2,13 @@ import AlignLeftIcon from "@src/assets/icons/align-left.svg?react";
 import ChevronRightIcon from "@src/assets/icons/chevron-right.svg?react";
 import HashTagIcon from "@src/assets/icons/hashtag.svg?react";
 import ToggleIcon from "@src/assets/icons/toggle.svg?react";
-import type { TokenNode } from "@src/common/data/TokenNode";
+import type { TokenNode_depr } from "@src/common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes, JSX } from "react";
 import styles from "./TreeItem.module.scss";
 
 type TreeItemProps = {
-    item: TokenNode;
+    item: TokenNode_depr;
 } & HTMLAttributes<HTMLLIElement>;
 
 function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
@@ -36,7 +36,7 @@ function TreeItem({ item, className, children: _, ...props }: TreeItemProps) {
     );
 }
 
-function getTreeItem({ name, value }: TokenNode): JSX.Element | undefined {
+function getTreeItem({ name, value }: TokenNode_depr): JSX.Element | undefined {
     if (value?.entityType === "token") {
         switch (value.type) {
             case "string":

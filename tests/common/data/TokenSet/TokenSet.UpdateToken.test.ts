@@ -1,6 +1,9 @@
 import { UpdatePolicy } from "@src/common/data/Common";
 import { createToken } from "@src/common/data/Token";
-import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
+import {
+    createTokenNode,
+    type TokenNode_depr,
+} from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { generateTokenNode } from "../utils/Generators";
@@ -12,7 +15,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode[] = [];
+        const tokens: TokenNode_depr[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to insert
@@ -43,7 +46,7 @@ describe("TokenSet Update Tests", () => {
             undefined,
             [modes[0]],
         );
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             generateTokenNode(
                 undefined,
                 "token",
@@ -101,7 +104,7 @@ describe("TokenSet Update Tests", () => {
             secondToken.reference,
             modes,
         );
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             generateTokenNode(
                 undefined,
                 "token",
@@ -139,7 +142,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode[] = [];
+        const tokens: TokenNode_depr[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to ignore
@@ -160,11 +163,11 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             createTokenNode("25", createToken({ default: 5 }, type), "1"),
             createTokenNode("75", createToken({ default: 15 }, type), "2"),
         ];
-        const expectedTokens: TokenNode[] = [
+        const expectedTokens: TokenNode_depr[] = [
             createTokenNode("25", createToken({ default: 5 }, type), "1"),
             createTokenNode("75", createToken({ default: 15 }, type), "2"),
             createTokenNode("50", createToken({ default: 10 }, type), "3"),
@@ -190,11 +193,11 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             createTokenNode("25", createToken({ default: 5 }, type), "1"),
             createTokenNode("75", createToken({ default: 15 }, type), "2"),
         ];
-        const expectedTokens: TokenNode[] = [
+        const expectedTokens: TokenNode_depr[] = [
             createTokenNode("25", createToken({ default: 5 }, type), "1"),
             createTokenNode("75", createToken({ default: 15 }, type), "2"),
         ];
@@ -239,7 +242,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const initialToken: TokenNode[] = [
+        const initialToken: TokenNode_depr[] = [
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
@@ -256,7 +259,7 @@ describe("TokenSet Update Tests", () => {
                 "3",
             ),
         ];
-        const sortedTokens: TokenNode[] = [
+        const sortedTokens: TokenNode_depr[] = [
             createTokenNode(
                 "size-0",
                 createToken({ default: 0 }, tokenType),
@@ -296,7 +299,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const initialToken: TokenNode[] = [
+        const initialToken: TokenNode_depr[] = [
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
@@ -313,7 +316,7 @@ describe("TokenSet Update Tests", () => {
                 "3",
             ),
         ];
-        const sortedTokens: TokenNode[] = [
+        const sortedTokens: TokenNode_depr[] = [
             createTokenNode(
                 "size-50",
                 createToken({ default: 5 }, tokenType),
@@ -362,7 +365,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode[] = [];
+        const tokens: TokenNode_depr[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated(upserted)
@@ -381,7 +384,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
@@ -410,7 +413,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode[] = [
+        const tokens: TokenNode_depr[] = [
             createTokenNode(
                 "size-100",
                 createToken({ default: 10 }, tokenType),
@@ -435,7 +438,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const initialToken: TokenNode[] = [];
+        const initialToken: TokenNode_depr[] = [];
         const token1 = createTokenNode(
             "size-50",
             createToken({ default: 5 }, tokenType),
@@ -447,7 +450,7 @@ describe("TokenSet Update Tests", () => {
             "2",
         );
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
-        const sortedTokens: TokenNode[] = [
+        const sortedTokens: TokenNode_depr[] = [
             createTokenNode(
                 "size-0",
                 createToken({ default: 0 }, tokenType),
@@ -473,7 +476,7 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const initialToken: TokenNode[] = [
+        const initialToken: TokenNode_depr[] = [
             createTokenNode(
                 "size-100",
                 createToken({ default: 100 }, tokenType),
@@ -490,7 +493,7 @@ describe("TokenSet Update Tests", () => {
                 "3",
             ),
         ];
-        const sortedTokens: TokenNode[] = [
+        const sortedTokens: TokenNode_depr[] = [
             createTokenNode(
                 "size-50",
                 createToken({ default: 0 }, tokenType),
