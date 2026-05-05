@@ -1,19 +1,39 @@
-import typia from "typia";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { isReferenceID } from "./ReferenceID";
 import type { TokenNode_depr } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
-/**
- * Basic Design System token categories.
- *
- * @category Constants
- */
-
 // TODO: Add getGroupName
 // TODO: Add getTokenValue/getTokenValueByMode helpers
 
 /**
+ * Basic Design System token categories.
+ * @category Constants
+ */
+export const BasicTokens = {
+    number: "number",
+    string: "string",
+    boolean: "boolean",
+    color: "color",
+} as const;
+
+/**
+ * Complete list of supported Design System token categories, including effects.
+ * @category Constants
+ */
+export const ExtendedTokens = {
+    ...BasicTokens,
+    typography: "typography",
+    sizing: "sizing",
+    spacing: "spacing",
+    animation: "animation",
+    cornerRadius: "cornerRadius",
+    boxShadow: "boxShadow",
+    gradient: "gradient",
+} as const;
+
+/**
+ * @deprecated Remove
  * Primitive token types used for validationa and node classfication.
  */
 export type BasicTokenMap = {
@@ -22,17 +42,6 @@ export type BasicTokenMap = {
     boolean: boolean;
     color: string;
 };
-/**
- * List of basic token types.
- * @category Constants
- */
-export const BASIC_TOKENS = {
-    number: "number",
-    string: "string",
-    boolean: "boolean",
-    color: "color",
-} as const;
-
 /**
  * @deprecated Remove
  * Union type of all supported token categories and their respective value types.
@@ -49,27 +58,6 @@ export type ExtendedTokenMap = BasicTokenMap & {
 };
 
 /**
- * Complete list of supported token categories, including effects.
- * @category Constants
- */
-export const EXTENDED_TOKENS = {
-    ...BASIC_TOKENS,
-    typography: "typography",
-    sizing: "sizing",
-    spacing: "spacing",
-    animation: "animation",
-    cornerRadius: "cornerRadius",
-    boxShadow: "boxShadow",
-    gradient: "gradient",
-} as const;
-
-/**
- * Union type of all supported token categories.
- * Used for validation and node classification.
- */
-// export type ExtendedTokenTypes = (typeof extendedTokens)[number];
-
-/**
  * Validator to check if a string is a member of {@link ExtendedTokenTypes}.
  */
 // export function isValidExtendedToken(token: string): boolean {
@@ -78,7 +66,8 @@ export const EXTENDED_TOKENS = {
 export function isValidExtendedToken(input: string): boolean {
     // TODO: Update to use extended token
     // TODO: Add/update test
-    return typia.createIs<keyof ExtendedTokenMap>()(input);
+    return input in ExtendedTokens;
+    // return typia.createIs<keyof ExtendedTokenMap>()(input);
 }
 
 /**
@@ -90,16 +79,16 @@ export function isValidExtendedToken(input: string): boolean {
  * @returns True if all values satisfy the type requirements, else False.
  */
 export function validateToken(
-    tokenValuesByMode: Record<keyof typeof EXTENDED_TOKENS, any>,
-    tokenType: keyof typeof EXTENDED_TOKENS,
+    tokenValuesByMode: Record<keyof typeof ExtendedTokens, any>,
+    tokenType: keyof typeof ExtendedTokens,
 ): boolean {
     if (!tokenValuesByMode) return false;
     const tokens = Object.values(tokenValuesByMode);
     switch (tokenType) {
-        case EXTENDED_TOKENS.number:
-        case EXTENDED_TOKENS.sizing:
-        case EXTENDED_TOKENS.spacing:
-        case EXTENDED_TOKENS.cornerRadius:
+        case ExtendedTokens.number:
+        case ExtendedTokens.sizing:
+        case ExtendedTokens.spacing:
+        case ExtendedTokens.cornerRadius:
             return tokens.every(
                 (token) => typeof token === "number" || isReferenceID(token),
             );

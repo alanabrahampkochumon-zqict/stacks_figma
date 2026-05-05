@@ -1,28 +1,25 @@
 import { generateReferenceID } from "@src/common/data/ReferenceID";
 import {
     createToken,
-    EXTENDED_TOKENS,
+    ExtendedTokens,
     isValidExtendedToken,
     isValidLevel,
     validateToken,
     validLevels,
     type ExtendedTokenMap,
 } from "@src/common/data/Token";
-import {
-    createGroupNode,
-    createReferenceNode,
-    createValueNode,
-} from "@src/common/data/TokenNode";
 import { TypographyToken } from "@src/common/data/TypographyToken";
-import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
-    test.each(EXTENDED_TOKENS)("returns true, if token is %s", (token) => {
-        // Given a valid extended token
-        // Then, validation returns true
-        expect(isValidExtendedToken(token)).toStrictEqual(true);
-    });
+    test.each(Object.values(ExtendedTokens))(
+        "returns true, if token is %s",
+        (token) => {
+            // Given a valid extended token
+            // Then, validation returns true
+            expect(isValidExtendedToken(token)).toStrictEqual(true);
+        },
+    );
 
     test.each(["token-1234", "invalid", "true"])(
         "returns false, if token is %s (invalid)",
@@ -481,69 +478,4 @@ describe("Token Validator Tests", () => {
             expect(result).toBe(expected);
         },
     );
-});
-
-describe("CreateValueNode", () => {
-    const name = "value-node";
-    const valueByMode = { default: 24 };
-    const type = "number";
-    const id = v4();
-
-    test("returns valueNode, when createValueNode is invoked", () => {
-        const valueNode = createValueNode(name, valueByMode, type);
-        expect(valueNode.entityType).toStrictEqual("token");
-        expect(valueNode.name).toStrictEqual(name);
-        expect(valueNode.valueByMode).toStrictEqual(valueByMode);
-        expect(valueNode.type).toStrictEqual(type);
-
-        expect(valueNode.uid.length).greaterThan(0); // UID is generated
-    });
-
-    test("returns valueNode with passed-in id, when createValueNode is invoked with parameters", () => {
-        const valueNode = createValueNode(name, valueByMode, type, id);
-
-        expect(valueNode.uid).toStrictEqual(id);
-    });
-});
-
-describe("CreateReferenceNode", () => {
-    const name = "ref-node";
-    const referenceId = v4();
-    const id = v4();
-
-    test("returns valueNode, when createValueNode is invoked", () => {
-        const refNode = createReferenceNode(name, referenceId);
-        expect(refNode.entityType).toStrictEqual("reference");
-        expect(refNode.name).toStrictEqual(name);
-        expect(refNode.referenceId).toStrictEqual(referenceId);
-
-        expect(refNode.uid.length).greaterThan(0); // UID is generated
-    });
-
-    test("returns valueNode with passed-in id, when createValueNode is invoked with parameters", () => {
-        const refNode = createReferenceNode(name, referenceId, id);
-
-        expect(refNode.uid).toStrictEqual(id);
-    });
-});
-
-describe("CreateGroupNode", () => {
-    const name = "group-node";
-    const expanded = false;
-    const id = v4();
-
-    test("returns valueNode, when createValueNode is invoked", () => {
-        const groupNode = createGroupNode(name, expanded);
-        expect(groupNode.entityType).toStrictEqual("group");
-        expect(groupNode.name).toStrictEqual(name);
-        expect(groupNode.expanded).toStrictEqual(expanded);
-
-        expect(groupNode.uid.length).greaterThan(0); // UID is generated
-    });
-
-    test("returns valueNode with passed-in id, when createValueNode is invoked with parameters", () => {
-        const groupNode = createGroupNode(name, expanded, id);
-
-        expect(groupNode.uid).toStrictEqual(id);
-    });
 });

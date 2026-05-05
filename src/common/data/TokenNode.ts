@@ -98,6 +98,7 @@ export type TokenNode_depr<K extends keyof ExtendedTokenMap> = {
 
 /**
  * Factory to create and initialize a {@link TokenNode_depr}.
+ * @deprecated
  * @remarks
  * **Priority Logic:** If both `value` and `reference` are provided, `reference` takes
  * precedence and the resulting node's `value` will be set to `undefined`.
@@ -134,7 +135,7 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
 }
 
 /**
- * Construct a { @link ValueNode }.
+ * Construct a {@link ValueToken}.
  *
  * @param name        The human readable name of the node.
  * @param valueByMode The key value pair of values that token holds. E.g: {dark: "#ffffff"}
@@ -143,7 +144,7 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
  *                    other than ones provided in {@link ExtendedTokenMap} is not recommended.
  * @param uid         The unique identifier of the node.
  *
- * @returns A { @see ValueToken } with the passed-in paramters.
+ * @returns A {@link ValueToken} created with the passed-in paramters.
  */
 export function createValueNode<K extends keyof ExtendedTokenMap>(
     name: string,
@@ -161,13 +162,13 @@ export function createValueNode<K extends keyof ExtendedTokenMap>(
 }
 
 /**
- * Construct a { @link GroupNode }.
+ * Construct a {@link GroupNode}.
  *
  * @param name     The human readable name of the node.
  * @param expanded The state of the GroupNode, whether its expanded or not.
  * @param uid      The unique identifier of the node.
  *
- * @returns A { @see GroupNode } with the passed-in paramters.
+ * @returns A {@link GroupNode} created with the passed-in paramters.
  */
 export function createGroupNode(
     name: string,
@@ -183,14 +184,14 @@ export function createGroupNode(
 }
 
 /**
- * Construct a { @link ReferenceNode }.
+ * Construct a {@link ReferenceNode}.
  *
  * @param name        The human readable name of the node.
  * @param referenceId The unique identifier of the {@link ReferenceNode}, {@link ValueNode}, or {@link GroupNode} that this
  *                    node is aliasing.
  * @param uid         The unique identifier of the node.
  *
- * @returns A { @see GroupNode } with the passed-in paramters.
+ * @returns A {@link ReferenceNode} created with the passed-in paramters.
  */
 export function createReferenceNode(
     name: string,
