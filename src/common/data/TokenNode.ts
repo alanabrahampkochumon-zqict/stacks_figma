@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4, v4 } from "uuid";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import type { Group } from "./Group";
 import { type ExtendedTokenMap, type Token } from "./Token";
@@ -195,11 +195,11 @@ export function createGroupNode(
 export function createReferenceNode(
     name: string,
     referenceId: string,
-    uid: string | undefined,
+    uid?: string | undefined,
 ): ReferenceNode {
     return {
         name,
-        uid,
+        uid: uid || v4(),
         referenceId,
         entityType: "reference",
     } as ReferenceNode;
