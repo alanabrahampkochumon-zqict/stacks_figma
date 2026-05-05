@@ -136,12 +136,12 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
 /**
  * Construct a { @link ValueNode }.
  *
- * @param name        The name of the value token.
+ * @param name        The human readable name of the node.
  * @param valueByMode The key value pair of values that token holds. E.g: {dark: "#ffffff"}
  * @param type        The type of token.
  *                    Although explicit constraints are not applied, using a type (string value)
  *                    other than ones provided in {@link ExtendedTokenMap} is not recommended.
- * @param uid         The unique identifier of the token.
+ * @param uid         The unique identifier of the node.
  *
  * @returns A { @see ValueToken } with the passed-in paramters.
  */
@@ -163,11 +163,9 @@ export function createValueNode<K extends keyof ExtendedTokenMap>(
 /**
  * Construct a { @link GroupNode }.
  *
- * @param name     The name of the group token.
+ * @param name     The human readable name of the node.
  * @param expanded The state of the GroupNode, whether its expanded or not.
- *                 Although explicit constraints are not applied, using a type (string value)
- *                 other than ones provided in {@link ExtendedTokenMap} is not recommended.
- * @param uid      The unique identifier of the token.
+ * @param uid      The unique identifier of the node.
  *
  * @returns A { @see GroupNode } with the passed-in paramters.
  */
@@ -184,6 +182,16 @@ export function createGroupNode(
     } as GroupNode;
 }
 
+/**
+ * Construct a { @link ReferenceNode }.
+ *
+ * @param name        The human readable name of the node.
+ * @param referenceId The unique identifier of the {@link ReferenceNode}, {@link ValueNode}, or {@link GroupNode} that this
+ *                    node is aliasing.
+ * @param uid         The unique identifier of the node.
+ *
+ * @returns A { @see GroupNode } with the passed-in paramters.
+ */
 export function createReferenceNode(
     name: string,
     referenceId: string,
