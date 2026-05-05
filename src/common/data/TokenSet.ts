@@ -10,13 +10,17 @@ import {
     validateToken,
     validLevels,
 } from "./Token";
-import { createTokenNode, type TokenNode_depr } from "./TokenNode";
+import {
+    createTokenNode,
+    type TokenNode,
+    type TokenNode_depr,
+} from "./TokenNode";
 
 /**
  * Options for updating the contents of a {@link TokenSet}.
- * @property {?UpdatePolicy} updatePolicy Policy to handle conflicts if a token does not exist.
- * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
- * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ * @property updatePolicy Policy to handle conflicts if a token does not exist.
+ * @property sortToken Whether to re-sort the collection after the operation.
+ * @property compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
 type TokenSetUpdateOptions<K extends keyof ExtendedTokenMap> = {
     updatePolicy?: UpdatePolicy;
@@ -26,9 +30,9 @@ type TokenSetUpdateOptions<K extends keyof ExtendedTokenMap> = {
 
 /**
  * Options for adding contents to a {@link TokenSet}.
- * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
- * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
- * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ * @property insertPolicy Policy to handle conflicts if a token with the same UID exists.
+ * @property sortToken Whether to re-sort the collection after the operation.
+ * @property compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
 type TokenSetAddOptions<K extends keyof ExtendedTokenMap> = {
     insertPolicy?: InsertConflictPolicy;
@@ -38,9 +42,9 @@ type TokenSetAddOptions<K extends keyof ExtendedTokenMap> = {
 
 /**
  * Options for merging contents of a {@link TokenSet} with another.
- * @property {?InsertConflictPolicy} insertPolicy Policy to handle conflicts if a token with the same UID exists.
- * @property {?boolean} sortToken Whether to re-sort the collection after the operation.
- * @property {?TokenComparator} compareFn Custom sorting logic. Defaults to alphanumeric by name.
+ * @property insertPolicy Policy to handle conflicts if a token with the same UID exists.
+ * @property sortToken Whether to re-sort the collection after the operation.
+ * @property compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
 type TokenSetMergeOptions<K extends keyof ExtendedTokenMap> = {
     insertPolicy?: InsertConflictPolicy;
@@ -67,11 +71,11 @@ type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
  * @property {Levels} level         The elevation/hierarchy level (1-4). @see {@link Levels}.
  * @property {TokenNode[]} tokens   The internal collection of nodes..
  */
-export class TokenSet<K extends keyof ExtendedTokenMap> {
+export class TokenSet<K extends keyof typeof ExtendedToken> {
     name: string;
     type: TokenSetType;
     level: Levels;
-    tokens: TokenNode_depr<K>[];
+    tokens: TokenNode<K>[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, string>;
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
@@ -80,10 +84,10 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
     #modes: Set<string>;
 
     /**
-     * @param {string} name          Unique identifier for the set.
-     * @param {TokenSetType} type    The expected type for all member tokens (Default: "number").
-     * @param {Levels} level         The architectural level (Default: 1).
-     * @param {TokenNode_depr[]} tokens   Initial members (validated upon construction).
+     * @param name   Unique identifier for the set.
+     * @param type   The expected type for all member tokens (Default: "number").
+     * @param level  The architectural level (Default: 1).
+     * @param tokens Initial members (validated upon construction).
      *
      * @throws {IllegalArgumentError} If name is empty or initial tokens fail type validation.
      * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
@@ -92,7 +96,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
         name: string,
         type: TokenSetType = "number",
         level: Levels = 1,
-        tokens: TokenNode_depr<K>[] = [],
+        tokens: TokenNode<K>[] = [],
     ) {
         if (!name)
             throw new IllegalArgumentError(

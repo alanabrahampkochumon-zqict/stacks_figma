@@ -1,10 +1,7 @@
 import { InsertConflictPolicy } from "@src/common/data/Common";
 import { createGroup } from "@src/common/data/Group";
-import { createToken } from "@src/common/data/Token";
-import {
-    createTokenNode,
-    type TokenNode_depr,
-} from "@src/common/data/TokenNode";
+import { createToken, ExtendedToken } from "@src/common/data/Token";
+import { createTokenNode, type TokenNode } from "@src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { generateTokenNode } from "../utils/Generators";
@@ -17,13 +14,13 @@ describe("TokenSet Add Tests", () => {
     test("token gets added, when a valid token is passed in", () => {
         // Given a empty token set
         const name = "TokenSet";
-        const type = "number";
+        const type = ExtendedToken.number;
         const level = 1;
-        const tokens: TokenNode_depr[] = [];
+        const tokens: TokenNode<typeof type>[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const validToken = createTokenNode(
+        const validToken = generateTokenNode(
             "50",
             createToken({ default: 10 }, type),
         );
@@ -39,7 +36,7 @@ describe("TokenSet Add Tests", () => {
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const tokens: TokenNode_depr[] = [
+        const tokens: TokenNode[] = [
             generateTokenNode(
                 undefined,
                 "token",
@@ -82,7 +79,7 @@ describe("TokenSet Add Tests", () => {
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const tokens: TokenNode_depr[] = [
+        const tokens: TokenNode[] = [
             generateTokenNode(
                 undefined,
                 "token",
@@ -127,7 +124,7 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const type = "group";
         const level = 1;
-        const tokens: TokenNode_depr[] = [];
+        const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a group is added
@@ -349,7 +346,7 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode_depr[] = [];
+        const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added

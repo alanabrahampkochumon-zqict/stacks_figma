@@ -1,5 +1,6 @@
 /**
  * Represents a logical container or folder used to categorize and nest Design Tokens.
+ * @deprecated
  * @remarks
  * Groups do not hold values directly; they provide structure and UI state (expansion)
  * for the token tree. Use this in conjunction with {@link TokenNode} to build

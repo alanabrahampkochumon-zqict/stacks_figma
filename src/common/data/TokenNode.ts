@@ -26,7 +26,7 @@ type GroupNode<K extends keyof typeof ExtendedToken> = {
 type ValueNode<K extends keyof typeof ExtendedToken> = {
     entityType: "token";
     type: K;
-    valueByMode: Record<string, any>;
+    valueByMode: Record<string, any>; // TODO: Add type safety
 } & BasicNode;
 
 /**
