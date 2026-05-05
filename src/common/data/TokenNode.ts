@@ -134,15 +134,16 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
 }
 
 /**
- * Factory function for creating a { @link ValueNode }
+ * Construct a { @link ValueNode }.
  *
  * @param name        The name of the value token.
  * @param valueByMode The key value pair of values that token holds. E.g: {dark: "#ffffff"}
  * @param type        The type of token.
- *                    Although explicit constraints are not applied, using a type other than ones provided in {@link ExtendedTokenMap} is not recommended.
+ *                    Although explicit constraints are not applied, using a type (string value)
+ *                    other than ones provided in {@link ExtendedTokenMap} is not recommended.
  * @param uid         The unique identifier of the token.
  *
- * @returns A { @see ValueToken } with the given value.
+ * @returns A { @see ValueToken } with the passed-in paramters.
  */
 export function createValueNode<K extends keyof ExtendedTokenMap>(
     name: string,
@@ -159,10 +160,21 @@ export function createValueNode<K extends keyof ExtendedTokenMap>(
     } as ValueNode<K>;
 }
 
+/**
+ * Construct a { @link GroupNode }.
+ *
+ * @param name     The name of the group token.
+ * @param expanded The state of the GroupNode, whether its expanded or not.
+ *                 Although explicit constraints are not applied, using a type (string value)
+ *                 other than ones provided in {@link ExtendedTokenMap} is not recommended.
+ * @param uid      The unique identifier of the token.
+ *
+ * @returns A { @see GroupNode } with the passed-in paramters.
+ */
 export function createGroupNode(
     name: string,
     expanded: boolean = false,
-    uid: string | undefined,
+    uid?: string | undefined,
 ): GroupNode {
     return {
         name,
