@@ -9,6 +9,7 @@ import {
     type ExtendedTokenMap,
 } from "@src/common/data/Token";
 import {
+    createGroupNode,
     createReferenceNode,
     createValueNode,
 } from "@src/common/data/TokenNode";
@@ -523,5 +524,26 @@ describe("CreateReferenceNode", () => {
         const refNode = createReferenceNode(name, referenceId, id);
 
         expect(refNode.uid).toStrictEqual(id);
+    });
+});
+
+describe("CreateGroupNode", () => {
+    const name = "group-node";
+    const expanded = false;
+    const id = v4();
+
+    test("returns valueNode, when createValueNode is invoked", () => {
+        const groupNode = createGroupNode(name, expanded);
+        expect(groupNode.entityType).toStrictEqual("group");
+        expect(groupNode.name).toStrictEqual(name);
+        expect(groupNode.expanded).toStrictEqual(expanded);
+
+        expect(groupNode.uid.length).greaterThan(0); // UID is generated
+    });
+
+    test("returns valueNode with passed-in id, when createValueNode is invoked with parameters", () => {
+        const groupNode = createGroupNode(name, expanded, id);
+
+        expect(groupNode.uid).toStrictEqual(id);
     });
 });

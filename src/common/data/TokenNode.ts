@@ -177,7 +177,7 @@ export function createGroupNode(
     return {
         name,
         expanded,
-        uid,
+        uid: uid || v4(),
         entityType: "group",
     } as GroupNode;
 }
