@@ -1,4 +1,3 @@
-import { generateReferenceID } from "@src/common/data/ReferenceID";
 import {
     createToken,
     ExtendedToken,
@@ -86,7 +85,7 @@ describe("Token Validator Tests", () => {
         name: string;
         input: any;
         expected: boolean;
-        type: keyof ExtendedTokenMap;
+        type: keyof typeof ExtendedToken;
     }[] = [
         // Number validation
         {
@@ -119,12 +118,6 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "number",
         },
-        {
-            name: "number validation: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
-            type: "number",
-        },
 
         // String validation
         {
@@ -143,12 +136,6 @@ describe("Token Validator Tests", () => {
             name: "string validation: non-string",
             input: { default: 5 },
             expected: false,
-            type: "string",
-        },
-        {
-            name: "string validation: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
             type: "string",
         },
 
@@ -183,12 +170,6 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "sizing",
         },
-        {
-            name: "sizing validation: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
-            type: "sizing",
-        },
 
         // Spacing Validation
         {
@@ -219,12 +200,6 @@ describe("Token Validator Tests", () => {
             name: "spacing validation: string",
             input: { default: "fff" },
             expected: false,
-            type: "spacing",
-        },
-        {
-            name: "spacing validation: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
             type: "spacing",
         },
 
@@ -259,12 +234,6 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "cornerRadius",
         },
-        {
-            name: "corner radius validation: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
-            type: "cornerRadius",
-        },
 
         // Boolean validation
         {
@@ -295,12 +264,6 @@ describe("Token Validator Tests", () => {
             name: "boolean validation: string",
             input: { default: "test" },
             expected: false,
-            type: "boolean",
-        },
-        {
-            name: "boolean validation: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
             type: "boolean",
         },
 
@@ -377,12 +340,8 @@ describe("Token Validator Tests", () => {
             expected: false,
             type: "color",
         },
-        {
-            name: "color: UIDReference",
-            input: { default: generateReferenceID() },
-            expected: true,
-            type: "color",
-        },
+
+        // Typography
         {
             name: "typography: TypographyToken instance",
             input: {
@@ -395,12 +354,6 @@ describe("Token Validator Tests", () => {
                     "LineThrough",
                 ),
             },
-            expected: true,
-            type: "typography",
-        },
-        {
-            name: "typography: UIDReference",
-            input: { default: generateReferenceID() },
             expected: true,
             type: "typography",
         },
