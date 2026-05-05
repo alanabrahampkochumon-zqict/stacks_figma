@@ -1,20 +1,20 @@
 import { v4 as uuidv4, v4 } from "uuid";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import type { Group } from "./Group";
-import { type ExtendedTokenMap, type Token } from "./Token";
+import { type ExtendedTokenMap, type Token_depr } from "./Token";
 
 /**
  * The atomic unit of the Design System tree.
  * Represents either a functional token or a structural group.
  * @remarks
  * A `TokenNode` can exist in two states:
- * 1. **Concrete**: Holds a {@link Group} or {@link Token} in the `value` property.
+ * 1. **Concrete**: Holds a {@link Group} or {@link Token_depr} in the `value` property.
  * 2. **Alias/Reference**: Points to another node via `reference` (UID), in which case `value` is `undefined`.
  *
  * @property {string} name                      Semantic name of the node (e.g., "spacing.medium").
  * @property {string} uid                       Unique identifier. Recommended to use the auto-generated UUID.
  * @property {?(Group|Token|undefined)} value   The payload of the node.
- *                                              @see {@link Group} | {@link Token}
+ *                                              @see {@link Group} | {@link Token_depr}
  * @property {?(string|undefined)} parentId     UID of the containing {@link Group}. `undefined` for root-level nodes.
  * @property {?(string|undefined)} reference    UID of the target node if this node acts as a reference/alias.
  *
@@ -79,7 +79,7 @@ export type TokenNode<K extends keyof ExtendedTokenMap> =
 export type TokenNode_depr<K extends keyof ExtendedTokenMap> = {
     name: string;
     uid: string;
-    value?: Group | Token<K> | undefined;
+    value?: Group | Token_depr<K> | undefined;
     parentId?: string | undefined;
     reference?: string | undefined;
 };
@@ -103,7 +103,7 @@ export type TokenNode_depr<K extends keyof ExtendedTokenMap> = {
  * precedence and the resulting node's `value` will be set to `undefined`.
  *
  * @param name        The semantic identifier for the node.
- * @param value       The {@link Group} or {@link Token} data. Optional if `reference` is provided.
+ * @param value       The {@link Group} or {@link Token_depr} data. Optional if `reference` is provided.
  * @param uid         Manual UID override. If omitted, a v4 UUID is generated.
  * @param parentId    UID of the parent group.
  * @param reference   UID of the target node for aliasing.
@@ -114,7 +114,7 @@ export type TokenNode_depr<K extends keyof ExtendedTokenMap> = {
  */
 export function createTokenNode<K extends keyof ExtendedTokenMap>(
     name: string,
-    value: Group | Token<K> | undefined,
+    value: Group | Token_depr<K> | undefined,
     uid: string | undefined = undefined,
     parentId: string | undefined = undefined,
     reference: string | undefined = undefined,

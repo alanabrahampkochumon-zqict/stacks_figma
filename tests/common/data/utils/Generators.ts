@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import type { Group } from "@src/common/data/Group";
-import type { ExtendedTokenTypes, Token } from "@src/common/data/Token";
+import type { ExtendedTokenTypes, Token_depr } from "@src/common/data/Token";
 import type { TokenNode_depr } from "@src/common/data/TokenNode";
 import { v4 } from "uuid";
 
@@ -32,7 +32,7 @@ function _generateTokenByType(
 export function generateToken(
     type: ExtendedTokenTypes,
     modes: string[] = ["default"],
-): Token {
+): Token_depr {
     return {
         type: type,
         valueByMode: Object.fromEntries(
@@ -79,7 +79,7 @@ export function generateGroup(): Group {
  *                                                    Generates a parent with 50% RNG by default.
  * @param {boolean} [reference=false] A flag, whether to have a reference.
  *                                    <p>Note: Setting a flag will make value undefined.</p>
- * @param {(string[] | undefined)} [modes=undefined] The modes to use for generating @see Token. Not applicable for @see Group.
+ * @param {(string[] | undefined)} [modes=undefined] The modes to use for generating @see Token_depr. Not applicable for @see Group.
  * @returns {[TokenNode_depr, json]} The generated token node and its string representation.
  */
 export function generateTokenNode(

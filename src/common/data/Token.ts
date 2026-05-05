@@ -26,14 +26,15 @@ export type BasicTokenMap = {
  * List of basic token types.
  * @category Constants
  */
-export const BASIC_TOKENS: (keyof BasicTokenMap)[] = [
-    "number",
-    "string",
-    "boolean",
-    "color",
-] as const;
+export const BASIC_TOKENS = {
+    number: "number",
+    string: "string",
+    boolean: "boolean",
+    color: "color",
+} as const;
 
 /**
+ * @deprecated Remove
  * Union type of all supported token categories and their respective value types.
  * Used for validation and node classification.
  */
@@ -51,16 +52,16 @@ export type ExtendedTokenMap = BasicTokenMap & {
  * Complete list of supported token categories, including effects.
  * @category Constants
  */
-export const EXTENDED_TOKENS: (keyof ExtendedTokenMap)[] = [
+export const EXTENDED_TOKENS = {
     ...BASIC_TOKENS,
-    "typography",
-    "sizing",
-    "spacing",
-    "animation",
-    "cornerRadius",
-    "boxShadow",
-    "gradient",
-] as const;
+    typography: "typography",
+    sizing: "sizing",
+    spacing: "spacing",
+    animation: "animation",
+    cornerRadius: "cornerRadius",
+    boxShadow: "boxShadow",
+    gradient: "gradient",
+} as const;
 
 /**
  * Union type of all supported token categories.
@@ -75,28 +76,30 @@ export const EXTENDED_TOKENS: (keyof ExtendedTokenMap)[] = [
 //     return (extendedTokens as readonly string[]).includes(token);
 // }
 export function isValidExtendedToken(input: string): boolean {
+    // TODO: Update to use extended token
+    // TODO: Add/update test
     return typia.createIs<keyof ExtendedTokenMap>()(input);
 }
 
 /**
  * Validate the underlying values of a token against its schema definition.
  *
- * @param {Record<string, any>} tokenValuesByMode  Map of mode keys to their respective values.
- * @param {ExtendedTokenTypes} tokenType           The schema to validate against (e.g., "color" checks hex strings).
+ * @param tokenValuesByMode Map of mode keys to their respective values.
+ * @param tokenType         The schema to validate against (e.g., "color" checks hex strings).
  *
- * @returns {boolean} `true` if all values satisfy the type requirements.
+ * @returns True if all values satisfy the type requirements, else False.
  */
 export function validateToken(
-    tokenValuesByMode: Record<string, any>,
-    tokenType: keyof ExtendedTokenMap,
+    tokenValuesByMode: Record<keyof typeof EXTENDED_TOKENS, any>,
+    tokenType: keyof typeof EXTENDED_TOKENS,
 ): boolean {
     if (!tokenValuesByMode) return false;
     const tokens = Object.values(tokenValuesByMode);
     switch (tokenType) {
-        case "number":
-        case "sizing":
-        case "spacing":
-        case "cornerRadius":
+        case EXTENDED_TOKENS.number:
+        case EXTENDED_TOKENS.sizing:
+        case EXTENDED_TOKENS.spacing:
+        case EXTENDED_TOKENS.cornerRadius:
             return tokens.every(
                 (token) => typeof token === "number" || isReferenceID(token),
             );
@@ -158,6 +161,8 @@ export function isValidLevel(level: number): boolean {
 
 /**
  * Represents a single Design System Token entry.
+ * @deprecated in favor of {@link ValueNode}, {@link GroupNode}, and {@link ReferenceNode}
+ *
  * @remarks
  * **Important:** Do not instantiate this object manually.
  * Use the {@link createToken} factory function to ensure schema integrity.
@@ -167,15 +172,15 @@ export function isValidLevel(level: number): boolean {
  * @property type        The type of token. For details, see {@link ExtendedTokenTypes}
  * @property entityType  Internal discriminator used to identify this as a token.
  */
-export type Token<K extends keyof ExtendedTokenMap> = {
+export type Token_depr<K extends keyof ExtendedTokenMap> = {
     type: K;
     valueByMode: Record<string, ExtendedTokenMap[K]>;
     entityType: "token";
 };
 
 /**
- * Initialize a validated {@link Token}.
- *
+ * Initialize a validated {@link Token_depr}.
+ * @deprecated Remove
  * @param valueByMode The key-value pair of mode and value, e.g., {default: "#fff", dark: "#222"}.
  * @param type        The type of token. @see {@link BasicTokenMap} and {@link ExtendedTokenMap}.
  *
@@ -186,7 +191,7 @@ export type Token<K extends keyof ExtendedTokenMap> = {
 export function createToken<K extends keyof ExtendedTokenMap>(
     type: K,
     valueByMode: Record<string, ExtendedTokenMap[K]>,
-): Token<K> {
+): Token_depr<K> {
     if (!valueByMode || !Object.values(valueByMode).length)
         throw new IllegalArgumentError("Token must have atleast one value");
     if (!isValidExtendedToken(type))
