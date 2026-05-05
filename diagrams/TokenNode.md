@@ -1,3 +1,5 @@
+# TokenNode Diagram
+
 ```mermaid
 classDiagram
 class Token {
@@ -10,12 +12,14 @@ Token <|-- ValueToken
 class ValueToken {
     + valueByMode: Record<string, ExtendedTokenType>
     + entityType: "token"
+    + type: ExtendedTokenType
 }
 
 Token<|-- GroupToken
 
 class GroupToken {
     + expanded: boolean
+    + children: List<ValueNode|ReferenceNode|TokenNode>
     + entityType: "group"
 }
 
@@ -25,7 +29,12 @@ class ReferenceToken {
     + entityType: "reference"
 }
 
+```
 
+# Tokenset
+
+```mermaid
+classDiagram
 class TokenSet {
     - tokens: List<Token>
     - name: string
