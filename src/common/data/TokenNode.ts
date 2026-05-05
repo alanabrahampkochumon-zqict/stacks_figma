@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import type { Group } from "./Group";
-import type { ExtendedTokenMap, Token } from "./Token";
+import { type ExtendedTokenMap, type Token } from "./Token";
 
 /**
  * The atomic unit of the Design System tree.
@@ -138,11 +138,14 @@ export function createValueNode<K extends keyof ExtendedTokenMap>(
     name: string,
     valueByMode: Record<string, ExtendedTokenMap[K]>,
     uid: string | undefined,
+    type: K,
 ): ValueNode<K> {
     return {
         name,
         uid: uid || uuidv4(),
         valueByMode: valueByMode,
+        entityType: "token",
+        type: type,
     } as ValueNode<K>;
 }
 
@@ -155,6 +158,7 @@ export function createGroupNode(
         name,
         expanded,
         uid,
+        entityType: "group",
     } as GroupNode;
 }
 
@@ -167,5 +171,6 @@ export function createReferenceNode(
         name,
         uid,
         referenceId,
+        entityType: "reference",
     } as ReferenceNode;
 }

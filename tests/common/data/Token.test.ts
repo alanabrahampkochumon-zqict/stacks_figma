@@ -8,7 +8,9 @@ import {
     validLevels,
     type ExtendedTokenMap,
 } from "@src/common/data/Token";
+import { createValueNode } from "@src/common/data/TokenNode";
 import { TypographyToken } from "@src/common/data/TypographyToken";
+import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
@@ -475,4 +477,27 @@ describe("Token Validator Tests", () => {
             expect(result).toBe(expected);
         },
     );
+});
+
+describe("CreateValueNode", () => {
+    const name = "value-node";
+    const valueByMode = { default: 24 };
+    const type = "number";
+    const id = v4();
+
+    test("returns valueNode, when createValueNode is invoked", () => {
+        const valueNode = createValueNode(name, valueByMode, undefined, type);
+        expect(valueNode.entityType).toStrictEqual("token");
+        expect(valueNode.name).toStrictEqual(name);
+        expect(valueNode.valueByMode).toStrictEqual(valueByMode);
+        expect(valueNode.type).toStrictEqual(type);
+
+        expect(valueNode.uid.length).greaterThan(0); // UID is generated
+    });
+
+    test("returns valueNode with passed-in id, when createValueNode is invoked with parameters", () => {
+        const valueNode = createValueNode(name, valueByMode, id, type);
+
+        expect(valueNode.uid).toStrictEqual(id);
+    });
 });
