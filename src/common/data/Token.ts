@@ -1,6 +1,6 @@
 import typia from "typia";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { isReferenceID, type ReferenceID } from "./ReferenceID";
+import { isReferenceID } from "./ReferenceID";
 import type { TokenNode_depr } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
@@ -17,10 +17,10 @@ import { TypographyToken } from "./TypographyToken";
  * Primitive token types used for validationa and node classfication.
  */
 export type BasicTokenMap = {
-    number: number | ReferenceID;
-    string: string | ReferenceID;
-    boolean: boolean | ReferenceID;
-    color: string | ReferenceID;
+    number: number;
+    string: string;
+    boolean: boolean;
+    color: string;
 };
 /**
  * List of basic token types.
@@ -38,13 +38,13 @@ export const BASIC_TOKENS: (keyof BasicTokenMap)[] = [
  * Used for validation and node classification.
  */
 export type ExtendedTokenMap = BasicTokenMap & {
-    typography: TypographyToken | ReferenceID;
-    sizing: number | ReferenceID;
-    spacing: number | ReferenceID;
-    animation: any | ReferenceID; // TODO: Update to use a specific class
-    cornerRadius: number | ReferenceID;
-    boxShadow: any | ReferenceID; // TODO: Update to use a specific class
-    gradient: any | ReferenceID; // TODO: Update to use a specific class
+    typography: TypographyToken;
+    sizing: number;
+    spacing: number;
+    cornerRadius: number;
+    animation: any; // TODO: Update to use a specific class
+    boxShadow: any; // TODO: Update to use a specific class
+    gradient: any; // TODO: Update to use a specific class
 };
 
 /**
