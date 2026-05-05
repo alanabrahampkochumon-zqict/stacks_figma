@@ -133,12 +133,22 @@ export function createTokenNode<K extends keyof ExtendedTokenMap>(
     } as TokenNode_depr<K>;
 }
 
-//TODO: Add tests
+/**
+ * Factory function for creating a { @link ValueNode }
+ *
+ * @param name        The name of the value token.
+ * @param valueByMode The key value pair of values that token holds. E.g: {dark: "#ffffff"}
+ * @param type        The type of token.
+ *                    Although explicit constraints are not applied, using a type other than ones provided in {@link ExtendedTokenMap} is not recommended.
+ * @param uid         The unique identifier of the token.
+ *
+ * @returns A { @see ValueToken } with the given value.
+ */
 export function createValueNode<K extends keyof ExtendedTokenMap>(
     name: string,
     valueByMode: Record<string, ExtendedTokenMap[K]>,
-    uid: string | undefined,
     type: K,
+    uid?: string | undefined,
 ): ValueNode<K> {
     return {
         name,

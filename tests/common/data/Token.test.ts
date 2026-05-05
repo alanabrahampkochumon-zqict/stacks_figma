@@ -486,7 +486,7 @@ describe("CreateValueNode", () => {
     const id = v4();
 
     test("returns valueNode, when createValueNode is invoked", () => {
-        const valueNode = createValueNode(name, valueByMode, undefined, type);
+        const valueNode = createValueNode(name, valueByMode, type);
         expect(valueNode.entityType).toStrictEqual("token");
         expect(valueNode.name).toStrictEqual(name);
         expect(valueNode.valueByMode).toStrictEqual(valueByMode);
@@ -496,7 +496,7 @@ describe("CreateValueNode", () => {
     });
 
     test("returns valueNode with passed-in id, when createValueNode is invoked with parameters", () => {
-        const valueNode = createValueNode(name, valueByMode, id, type);
+        const valueNode = createValueNode(name, valueByMode, type, id);
 
         expect(valueNode.uid).toStrictEqual(id);
     });
