@@ -1,5 +1,4 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { isReferenceID } from "./ReferenceID";
 import type { TokenNode_depr } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
@@ -10,7 +9,7 @@ import { TypographyToken } from "./TypographyToken";
  * Basic Design System token categories.
  * @category Constants
  */
-export const BasicTokens = {
+export const BasicToken = {
     number: "number",
     string: "string",
     boolean: "boolean",
@@ -21,8 +20,8 @@ export const BasicTokens = {
  * Complete list of supported Design System token categories, including effects.
  * @category Constants
  */
-export const ExtendedTokens = {
-    ...BasicTokens,
+export const ExtendedToken = {
+    ...BasicToken,
     typography: "typography",
     sizing: "sizing",
     spacing: "spacing",
@@ -58,16 +57,13 @@ export type ExtendedTokenMap = BasicTokenMap & {
 };
 
 /**
- * Validator to check if a string is a member of {@link ExtendedTokenTypes}.
+ * Validate if an input is a member of {@link ExtendedToken}.
+ * @param input The string to validate.
+ *
+ * @returns True if input is an {@link ExtendedToken}
  */
-// export function isValidExtendedToken(token: string): boolean {
-//     return (extendedTokens as readonly string[]).includes(token);
-// }
 export function isValidExtendedToken(input: string): boolean {
-    // TODO: Update to use extended token
-    // TODO: Add/update test
-    return input in ExtendedTokens;
-    // return typia.createIs<keyof ExtendedTokenMap>()(input);
+    return input in ExtendedToken;
 }
 
 /**
@@ -79,48 +75,39 @@ export function isValidExtendedToken(input: string): boolean {
  * @returns True if all values satisfy the type requirements, else False.
  */
 export function validateToken(
-    tokenValuesByMode: Record<keyof typeof ExtendedTokens, any>,
-    tokenType: keyof typeof ExtendedTokens,
+    tokenValuesByMode: Record<keyof typeof ExtendedToken, any>,
+    tokenType: keyof typeof ExtendedToken,
 ): boolean {
     if (!tokenValuesByMode) return false;
     const tokens = Object.values(tokenValuesByMode);
     switch (tokenType) {
-        case ExtendedTokens.number:
-        case ExtendedTokens.sizing:
-        case ExtendedTokens.spacing:
-        case ExtendedTokens.cornerRadius:
-            return tokens.every(
-                (token) => typeof token === "number" || isReferenceID(token),
-            );
-        case "string":
-            return tokens.every(
-                (token) => typeof token === "string" || isReferenceID(token),
-            );
-        case "boolean":
-            return tokens.every(
-                (token) => typeof token === "boolean" || isReferenceID(token),
-            );
-        case "color":
+        case ExtendedToken.number:
+        case ExtendedToken.sizing:
+        case ExtendedToken.spacing:
+        case ExtendedToken.cornerRadius:
+            return tokens.every((token) => typeof token === "number");
+        case ExtendedToken.string:
+            return tokens.every((token) => typeof token === "string");
+        case ExtendedToken.boolean:
+            return tokens.every((token) => typeof token === "boolean");
+        case ExtendedToken.color:
             return tokens.every(
                 (token) =>
-                    (typeof token === "string" &&
-                        !!token.match(
-                            /^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i,
-                        )?.length) ||
-                    isReferenceID(token),
+                    typeof token === "string" &&
+                    !!token.match(/^#([A-F0-9]{3,4}|[A-F0-9]{6}|[A-F0-9]{8})$/i)
+                        ?.length,
             );
-        case "typography":
+        case ExtendedToken.typography:
             return tokens.every(
                 (token) =>
-                    (token instanceof TypographyToken &&
-                        TypographyToken.validate(token)) ||
-                    isReferenceID(token),
+                    token instanceof TypographyToken &&
+                    TypographyToken.validate(token),
             );
-        case "gradient":
+        case ExtendedToken.gradient:
         // TODO: Implementation
-        case "boxShadow":
+        case ExtendedToken.boxShadow:
         // TODO: Implementation
-        case "animation":
+        case ExtendedToken.animation:
         // TODO: Implementation
     }
     return false;

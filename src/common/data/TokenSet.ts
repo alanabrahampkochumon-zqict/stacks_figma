@@ -4,7 +4,7 @@ import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { Group } from "./Group";
 import type { ExtendedTokenMap, Levels, TokenComparator } from "./Token";
 import {
-    ExtendedTokens,
+    ExtendedToken,
     isValidExtendedToken,
     isValidLevel,
     validateToken,
@@ -412,7 +412,7 @@ export class TokenSet<K extends keyof ExtendedTokenMap> {
             )
         )
             throw new IllegalArgumentError(
-                `Invalid token type: Type must be in ${ExtendedTokens}`,
+                `Invalid token type: Type must be in ${ExtendedToken}`,
             );
 
         // Token Type validation

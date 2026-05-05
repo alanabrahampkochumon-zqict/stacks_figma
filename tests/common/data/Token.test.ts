@@ -1,7 +1,7 @@
 import { generateReferenceID } from "@src/common/data/ReferenceID";
 import {
     createToken,
-    ExtendedTokens,
+    ExtendedToken,
     isValidExtendedToken,
     isValidLevel,
     validateToken,
@@ -12,7 +12,7 @@ import { TypographyToken } from "@src/common/data/TypographyToken";
 import { describe, expect, test } from "vitest";
 
 describe("TokenType Validator Tests", () => {
-    test.each(Object.values(ExtendedTokens))(
+    test.each(Object.values(ExtendedToken))(
         "returns true, if token is %s",
         (token) => {
             // Given a valid extended token
