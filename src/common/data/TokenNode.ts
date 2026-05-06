@@ -52,7 +52,7 @@ export type TokenNode<K extends keyof typeof ExtendedToken> =
 /**
  * Construct a {@link ValueToken}.
  *
- * @param name        The human readable name of the node.
+ * @param name        The human-readable name of the node.
  * @param valueByMode The key value pair of values that token holds. E.g: {dark: "#ffffff"}
  * @param type        The type of token.
  *                    Although explicit constraints are not applied, using a type (string value)
@@ -79,7 +79,7 @@ export function createValueNode<K extends keyof ExtendedTokenMap>(
 /**
  * Construct a {@link GroupNode}.
  *
- * @param name     The human readable name of the node.
+ * @param name     The human-readable name of the node.
  * @param expanded The state of the GroupNode, whether its expanded or not.
  * @param uid      The unique identifier of the node.
  *
@@ -101,7 +101,7 @@ export function createGroupNode<K extends keyof typeof ExtendedToken>(
 /**
  * Construct a {@link ReferenceNode}.
  *
- * @param name        The human readable name of the node.
+ * @param name        The human-readable name of the node.
  * @param referenceId The unique identifier of the {@link ReferenceNode}, {@link ValueNode}, or
  *                    {@link GroupNode} that this node is aliasing.
  * @param uid         The unique identifier of the node.

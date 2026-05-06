@@ -62,14 +62,14 @@ type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
  * @remarks
  * **Invariants:**
  * - All nodes in a set must share the same `type`.
- * - A set cannot mix {@link Group} nodes and {@link Token} nodes.
+ * - A set cannot mix {@link Group} nodes and {@link TokenNode} nodes.
  * - Names within a set should be unique.
  * @category Core
  *
  * @property {string} name          The unique name identifying this collection.
  * @property {TokenSetType} type    The mandatory schema for all members of this set.
  * @property {Levels} level         The elevation/hierarchy level (1-4). @see {@link Levels}.
- * @property {TokenNode[]} tokens   The internal collection of nodes..
+ * @property {TokenNode[]} tokens   The internal collection of nodes.
  */
 export class TokenSet<K extends keyof typeof ExtendedToken> {
     name: string;
