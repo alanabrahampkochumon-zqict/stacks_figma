@@ -90,8 +90,8 @@ export function createValueNode<K extends keyof typeof ExtendedToken>(
 export function createGroupNode<K extends keyof typeof ExtendedToken>(
     name: string,
     expanded: boolean = false,
-    uid?: string | undefined,
-    children?: TokenNode<K>[]
+    children?: TokenNode<K>[],
+    uid?: string | undefined
 ): GroupNode<K> {
     return {
         name,

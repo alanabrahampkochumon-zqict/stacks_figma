@@ -66,13 +66,13 @@ describe("createGroupNode", () => {
     });
 
     test("returns GroupNode with passed-in id, when createValueNode is invoked with parameters", () => {
-        const groupNode = createGroupNode(name, expanded, id);
+        const groupNode = createGroupNode(name, expanded, [], id);
 
         expect(groupNode.uid).toStrictEqual(id);
     });
 
     test("returns GroupNode with empty array for default children, when no value is passed-in for children", () => {
-        const groupNode = createGroupNode(name, expanded, id);
+        const groupNode = createGroupNode(name, expanded, [], id);
 
         expect(groupNode.children.length).toStrictEqual(0);
     });
@@ -83,7 +83,7 @@ describe("createGroupNode", () => {
             createReferenceNode("child1", "1234"),
             createValueNode("child1", {dark: "#fff"}, "color"),
         ]
-        const groupNode = createGroupNode(name, expanded, id, children);
+        const groupNode = createGroupNode(name, expanded, children, id);
 
 
         expect(groupNode.children).toStrictEqual(children);
@@ -107,7 +107,7 @@ describe("addToGroup", () => {
     })
 
     test("adds to group, non-duplicate token in a non-empty group", () => {
-        const group = createGroupNode("group1", false, undefined, [child1, child2])
+        const group = createGroupNode("group1", false, [child1, child2])
         // When a child is added to a non-empty group
         addToGroup(group, child3)
 
@@ -117,12 +117,23 @@ describe("addToGroup", () => {
     })
 
     test("does not add to group, a duplicate token", () => {
-        const group = createGroupNode("group1", false, undefined, [child1, child2, child3])
+        const group = createGroupNode("group1", false, [child1, child2, child3])
         // When a duplicate child is added to a non-empty group
         const initialSize = group.children.length
         addToGroup(group, child3)
 
         // Then, it does not get added
         expect(group.children.length).toStrictEqual(initialSize)
+    })
+})
+
+describe("removeFromGroup", () => {
+    const children: TokenNode<"color">[] = [
+        createGroupNode("child1", false),
+        createReferenceNode("child1", "1234"),
+        createValueNode("child1", {dark: "#fff"}, "color"),
+    ]
+    test("removes token from group, given a valid token", () => {
+        // const groupNode
     })
 })
