@@ -1,4 +1,5 @@
 import {
+    addToGroup,
     createGroupNode,
     createReferenceNode,
     createValueNode, type TokenNode,
@@ -90,17 +91,38 @@ describe("createGroupNode", () => {
 });
 
 describe("addToGroup", () => {
+    const child1 =
+        createGroupNode("child1", false)
+    const child2 =
+        createReferenceNode("child1", "1234")
+    const child3 = createValueNode("child1", {dark: "#fff"}, "color")
 
     test("adds to group, non-duplicate token in an empty group", () => {
         const group = createGroupNode("group1", false)
+        // When a child is added to an empty group
+        addToGroup(group, child1)
+
+        // Then, it gets added to the group
+        expect(group.children).toContain(child1)
     })
 
     test("adds to group, non-duplicate token in a non-empty group", () => {
+        const group = createGroupNode("group1", false, undefined, [child1, child2])
+        // When a child is added to a non-empty group
+        addToGroup(group, child3)
 
+        // Then, it gets added to the group
+        expect(group.children).toContain(child3)
 
     })
 
     test("does not add to group, a duplicate token", () => {
+        const group = createGroupNode("group1", false, undefined, [child1, child2, child3])
+        // When a duplicate child is added to a non-empty group
+        const initialSize = group.children.length
+        addToGroup(group, child3)
 
+        // Then, it does not get added
+        expect(group.children.length).toStrictEqual(initialSize)
     })
 })
