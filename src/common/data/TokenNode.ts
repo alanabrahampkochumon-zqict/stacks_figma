@@ -17,7 +17,7 @@ type BasicNode = {
 type GroupNode<K extends keyof typeof ExtendedToken> = {
     entityType: "group";
     expanded: boolean;
-    children: (GroupNode<K> | ValueNode<K> | ReferenceNode<K>)[];
+    children: TokenNode<K>[];
 } & BasicNode;
 
 /**
@@ -122,6 +122,7 @@ export function createReferenceNode<K extends keyof typeof ExtendedToken>(
     } as ReferenceNode<K>;
 }
 
+
 /**
  * Add a {@link TokenNode} to a group.
  *
@@ -129,7 +130,9 @@ export function createReferenceNode<K extends keyof typeof ExtendedToken>(
  * @param value The token to add.
  */
 export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
-    group.children = [...group.children, value]
+    // Only adds the token if it doesn't already exist in the group.
+    if(getIndex(group, value) === -1)
+        group.children = [...group.children, value]
 }
 
 
@@ -141,7 +144,7 @@ export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNod
  *
  * @returns The removed {@link TokenNode} or null if it does not exist.
  */
-export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
+export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>): TokenNode<K> | null {
     // Store the initial size of the group to ensure that the token exists
     const initialSize = group.children.length
     group.children = group.children.filter(node => node != value)
@@ -150,6 +153,21 @@ export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: Gro
     // and hence we return a null to indicate nothing was removed.
     return group.children.length === initialSize ? null: value
 }
+
+/**
+ * Return the index of a given {@link TokenNode} in a group.
+ *
+ * @param group The group to search in.
+ * @param value The token to search.
+ *
+ * @returns The index of the token if it exists, else -1.
+ */
+export function getIndex<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
+    return group.children.findIndex(node => node == value)
+}
+
+
+
 
 //////////////////////DEPRECATED////////////////////
 /**
