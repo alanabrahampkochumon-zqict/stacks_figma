@@ -81,8 +81,9 @@ export function createValueNode<K extends keyof typeof ExtendedToken>(
  * Construct a {@link GroupNode}.
  *
  * @param name     The human-readable name of the node.
- * @param expanded The state of the GroupNode, whether its expanded or not.
+ * @param expanded The state of the GroupNode, whether it's expanded or not.
  * @param uid      The unique identifier of the node.
+ * @param children The child nodes of the current group.
  *
  * @returns A {@link GroupNode} created with the passed-in paramters.
  */
@@ -90,12 +91,14 @@ export function createGroupNode<K extends keyof typeof ExtendedToken>(
     name: string,
     expanded: boolean = false,
     uid?: string | undefined,
+    children?: TokenNode<K>[]
 ): GroupNode<K> {
     return {
         name,
         expanded,
         uid: uid || v4(),
         entityType: "group",
+        children: children || []
     } as GroupNode<K>;
 }
 
@@ -107,7 +110,7 @@ export function createGroupNode<K extends keyof typeof ExtendedToken>(
  *                    {@link GroupNode} that this node is aliasing.
  * @param uid         The unique identifier of the node.
  *
- * @returns A {@link ReferenceNode} created with the passed-in paramters.
+ * @returns A {@link ReferenceNode} created with the passed-in parameters.
  */
 export function createReferenceNode<K extends keyof typeof ExtendedToken>(
     name: string,
