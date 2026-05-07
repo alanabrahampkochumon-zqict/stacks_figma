@@ -122,6 +122,16 @@ export function createReferenceNode<K extends keyof typeof ExtendedToken>(
     } as ReferenceNode<K>;
 }
 
+/**
+ * Add a {@link TokenNode} to a group.
+ *
+ * @param group The group to add the token to.
+ * @param value The token to add.
+ */
+export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
+    group.children = [...group.children, value]
+}
+
 //////////////////////DEPRECATED////////////////////
 /**
  * @deprecated Remove
