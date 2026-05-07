@@ -17,7 +17,7 @@ type BasicNode = {
 type GroupNode<K extends keyof typeof ExtendedToken> = {
     entityType: "group";
     expanded: boolean;
-    children: (GroupNode<K> | ValueNode<K> | ReferenceNode)[];
+    children: (GroupNode<K> | ValueNode<K> | ReferenceNode<K>)[];
 } & BasicNode;
 
 /**
@@ -35,9 +35,10 @@ type ValueNode<K extends keyof typeof ExtendedToken> = {
  * The token itself holds no value, and acts as a reference to another
  * {@link ValueNode} or {@link ReferenceNode}.
  */
-type ReferenceNode = {
+type ReferenceNode<K extends keyof typeof ExtendedToken> = {
     entityType: "reference";
     referenceId: string;
+    type: K;
     value: unknown;
 } & BasicNode;
 
@@ -47,7 +48,7 @@ type ReferenceNode = {
 export type TokenNode<K extends keyof typeof ExtendedToken> =
     | GroupNode<K>
     | ValueNode<K>
-    | ReferenceNode;
+    | ReferenceNode<K>;
 
 /**
  * Construct a {@link ValueToken}.
@@ -61,9 +62,9 @@ export type TokenNode<K extends keyof typeof ExtendedToken> =
  *
  * @returns A {@link ValueToken} created with the passed-in paramters.
  */
-export function createValueNode<K extends keyof ExtendedTokenMap>(
+export function createValueNode<K extends keyof typeof ExtendedToken>(
     name: string,
-    valueByMode: Record<string, ExtendedTokenMap[K]>,
+    valueByMode: Record<string, any>,
     type: K,
     uid?: string | undefined,
 ): ValueNode<K> {
@@ -108,17 +109,17 @@ export function createGroupNode<K extends keyof typeof ExtendedToken>(
  *
  * @returns A {@link ReferenceNode} created with the passed-in paramters.
  */
-export function createReferenceNode(
+export function createReferenceNode<K extends keyof typeof ExtendedToken>(
     name: string,
     referenceId: string,
     uid?: string | undefined,
-): ReferenceNode {
+): ReferenceNode<K> {
     return {
         name,
         uid: uid || v4(),
         referenceId,
         entityType: "reference",
-    } as ReferenceNode;
+    } as ReferenceNode<K>;
 }
 
 //////////////////////DEPRECATED////////////////////

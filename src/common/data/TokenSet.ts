@@ -393,16 +393,18 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         );
     }
 
+
     /**
      * Validate a list of tokens are of the same type.
      * @remarks
      * Type must be the same among all the tokens and the parent token type.
+     * @deprecated Reason: Tokenset can contain groups
      *
      * @private
-     * @param {TokenNode_depr[]} tokens The tokens to validate.
-     * @param {TokenSetType} tokenType The parent token type to use for validation.
+     * @param tokens The tokens to validate.
+     * @param tokenType The parent token type to use for validation.
      *
-     * @throws {IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
+     * @throws {@link IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
     private _validateToken(
         tokens: TokenNode_depr<K>[],
