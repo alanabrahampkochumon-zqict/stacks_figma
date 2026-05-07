@@ -132,6 +132,25 @@ export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNod
     group.children = [...group.children, value]
 }
 
+
+/**
+ * Remove a {@link TokenNode} from a group.
+ *
+ * @param group The group to remove the token from.
+ * @param value The token to remove.
+ *
+ * @returns The removed {@link TokenNode} or null if it does not exist.
+ */
+export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
+    // Store the initial size of the group to ensure that the token exists
+    const initialSize = group.children.length
+    group.children = group.children.filter(node => node != value)
+
+    // If the number of children(length) remains the same then, it means the `value` does not exist
+    // and hence we return a null to indicate nothing was removed.
+    return group.children.length === initialSize ? null: value
+}
+
 //////////////////////DEPRECATED////////////////////
 /**
  * @deprecated Remove
