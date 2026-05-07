@@ -456,8 +456,9 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         return !this.tokens.some((token) => token.name === name);
     }
 
+
     /**
-     * Perform a uniqueness check on token against a this tokenset's internal collection.
+     * Perform a uniqueness check on token against this tokenset's internal collection.
      * **Invariants**
      * - A token is considered unique if it has the same name and ID.
      * - A token with same name but different ID will is not unique.
@@ -465,7 +466,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * @param {string} token The name to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    checkTokenUniqueness(token: TokenNode_depr<K>): boolean {
+    checkTokenUniqueness(token: TokenNode<K>): boolean {
         if (
             this.#tokenIDMap.has(token.name) &&
             this.#tokenIDMap.get(token.name) !== token.uid
@@ -482,10 +483,10 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * - A token is considered unique if it has the same name and ID.
      * - A token with same name but different ID will is not unique.
      *
-     * @param {TokenNode_depr[]} tokens The set of tokens to validate.
-     * @returns {boolean} True if the name is unique within the current tokenset.
+     * @param tokens The set of tokens to validate.
+     * @returns True if the name is unique within the current tokenset.
      */
-    checkAllTokenUniqueness(tokens: TokenNode_depr<K>[]): boolean {
+    checkAllTokenUniqueness(tokens: TokenNode<K>[]): boolean {
         for (const { name, uid } of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
             if (
