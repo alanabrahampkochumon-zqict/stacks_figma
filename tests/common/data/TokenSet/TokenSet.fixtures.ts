@@ -3,7 +3,7 @@ import { createToken, type ExtendedTokenTypes } from "@src/common/data/Token";
 import {
     createTokenNode,
     type TokenNode_depr,
-} from "@src/common/data/TokenNode";
+} from "../../../../src/common/data/TokenNode_t";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { generateTokenNode } from "../utils/Generators";
 

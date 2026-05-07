@@ -11,13 +11,46 @@ type BasicNode = {
     uid: string;
 };
 
+abstract class TokenNode {
+    abstract id: string
+    abstract name: string
+
+    abstract toJSON(): string
+}
+
+
+const VALUE_NODE_IDENTIFIER = "value_node"
+
+class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
+    id: string;
+    name: string;
+    valueByMode: Record<K, any>
+
+    ValueNode(name: string, valueByMode: Record<K, any>, id?: string = v4()) {
+        this.id = id
+        this.name = name
+        this.valueByMode = valueByMode
+    }
+
+    toJSON(): string {
+        return JSON.stringify({
+            id: this.id,
+            name: this.name,
+            valueByMode: this.valueByMode,
+            __node: VALUE_NODE_IDENTIFIER,
+        });
+    }
+
+}
+
+
 /**
  * A token node representing Group/Folder.
  */
 type GroupNode<K extends keyof typeof ExtendedToken> = {
     entityType: "group";
     expanded: boolean;
-    children: TokenNode<K>[];
+    children: TokenNode_t<K>[];
 } & BasicNode;
 
 /**
@@ -45,7 +78,7 @@ type ReferenceNode<K extends keyof typeof ExtendedToken> = {
 /**
  * Unified TokenNode type.
  */
-export type TokenNode<K extends keyof typeof ExtendedToken> =
+export type TokenNode_t<K extends keyof typeof ExtendedToken> =
     | GroupNode<K>
     | ValueNode<K>
     | ReferenceNode<K>;
@@ -90,7 +123,7 @@ export function createValueNode<K extends keyof typeof ExtendedToken>(
 export function createGroupNode<K extends keyof typeof ExtendedToken>(
     name: string,
     expanded: boolean = false,
-    children?: TokenNode<K>[],
+    children?: TokenNode_t<K>[],
     uid?: string | undefined
 ): GroupNode<K> {
     return {
@@ -102,6 +135,7 @@ export function createGroupNode<K extends keyof typeof ExtendedToken>(
     } as GroupNode<K>;
 }
 
+// TODO: Update to Class
 /**
  * Construct a {@link ReferenceNode}.
  *
@@ -127,12 +161,12 @@ export function createReferenceNode<K extends keyof typeof ExtendedToken>(
 
 
 /**
- * Add a {@link TokenNode} to a group.
+ * Add a {@link TokenNode_t} to a group.
  *
  * @param group The group to add the token to.
  * @param value The token to add.
  */
-export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
+export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode_t<K>) {
     // Only adds the token if it doesn't already exist in the group.
     if(getIndex(group, value) === -1)
         group.children = [...group.children, value]
@@ -140,14 +174,14 @@ export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNod
 
 
 /**
- * Remove a {@link TokenNode} from a group.
+ * Remove a {@link TokenNode_t} from a group.
  *
  * @param group The group to remove the token from.
  * @param value The token to remove.
  *
- * @returns The removed {@link TokenNode} or null if it does not exist.
+ * @returns The removed {@link TokenNode_t} or null if it does not exist.
  */
-export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>): TokenNode<K> | null {
+export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode_t<K>): TokenNode_t<K> | null {
     // Store the initial size of the group to ensure that the token exists
     const initialSize = group.children.length
     group.children = group.children.filter(node => node != value)
@@ -158,14 +192,14 @@ export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: Gro
 }
 
 /**
- * Return the index of a given {@link TokenNode} in a group.
+ * Return the index of a given {@link TokenNode_t} in a group.
  *
  * @param group The group to search in.
  * @param value The token to search.
  *
  * @returns The index of the token if it exists, else -1.
  */
-export function getIndex<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
+export function getIndex<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode_t<K>) {
     return group.children.findIndex(node => node == value)
 }
 

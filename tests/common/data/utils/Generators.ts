@@ -5,7 +5,7 @@ import type {
     ExtendedTokenTypes,
     Token_depr,
 } from "@src/common/data/Token";
-import type { TokenNode } from "@src/common/data/TokenNode";
+import type { TokenNode_t } from "../../../../src/common/data/TokenNode_t";
 import { v4 } from "uuid";
 
 function _generateTokenByType(
@@ -68,7 +68,7 @@ export function generateGroup(): Group {
 // }
 
 /**
- * Generates a {@link TokenNode} for testing.
+ * Generates a {@link TokenNode_t} for testing.
  *
  * @export
  * @param name        The name of the generated token node.
@@ -82,9 +82,9 @@ export function generateGroup(): Group {
  * @param parentId    The parentId of the token node.
  *                    Generates a parent with 50% RNG by default.
  * @param referenceId A reference id for the generated token, only applicable when setting type to "reference".
- * @param modes       The modes to use for generating {@link TokenNode}. Only applicable for {@link ValueNode}.
+ * @param modes       The modes to use for generating {@link TokenNode_t}. Only applicable for {@link ValueNode}.
  *
- * @returns {[TokenNode, string]} The generated token node and its string representation.
+ * @returns {[TokenNode_t, string]} The generated token node and its string representation.
  */
 export function generateTokenNode<K extends keyof typeof ExtendedToken>(
     name: string | undefined = undefined,
@@ -94,7 +94,7 @@ export function generateTokenNode<K extends keyof typeof ExtendedToken>(
     parentId: string | undefined = undefined,
     reference: string | undefined = undefined,
     modes: string[] | undefined = undefined,
-): TokenNode<K> {
+): TokenNode_t<K> {
     const tokenName = name || v4();
     const tokenId = uid || v4();
     const tokenReference = reference ? reference : undefined;

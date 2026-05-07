@@ -2,7 +2,7 @@ import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { TokenMismatchError } from "../error/TokenMismatchError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
 import type { ExtendedTokenMap, TokenComparator } from "./Token";
-import type { TokenNode_depr } from "./TokenNode";
+import type { TokenNode_depr } from "./TokenNode_t";
 import { TokenSet } from "./TokenSet";
 
 /**

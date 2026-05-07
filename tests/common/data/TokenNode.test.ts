@@ -2,8 +2,8 @@ import {
     addToGroup,
     createGroupNode,
     createReferenceNode,
-    createValueNode, type TokenNode,
-} from "@src/common/data/TokenNode";
+    createValueNode, removeFromGroup, type TokenNode_t,
+} from "../../../src/common/data/TokenNode_t";
 import {v4} from "uuid";
 import {describe, expect, test} from "vitest";
 
@@ -78,7 +78,7 @@ describe("createGroupNode", () => {
     });
 
     test("returns GroupNode with children, when no value is passed-in with children", () => {
-        const children: TokenNode<"color">[] = [
+        const children: TokenNode_t<"color">[] = [
             createGroupNode("child1", false),
             createReferenceNode("child1", "1234"),
             createValueNode("child1", {dark: "#fff"}, "color"),
@@ -128,12 +128,29 @@ describe("addToGroup", () => {
 })
 
 describe("removeFromGroup", () => {
-    const children: TokenNode<"color">[] = [
-        createGroupNode("child1", false),
+    const child1 = createGroupNode<"color">("child1", false)
+    const children: TokenNode_t<"color">[] = [
+        child1,
         createReferenceNode("child1", "1234"),
         createValueNode("child1", {dark: "#fff"}, "color"),
     ]
+
     test("removes token from group, given a valid token", () => {
-        // const groupNode
+        const groupNode = createGroupNode("group", false, children)
+        removeFromGroup(groupNode, child1)
+
+        expect(groupNode.children).not.toContain(child1)
+    })
+
+    test("returns token, when a valid token is passed-in", () => {
+        const groupNode = createGroupNode("group", false, children)
+        const removed = removeFromGroup(groupNode, child1)
+        expect(removed).toStrictEqual(child1)
+    })
+
+    test("returns null, when a invalid token is passed-in", () => {
+
+        const groupNode = createGroupNode("group", false, children)
+        const removed = removeFromGroup(groupNode, createR)
     })
 })

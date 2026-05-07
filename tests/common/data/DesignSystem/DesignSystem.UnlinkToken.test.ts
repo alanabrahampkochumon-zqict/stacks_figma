@@ -1,5 +1,5 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
-import type { TokenNode_depr } from "@src/common/data/TokenNode";
+import type { TokenNode_depr } from "../../../../src/common/data/TokenNode_t";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";

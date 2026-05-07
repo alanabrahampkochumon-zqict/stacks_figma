@@ -1,6 +1,6 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
 import { createToken } from "@src/common/data/Token";
-import { createTokenNode } from "@src/common/data/TokenNode";
+import { createTokenNode } from "../../../../src/common/data/TokenNode_t";
 import { TokenSet } from "@src/common/data/TokenSet";
 
 export function setUpDesignSystem() {

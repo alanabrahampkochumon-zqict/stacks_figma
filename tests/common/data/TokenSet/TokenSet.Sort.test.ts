@@ -1,5 +1,5 @@
 import { createToken } from "@src/common/data/Token";
-import { createTokenNode } from "@src/common/data/TokenNode";
+import { createTokenNode } from "../../../../src/common/data/TokenNode_t";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 
