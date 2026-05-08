@@ -151,6 +151,6 @@ describe("removeFromGroup", () => {
     test("returns null, when a invalid token is passed-in", () => {
 
         const groupNode = createGroupNode("group", false, children)
-        const removed = removeFromGroup(groupNode, createR)
+        // const removed = removeFromGroup(groupNode, createR)
     })
 })

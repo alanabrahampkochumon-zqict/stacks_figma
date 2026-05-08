@@ -25,7 +25,7 @@ export abstract class TokenNode {
     name: string
     abstract __identifier: string // Identifier used by discriminator for serialization/deserialization
 
-    protected constructor(id: string, name: string) {
+    protected constructor(name: string, id: string) {
         this.id = id
         this.name = name
     }
@@ -35,12 +35,12 @@ export abstract class TokenNode {
 /**
  * A token node representing a concrete Token (Token with a value).
  */
-export class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
-    valueByMode: Record<K, any> // TODO: Update to use a typesafe mapping
+export class ValueNode extends TokenNode {
+    valueByMode: Record<string, any> // TODO: Update to use a typesafe mapping
     __identifier = JSON_IDENTIFIERS.VALUE_NODE
 
-    constructor(name: string, valueByMode: Record<K, any>, id: string = v4()) {
-        super(id, name)
+    constructor(name: string, valueByMode: Record<string, any>, id: string = v4()) {
+        super(name, id)
         this.valueByMode = valueByMode
     }
 }
