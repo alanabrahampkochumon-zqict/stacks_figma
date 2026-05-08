@@ -15,8 +15,7 @@ type BasicNode = {
 abstract class TokenNode {
     abstract id: string
     abstract name: string
-
-    abstract toJSON(): string
+    abstract __identifier: string // Identifier used by discriminator for serialization/deserialization
 }
 
 /**
@@ -26,6 +25,7 @@ class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
     id: string;
     name: string;
     valueByMode: Record<K, any>
+    __identifier= JSON_IDENTIFIERS.VALUE_NODE
 
     constructor(name: string, valueByMode: Record<K, any>, id: string = v4()) {
         super()
@@ -33,16 +33,6 @@ class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
         this.name = name
         this.valueByMode = valueByMode
     }
-
-    toJSON(): string {
-        return JSON.stringify({
-            id: this.id,
-            name: this.name,
-            valueByMode: this.valueByMode,
-            JSON_IDENTIFIER_KEY: JSON_IDENTIFIERS.VALUE_NODE,
-        });
-    }
-
 }
 
 
