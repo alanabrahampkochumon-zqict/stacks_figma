@@ -6,7 +6,7 @@ import {
 import {
     createTokenNode,
     type TokenNode_depr,
-} from "../../../../src/common/data/TokenNode_t";
+} from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { generateTokenNode } from "../utils/Generators";

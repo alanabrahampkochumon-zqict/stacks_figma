@@ -1,7 +1,7 @@
-import { v4 as uuidv4, v4 } from "uuid";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import type { Group } from "./Group";
-import { ExtendedToken, type ExtendedTokenMap, type Token_depr } from "./Token";
+import {v4 as uuidv4, v4} from "uuid";
+import {IllegalArgumentError} from "../error/IllegalArgumentError";
+import type {Group} from "./Group";
+import {ExtendedToken, type ExtendedTokenMap, type Token_depr} from "./Token";
 import {JSON_IDENTIFIER_KEY, JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
 
 /**
@@ -16,10 +16,11 @@ type BasicNode = {
 /**
  * The base class for all design system tokens.
  * @remarks
- * Don't instantiate a TokenNode, use {@link ValueNode}, {@link GroupNode}, or {@link ReferenceNode}
+ * Direct instantiation of TokenNode is prohibited.
+ * Use {@link ValueNode}, {@link GroupNode}, or {@link ReferenceNode}
  * to create the design system tokens.
  */
-abstract class TokenNode {
+export abstract class TokenNode {
     id: string
     name: string
     abstract __identifier: string // Identifier used by discriminator for serialization/deserialization
@@ -34,9 +35,9 @@ abstract class TokenNode {
 /**
  * A token node representing a concrete Token (Token with a value).
  */
-class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
+export class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
     valueByMode: Record<K, any> // TODO: Update to use a typesafe mapping
-    __identifier= JSON_IDENTIFIERS.VALUE_NODE
+    __identifier = JSON_IDENTIFIERS.VALUE_NODE
 
     constructor(name: string, valueByMode: Record<K, any>, id: string = v4()) {
         super(id, name)
@@ -59,7 +60,7 @@ class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
 type GroupNode<K extends keyof typeof ExtendedToken> = {
     entityType: "group";
     expanded: boolean;
-    children: TokenNode_t<K>[];
+    children: TokenNode<K>[];
 } & BasicNode;
 
 /**
@@ -87,10 +88,10 @@ type ReferenceNode<K extends keyof typeof ExtendedToken> = {
 /**
  * Unified TokenNode type.
  */
-export type TokenNode_t<K extends keyof typeof ExtendedToken> =
-    | GroupNode<K>
-    | ValueNode<K>
-    | ReferenceNode<K>;
+// export type TokenNode<K extends keyof typeof ExtendedToken> =
+//     | GroupNode<K>
+//     | ValueNode<K>
+//     | ReferenceNode<K>;
 
 /**
  * Construct a {@link ValueToken}.
@@ -132,7 +133,7 @@ export function createValueNode<K extends keyof typeof ExtendedToken>(
 export function createGroupNode<K extends keyof typeof ExtendedToken>(
     name: string,
     expanded: boolean = false,
-    children?: TokenNode_t<K>[],
+    children?: TokenNode<K>[],
     uid?: string | undefined
 ): GroupNode<K> {
     return {
@@ -170,49 +171,47 @@ export function createReferenceNode<K extends keyof typeof ExtendedToken>(
 
 
 /**
- * Add a {@link TokenNode_t} to a group.
+ * Add a {@link TokenNode} to a group.
  *
  * @param group The group to add the token to.
  * @param value The token to add.
  */
-export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode_t<K>) {
+export function addToGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
     // Only adds the token if it doesn't already exist in the group.
-    if(getIndex(group, value) === -1)
+    if (getIndex(group, value) === -1)
         group.children = [...group.children, value]
 }
 
 
 /**
- * Remove a {@link TokenNode_t} from a group.
+ * Remove a {@link TokenNode} from a group.
  *
  * @param group The group to remove the token from.
  * @param value The token to remove.
  *
- * @returns The removed {@link TokenNode_t} or null if it does not exist.
+ * @returns The removed {@link TokenNode} or null if it does not exist.
  */
-export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode_t<K>): TokenNode_t<K> | null {
+export function removeFromGroup<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>): TokenNode<K> | null {
     // Store the initial size of the group to ensure that the token exists
     const initialSize = group.children.length
     group.children = group.children.filter(node => node != value)
 
     // If the number of children(length) remains the same then, it means the `value` does not exist
     // and hence we return a null to indicate nothing was removed.
-    return group.children.length === initialSize ? null: value
+    return group.children.length === initialSize ? null : value
 }
 
 /**
- * Return the index of a given {@link TokenNode_t} in a group.
+ * Return the index of a given {@link TokenNode} in a group.
  *
  * @param group The group to search in.
  * @param value The token to search.
  *
  * @returns The index of the token if it exists, else -1.
  */
-export function getIndex<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode_t<K>) {
+export function getIndex<K extends keyof typeof ExtendedToken>(group: GroupNode<K>, value: TokenNode<K>) {
     return group.children.findIndex(node => node == value)
 }
-
-
 
 
 /**

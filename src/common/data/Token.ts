@@ -1,5 +1,5 @@
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import type { TokenNode_depr } from "./TokenNode_t";
+import type { TokenNode_depr } from "./TokenNode";
 import { TypographyToken } from "./TypographyToken";
 
 // TODO: Add getGroupName

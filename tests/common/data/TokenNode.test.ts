@@ -2,8 +2,8 @@ import {
     addToGroup,
     createGroupNode,
     createReferenceNode,
-    createValueNode, removeFromGroup, type TokenNode_t,
-} from "../../../src/common/data/TokenNode_t";
+    createValueNode, removeFromGroup, type TokenNode,
+} from "../../../src/common/data/TokenNode";
 import {v4} from "uuid";
 import {describe, expect, test} from "vitest";
 
@@ -78,7 +78,7 @@ describe("createGroupNode", () => {
     });
 
     test("returns GroupNode with children, when no value is passed-in with children", () => {
-        const children: TokenNode_t<"color">[] = [
+        const children: TokenNode<"color">[] = [
             createGroupNode("child1", false),
             createReferenceNode("child1", "1234"),
             createValueNode("child1", {dark: "#fff"}, "color"),
@@ -129,7 +129,7 @@ describe("addToGroup", () => {
 
 describe("removeFromGroup", () => {
     const child1 = createGroupNode<"color">("child1", false)
-    const children: TokenNode_t<"color">[] = [
+    const children: TokenNode<"color">[] = [
         child1,
         createReferenceNode("child1", "1234"),
         createValueNode("child1", {dark: "#fff"}, "color"),

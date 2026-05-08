@@ -3,7 +3,7 @@ import { createToken } from "@src/common/data/Token";
 import {
     createTokenNode,
     type TokenNode_depr,
-} from "../../../common/data/TokenNode_t";
+} from "../../../common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { OlHTMLAttributes } from "react";
 import styles from "./ComponentTree.module.scss";

@@ -1,5 +1,5 @@
 import { createGroup } from "@src/common/data/Group";
-import { createTokenNode } from "../../../../src/common/data/TokenNode_t";
+import { createTokenNode } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
 import { setUpDesignSystem } from "./DesignSystem.fixtures";

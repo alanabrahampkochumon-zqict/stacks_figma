@@ -1,4 +1,4 @@
-import type { TokenNode_depr } from "../../../common/data/TokenNode_t";
+import type { TokenNode_depr } from "../../../common/data/TokenNode";
 import type { TokenSet } from "@src/common/data/TokenSet";
 import { cn } from "@src/lib/utils";
 import { TYPE_PANGRAM } from "@src/ui/utils/Constants";

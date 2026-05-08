@@ -2,7 +2,7 @@ import AlignLeftIcon from "@src/assets/icons/align-left.svg?react";
 import ChevronRightIcon from "@src/assets/icons/chevron-right.svg?react";
 import HashTagIcon from "@src/assets/icons/hashtag.svg?react";
 import ToggleIcon from "@src/assets/icons/toggle.svg?react";
-import type { TokenNode_depr } from "../../../common/data/TokenNode_t";
+import type { TokenNode_depr } from "../../../common/data/TokenNode";
 import { cn } from "@src/lib/utils";
 import type { HTMLAttributes, JSX } from "react";
 import styles from "./TreeItem.module.scss";
