@@ -45,6 +45,22 @@ export class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
     }
 }
 
+
+/**
+ * A token node representing Group/Folder.
+ */
+export class GroupNode extends TokenNode {
+    expanded: boolean
+    children: TokenNode[]
+    __identifier = JSON_IDENTIFIERS.GROUP_NODE
+
+    constructor(name: string, children: TokenNode[] = [], expanded: boolean = false, id: string = v4()) {
+        super(name, id)
+        this.expanded = expanded
+        this.children = children
+    }
+}
+
 /**
  * A token node representing a reference/alias token.
  */
@@ -57,11 +73,11 @@ export class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
 /**
  * A token node representing Group/Folder.
  */
-type GroupNode<K extends keyof typeof ExtendedToken> = {
-    entityType: "group";
-    expanded: boolean;
-    children: TokenNode<K>[];
-} & BasicNode;
+// type GroupNode<K extends keyof typeof ExtendedToken> = {
+//     entityType: "group";
+//     expanded: boolean;
+//     children: TokenNode<K>[];
+// } & BasicNode;
 
 /**
  * A token node representing a concrete Token (Token with a value).
