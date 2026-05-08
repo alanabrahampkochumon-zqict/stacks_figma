@@ -77,9 +77,16 @@ export class GroupNode extends TokenNode {
         this.children = children
     }
 
+
     /**
-     *
+     * Add a {@see TokenNode} as the current group's child.
+     * @param node The {@see TokenNode} to add.
      */
+    addChild(node: TokenNode) {
+        this.children.push(node)
+    }
+
+
 }
 
 /**

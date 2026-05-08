@@ -39,3 +39,25 @@ describe("GroupNode: Instantiation", () => {
         expect(groupNode.__identifier).toStrictEqual(JSON_IDENTIFIERS.GROUP_NODE)
     })
 })
+
+describe("GroupNode: addChild", () => {
+
+    const child1 = new ValueNode("value", {"dark": "#316316"})
+    const child2 = new GroupNode("group")
+
+    const groupNode= new GroupNode("parent")
+
+    test("adds child, when invoked with ValueNode instance", () => {
+        groupNode.addChild(child1)
+
+        expect(groupNode.children).toContain(child1)
+    })
+
+    test("adds child, when invoked with GroupNode instance", () => {
+        groupNode.addChild(child2)
+
+        expect(groupNode.children).toContain(child2)
+    })
+
+    // TODO: add test for ReferenceNode
+})
