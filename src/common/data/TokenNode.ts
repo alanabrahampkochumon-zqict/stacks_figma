@@ -86,6 +86,21 @@ export class GroupNode extends TokenNode {
         this.children.push(node)
     }
 
+    /**
+     * Remove a child node from the current group if it exists.
+     * @returns The removed node if it exists or null.
+     */
+    removeChild(node: TokenNode): TokenNode | null {
+        // Store initial size so it can be later compared to check if a node has been removed
+        const initialSize = this.children.length
+        console.log(`Before: ${this.children}`)
+        this.children = this.children.filter(child => child !== node)
+        console.log(`After: ${this.children}`)
+        // If initialSize and current length of children is the same
+        // then it means no element has been removed, so a null is returned
+        console.log(`${initialSize}: ${this.children.length}`)
+        return initialSize === this.children.length ? null : node
+    }
 
 }
 

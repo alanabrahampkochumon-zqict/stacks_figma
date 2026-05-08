@@ -47,17 +47,57 @@ describe("GroupNode: addChild", () => {
 
     const groupNode= new GroupNode("parent")
 
-    test("adds child, when invoked with ValueNode instance", () => {
+    test("adds child, when a ValueNode instance is passed-in", () => {
         groupNode.addChild(child1)
 
         expect(groupNode.children).toContain(child1)
     })
 
-    test("adds child, when invoked with GroupNode instance", () => {
+    test("adds child, when a GroupNode instance is passed-in", () => {
         groupNode.addChild(child2)
 
         expect(groupNode.children).toContain(child2)
     })
 
+    // TODO: add test for ReferenceNode
+})
+
+
+describe("GroupNode: removeChild", () => {
+
+    const child1 = new ValueNode("value", {"dark": "#316316"})
+    const child2 = new GroupNode("group")
+
+
+    test("removes child, when an existing node is passed-in", () => {
+        const groupNode= new GroupNode("parent", [child1, child1])
+        groupNode.removeChild(child1)
+
+        expect(groupNode.children).not.toContain(child1)
+    })
+
+    test("returns removed child, when an existing node is passed-in", () => {
+        const groupNode= new GroupNode("parent", [child1, child1])
+        const removed = groupNode.removeChild(child2)
+
+        expect(removed).toStrictEqual(child2)
+    })
+
+    test("doesn't modify children, when a non-existing node is passed-in", () => {
+        const node = new GroupNode("DNE")
+        const groupNode= new GroupNode("parent", [child1, child1])
+        groupNode.removeChild(node)
+
+        expect(groupNode.children).toContain(child1)
+        expect(groupNode.children).toContain(child2)
+    })
+
+    test("returns null, when a non-existing node is passed-in", () => {
+        const node = new GroupNode("DNE")
+        const groupNode= new GroupNode("parent", [child1, child1])
+        const removed = groupNode.removeChild(node)
+
+        expect(removed).toBeNull()
+    })
     // TODO: add test for ReferenceNode
 })
