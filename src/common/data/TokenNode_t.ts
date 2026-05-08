@@ -12,28 +12,44 @@ type BasicNode = {
     uid: string;
 };
 
+
+/**
+ * The base class for all design system tokens.
+ * @remarks
+ * Don't instantiate a TokenNode, use {@link ValueNode}, {@link GroupNode}, or {@link ReferenceNode}
+ * to create the design system tokens.
+ */
 abstract class TokenNode {
-    abstract id: string
-    abstract name: string
+    id: string
+    name: string
     abstract __identifier: string // Identifier used by discriminator for serialization/deserialization
+
+    protected constructor(id: string, name: string) {
+        this.id = id
+        this.name = name
+    }
 }
+
 
 /**
  * A token node representing a concrete Token (Token with a value).
  */
 class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
-    id: string;
-    name: string;
-    valueByMode: Record<K, any>
+    valueByMode: Record<K, any> // TODO: Update to use a typesafe mapping
     __identifier= JSON_IDENTIFIERS.VALUE_NODE
 
     constructor(name: string, valueByMode: Record<K, any>, id: string = v4()) {
-        super()
-        this.id = id
-        this.name = name
+        super(id, name)
         this.valueByMode = valueByMode
     }
 }
+
+/**
+ * A token node representing a reference/alias token.
+ */
+// class ReferenceToken<K extends typeof ExtendedToken> extends TokenNode {
+//
+// }
 
 
 //////////////////////DEPRECATED////////////////////
