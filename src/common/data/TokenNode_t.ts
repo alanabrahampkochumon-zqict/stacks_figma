@@ -2,6 +2,7 @@ import { v4 as uuidv4, v4 } from "uuid";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import type { Group } from "./Group";
 import { ExtendedToken, type ExtendedTokenMap, type Token_depr } from "./Token";
+import {JSON_IDENTIFIER_KEY, JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
 
 /**
  * The basic token node of the Design System tree.
@@ -18,15 +19,16 @@ abstract class TokenNode {
     abstract toJSON(): string
 }
 
-
-const VALUE_NODE_IDENTIFIER = "value_node"
-
+/**
+ * A token node representing a concrete Token (Token with a value).
+ */
 class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
     id: string;
     name: string;
     valueByMode: Record<K, any>
 
-    ValueNode(name: string, valueByMode: Record<K, any>, id?: string = v4()) {
+    constructor(name: string, valueByMode: Record<K, any>, id: string = v4()) {
+        super()
         this.id = id
         this.name = name
         this.valueByMode = valueByMode
@@ -37,13 +39,14 @@ class ValueNode<K extends keyof typeof ExtendedToken> extends TokenNode {
             id: this.id,
             name: this.name,
             valueByMode: this.valueByMode,
-            __node: VALUE_NODE_IDENTIFIER,
+            JSON_IDENTIFIER_KEY: JSON_IDENTIFIERS.VALUE_NODE,
         });
     }
 
 }
 
 
+//////////////////////DEPRECATED////////////////////
 /**
  * A token node representing Group/Folder.
  */
@@ -56,11 +59,11 @@ type GroupNode<K extends keyof typeof ExtendedToken> = {
 /**
  * A token node representing a concrete Token (Token with a value).
  */
-type ValueNode<K extends keyof typeof ExtendedToken> = {
-    entityType: "token";
-    type: K;
-    valueByMode: Record<string, any>; // TODO: Add type safety
-} & BasicNode;
+// type ValueNode<K extends keyof typeof ExtendedToken> = {
+//     entityType: "token";
+//     type: K;
+//     valueByMode: Record<string, any>; // TODO: Add type safety
+// } & BasicNode;
 
 /**
  * A token node representing a reference/alias.
@@ -206,7 +209,6 @@ export function getIndex<K extends keyof typeof ExtendedToken>(group: GroupNode<
 
 
 
-//////////////////////DEPRECATED////////////////////
 /**
  * @deprecated Remove
  */
