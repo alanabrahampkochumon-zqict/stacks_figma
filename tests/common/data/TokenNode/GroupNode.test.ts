@@ -117,5 +117,20 @@ describe("GroupNode: removeChild", () => {
 
         expect(removed).toBeNull()
     })
+
+    test("clears cache, when a child is removed", () => {
+        // Given a group node with 2 children
+        const groupNode = new GroupNode("parent", [child1, child2])
+
+        // When one child is removed
+        groupNode.removeChild(child1)
+        // Initial assertion: Child is removed
+        expect(groupNode.children).not.toContain(child1)
+
+        // And the same node is added
+        groupNode.addChild(child1)
+        // Then, the child is re-added
+        expect(groupNode.children).toContain(child1)
+    })
     // TODO: add test for ReferenceNode
 })

@@ -106,6 +106,7 @@ export class GroupNode extends TokenNode {
         // Store initial size so it can be later compared to check if a node has been removed
         const initialSize = this.children.length
         this.children = this.children.filter(child => child !== node)
+        this.#childrenCache.delete(node)
         // If initialSize and current length of children is the same
         // then it means no element has been removed, so a null is returned
         return initialSize === this.children.length ? null : node
