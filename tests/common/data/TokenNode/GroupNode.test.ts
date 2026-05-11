@@ -63,7 +63,17 @@ describe("GroupNode: addChild", () => {
 
     test("adds child, when a GroupNode instance is passed-in", () => {
         groupNode.addChild(child2)
+        expect(groupNode.children).toContain(child2)
+    })
 
+
+    test("do not add child , when a child already exists in memory", () => {
+        // Duplicate entries are added only once
+        const initialSize = groupNode.children.length
+        const node = new GroupNode("group-23")
+        groupNode.addChild(node)
+        groupNode.addChild(node)
+        expect(groupNode.children.length).toStrictEqual(initialSize + 1)
         expect(groupNode.children).toContain(child2)
     })
 

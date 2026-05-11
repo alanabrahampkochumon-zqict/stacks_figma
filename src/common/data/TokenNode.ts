@@ -84,7 +84,6 @@ export class GroupNode extends TokenNode {
                 this.children.push(child)
             }
         })
-        // this.children = children
     }
 
 
@@ -93,7 +92,10 @@ export class GroupNode extends TokenNode {
      * @param node The {@see TokenNode} to add.
      */
     addChild(node: TokenNode) {
-        this.children.push(node)
+        if(!this.#childrenCache.has(node)) {
+            this.children.push(node)
+            this.#childrenCache.add(node)
+        }
     }
 
     /**
