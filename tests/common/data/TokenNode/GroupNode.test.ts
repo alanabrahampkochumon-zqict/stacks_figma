@@ -5,9 +5,9 @@ import {JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
 describe("GroupNode: Instantiation", () => {
 
     const name = "Group"
-    const valueNode = new ValueNode("node-1", {"group": "1234"})
-    const groupNode = new GroupNode("group-1")
-    const children = [valueNode, groupNode]
+    const childNode1 = new ValueNode("node-1", {"group": "1234"})
+    const childNode2 = new GroupNode("group-1")
+    const children = [childNode1, childNode2]
     const expanded = true
     const id = "ID-ABCDEF-123456789"
 
@@ -38,6 +38,14 @@ describe("GroupNode: Instantiation", () => {
 
         expect(groupNode.__identifier).toStrictEqual(JSON_IDENTIFIERS.GROUP_NODE)
     })
+
+
+    test("returns GroupNode without duplicates, when instantiated with duplicate children", () => {
+        const groupNode = new GroupNode(name, [...children, childNode1])
+        expect(groupNode.children.length).toStrictEqual(2)
+        expect(groupNode.children).toContain(childNode1)
+        expect(groupNode.children).toContain(childNode2)
+    })
 })
 
 describe("GroupNode: addChild", () => {
@@ -45,7 +53,7 @@ describe("GroupNode: addChild", () => {
     const child1 = new ValueNode("value", {"dark": "#316316"})
     const child2 = new GroupNode("group")
 
-    const groupNode= new GroupNode("parent")
+    const groupNode = new GroupNode("parent")
 
     test("adds child, when a ValueNode instance is passed-in", () => {
         groupNode.addChild(child1)
@@ -70,14 +78,14 @@ describe("GroupNode: removeChild", () => {
 
 
     test("removes child, when an existing node is passed-in", () => {
-        const groupNode= new GroupNode("parent", [child1, child1])
+        const groupNode = new GroupNode("parent", [child1, child2])
         groupNode.removeChild(child1)
 
         expect(groupNode.children).not.toContain(child1)
     })
 
     test("returns removed child, when an existing node is passed-in", () => {
-        const groupNode= new GroupNode("parent", [child1, child1])
+        const groupNode = new GroupNode("parent", [child1, child2])
         const removed = groupNode.removeChild(child2)
 
         expect(removed).toStrictEqual(child2)
@@ -85,7 +93,7 @@ describe("GroupNode: removeChild", () => {
 
     test("doesn't modify children, when a non-existing node is passed-in", () => {
         const node = new GroupNode("DNE")
-        const groupNode= new GroupNode("parent", [child1, child1])
+        const groupNode = new GroupNode("parent", [child1, child2])
         groupNode.removeChild(node)
 
         expect(groupNode.children).toContain(child1)
@@ -94,7 +102,7 @@ describe("GroupNode: removeChild", () => {
 
     test("returns null, when a non-existing node is passed-in", () => {
         const node = new GroupNode("DNE")
-        const groupNode= new GroupNode("parent", [child1, child1])
+        const groupNode = new GroupNode("parent", [child1, child2])
         const removed = groupNode.removeChild(node)
 
         expect(removed).toBeNull()

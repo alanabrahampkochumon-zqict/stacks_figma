@@ -61,6 +61,7 @@ export class ValueNode extends TokenNode {
 export class GroupNode extends TokenNode {
     expanded: boolean
     children: TokenNode[]
+    #childrenCache: Set<TokenNode>
     __identifier = JSON_IDENTIFIERS.GROUP_NODE
 
     /**
@@ -74,7 +75,16 @@ export class GroupNode extends TokenNode {
     constructor(name: string, children: TokenNode[] = [], expanded: boolean = false, id: string = v4()) {
         super(name, id)
         this.expanded = expanded
-        this.children = children
+        this.#childrenCache = new Set()
+        this.children = []
+        children.forEach((child) => {
+            // Only add the child if it has not been previously added
+            if (!this.#childrenCache.has(child)) {
+                this.#childrenCache.add(child)
+                this.children.push(child)
+            }
+        })
+        // this.children = children
     }
 
 
@@ -93,12 +103,9 @@ export class GroupNode extends TokenNode {
     removeChild(node: TokenNode): TokenNode | null {
         // Store initial size so it can be later compared to check if a node has been removed
         const initialSize = this.children.length
-        console.log(`Before: ${this.children}`)
         this.children = this.children.filter(child => child !== node)
-        console.log(`After: ${this.children}`)
         // If initialSize and current length of children is the same
         // then it means no element has been removed, so a null is returned
-        console.log(`${initialSize}: ${this.children.length}`)
         return initialSize === this.children.length ? null : node
     }
 
