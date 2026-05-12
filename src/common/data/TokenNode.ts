@@ -2,15 +2,7 @@ import {v4 as uuidv4, v4} from "uuid";
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import type {Group} from "./Group";
 import {ExtendedToken, type ExtendedTokenMap, type Token_depr} from "./Token";
-import {JSON_IDENTIFIER_KEY, JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
-
-/**
- * The basic token node of the Design System tree.
- */
-type BasicNode = {
-    name: string;
-    uid: string;
-};
+import {JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
 
 
 /**
@@ -84,6 +76,22 @@ export class GroupNode extends TokenNode {
                 this.children.push(child)
             }
         })
+
+    }
+
+    /**
+     * Convert the current instance of {@link GroupNode} into a JSON string.
+     *
+     * @returns A JSON string representation of the current instance.
+     */
+    toJson(): string {
+        return JSON.stringify({
+            name: this.name,
+            id: this.id,
+            expanded: this.expanded,
+            children: this.children,
+            __identifier: this.__identifier
+        })
     }
 
 
@@ -119,7 +127,7 @@ export class GroupNode extends TokenNode {
  * @remarks
  * The token itself holds no value, and acts as a reference to another {@link TokenNode}.
  */
-class ReferenceNode extends TokenNode {
+export class ReferenceNode extends TokenNode {
     reference: string;
     __identifier: string = JSON_IDENTIFIERS.REFERENCE_NODE;
 
@@ -136,12 +144,17 @@ class ReferenceNode extends TokenNode {
 
 }
 
-// class ReferenceToken<K extends typeof ExtendedToken> extends TokenNode {
-//
-// }
-
-
 //////////////////////DEPRECATED////////////////////
+
+/**
+ * The basic token node of the Design System tree.
+ */
+type BasicNode = {
+    name: string;
+    uid: string;
+};
+
+
 /**
  * A token node representing Group/Folder.
  */

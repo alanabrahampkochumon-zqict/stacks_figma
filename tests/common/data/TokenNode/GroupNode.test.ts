@@ -1,5 +1,5 @@
 import {describe, expect, test} from "vitest"
-import {GroupNode, ValueNode} from "@src/common/data/TokenNode.ts";
+import {GroupNode, ReferenceNode, ValueNode} from "@src/common/data/TokenNode.ts";
 import {JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
 
 describe("GroupNode: Instantiation", () => {
@@ -52,6 +52,7 @@ describe("GroupNode: addChild", () => {
 
     const child1 = new ValueNode("value", {"dark": "#316316"})
     const child2 = new GroupNode("group")
+    const child3 = new ReferenceNode("reference", "1234")
 
     const groupNode = new GroupNode("parent")
 
@@ -70,14 +71,11 @@ describe("GroupNode: addChild", () => {
     test("do not add child , when a child already exists in memory", () => {
         // Duplicate entries are added only once
         const initialSize = groupNode.children.length
-        const node = new GroupNode("group-23")
-        groupNode.addChild(node)
-        groupNode.addChild(node)
+        groupNode.addChild(child3)
+        groupNode.addChild(child3)
         expect(groupNode.children.length).toStrictEqual(initialSize + 1)
         expect(groupNode.children).toContain(child2)
     })
-
-    // TODO: add test for ReferenceNode
 })
 
 
@@ -85,17 +83,18 @@ describe("GroupNode: removeChild", () => {
 
     const child1 = new ValueNode("value", {"dark": "#316316"})
     const child2 = new GroupNode("group")
+    const child3 = new ReferenceNode("reference", "1234")
 
 
     test("removes child, when an existing node is passed-in", () => {
-        const groupNode = new GroupNode("parent", [child1, child2])
+        const groupNode = new GroupNode("parent", [child1, child2, child3])
         groupNode.removeChild(child1)
 
         expect(groupNode.children).not.toContain(child1)
     })
 
     test("returns removed child, when an existing node is passed-in", () => {
-        const groupNode = new GroupNode("parent", [child1, child2])
+        const groupNode = new GroupNode("parent", [child1, child2, child3])
         const removed = groupNode.removeChild(child2)
 
         expect(removed).toStrictEqual(child2)
@@ -103,7 +102,7 @@ describe("GroupNode: removeChild", () => {
 
     test("doesn't modify children, when a non-existing node is passed-in", () => {
         const node = new GroupNode("DNE")
-        const groupNode = new GroupNode("parent", [child1, child2])
+        const groupNode = new GroupNode("parent", [child1, child2, child3])
         groupNode.removeChild(node)
 
         expect(groupNode.children).toContain(child1)
@@ -112,7 +111,7 @@ describe("GroupNode: removeChild", () => {
 
     test("returns null, when a non-existing node is passed-in", () => {
         const node = new GroupNode("DNE")
-        const groupNode = new GroupNode("parent", [child1, child2])
+        const groupNode = new GroupNode("parent", [child1, child2, child3])
         const removed = groupNode.removeChild(node)
 
         expect(removed).toBeNull()
@@ -120,7 +119,7 @@ describe("GroupNode: removeChild", () => {
 
     test("clears cache, when a child is removed", () => {
         // Given a group node with 2 children
-        const groupNode = new GroupNode("parent", [child1, child2])
+        const groupNode = new GroupNode("parent", [child1, child2, child3])
 
         // When one child is removed
         groupNode.removeChild(child1)
@@ -132,5 +131,23 @@ describe("GroupNode: removeChild", () => {
         // Then, the child is re-added
         expect(groupNode.children).toContain(child1)
     })
-    // TODO: add test for ReferenceNode
+})
+
+describe("GroupNode: toJson", () => {
+    const child1 = new ValueNode("value", {"dark": "#316316"})
+    const child2 = new GroupNode("group")
+    const child3 = new ReferenceNode("reference", "1234")
+    const groupNode = new GroupNode("parent", [child1, child2, child3])
+
+    test("returns a JSON string, when converted to JSON", () => {
+        const jsonString = groupNode.toJson()
+        const parsedObject = JSON.parse(jsonString)
+
+        expect(parsedObject.name).toStrictEqual("parent")
+        expect(parsedObject.id).toStrictEqual(groupNode.id)
+        expect(parsedObject.__identifier).toStrictEqual(groupNode.__identifier)
+        // Since JSON parse only returns a plain object instead of class instance,
+        // we need to make sure that groupNode.children are the Object literals.
+        expect(parsedObject.children).toStrictEqual(JSON.parse(JSON.stringify(groupNode.children)))
+    })
 })
