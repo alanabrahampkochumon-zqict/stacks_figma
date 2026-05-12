@@ -1,14 +1,14 @@
-import { faker } from "@faker-js/faker";
-import type { Group } from "@src/common/data/Group";
+import {faker} from "@faker-js/faker";
+import type {Group} from "@src/common/data/Group";
 import type {
     ExtendedToken,
     ExtendedTokenTypes,
     Token_depr,
 } from "@src/common/data/Token";
-import type { TokenNode } from "../../../../src/common/data/TokenNode";
-import { v4 } from "uuid";
+import {GroupNode, ReferenceNode, type TokenNode, ValueNode} from "../../../../src/common/data/TokenNode";
+import {v4} from "uuid";
 
-function _generateTokenByType(
+function generateTokenByType(
     type: ExtendedTokenTypes,
     randomLimit: number = 10000,
 ) {
@@ -23,7 +23,9 @@ function _generateTokenByType(
         case "boolean":
             return Math.random() > 0.5;
         case "color":
-            return faker.color.rgb({ format: "hex" });
+            return faker.color.rgb({format: "hex"});
+        case "typography":
+            // TODO
         case "gradient":
         // TODO: Implementation
         case "box-shadow":
@@ -33,24 +35,19 @@ function _generateTokenByType(
     }
 }
 
-export function generateToken(
-    type: ExtendedTokenTypes,
+export function generateValueTokenNode(
+    name: string,
+    id: string,
+    type: (keyof typeof ExtendedToken)[number],
     modes: string[] = ["default"],
-): Token_depr {
-    return {
-        type: type,
-        valueByMode: Object.fromEntries(
-            modes.map((mode) => [mode, _generateTokenByType(type)]),
+): ValueNode {
+    return new ValueNode(
+        name,
+        Object.fromEntries(
+            modes.map((mode) => [mode, generateTokenByType(type)]),
         ),
-        entityType: "token",
-    };
-}
-
-export function generateGroup(): Group {
-    return {
-        expanded: Math.random() > 0.5,
-        entityType: "group",
-    };
+        id,
+    )
 }
 
 // const usedNames = new Set();
@@ -86,30 +83,24 @@ export function generateGroup(): Group {
  *
  * @returns {[TokenNode, string]} The generated token node and its string representation.
  */
-export function generateTokenNode<K extends keyof typeof ExtendedToken>(
+export function generateTokenNode(
     name: string | undefined = undefined,
-    type: "group" | "token" = "token",
-    nodeType: ExtendedTokenTypes = "number",
+    type: "group" | "token" | "reference" = "token",
+    nodeType: (keyof typeof ExtendedToken)[number] = "number",
     uid: string | undefined = undefined,
-    parentId: string | undefined = undefined,
-    reference: string | undefined = undefined,
-    modes: string[] | undefined = undefined,
-): TokenNode<K> {
+    referenceId: string | undefined = undefined,
+    modes: string[] | undefined = undefined, // TODO: Add modes
+): TokenNode {
     const tokenName = name || v4();
     const tokenId = uid || v4();
-    const tokenReference = reference ? reference : undefined;
-    const tokenValue = !tokenReference
-        ? type === "group"
-            ? generateGroup()
-            : generateToken(nodeType, modes)
-        : undefined;
-    const tokenParentId = parentId || Math.random() > 0.5 ? v4() : undefined;
-
-    return {
-        name: tokenName,
-        uid: tokenId,
-        value: tokenValue,
-        parentId: tokenParentId,
-        reference: tokenReference,
-    };
+    switch (type) {
+        case "group":
+            const expanded = Math.random() < 0.5;
+            const childNodes = new Array(Math.round(Math.random() * 3 + 4)).map(() => generateValueTokenNode(v4(), v4(), nodeType))
+            return new GroupNode(tokenName, childNodes, expanded, tokenId)
+        case "token":
+            return generateValueTokenNode(tokenName, tokenId, nodeType)
+        case "reference":
+            return new ReferenceNode(tokenName, referenceId || v4(), tokenId)
+    }
 }

@@ -1,9 +1,9 @@
 import { createGroup } from "@src/common/data/Group";
 import { createToken, type ExtendedTokenTypes } from "@src/common/data/Token";
 import {
-    createTokenNode,
+    createTokenNode, TokenNode,
     type TokenNode_depr,
-} from "../../../../src/common/data/TokenNode";
+} from "@src/common/data/TokenNode.ts";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { generateTokenNode } from "../utils/Generators";
 
@@ -14,7 +14,7 @@ import { generateTokenNode } from "../utils/Generators";
 export default function setUpTokens() {
     const numberTokenModes = ["default"];
     const numberTokenType: ExtendedTokenTypes = "number";
-    const numberTokens: TokenNode_depr[] = Array(10)
+    const numberTokens:TokenNode[] = Array(10)
         .fill(0)
         .map(() =>
             generateTokenNode(
@@ -64,7 +64,7 @@ export default function setUpTokens() {
 }
 
 export function setUpTokenSet() {
-    const originalTokens: TokenNode_depr[] = [
+    const originalTokens = [
         createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
         createTokenNode(
             "size-100",
@@ -78,7 +78,7 @@ export function setUpTokenSet() {
         ),
     ];
 
-    const cleanMergingTokens: TokenNode_depr[] = [
+    const cleanMergingTokens = [
         createTokenNode("size-50", createToken({ default: 5 }, "sizing"), "1"),
         createTokenNode(
             "size-300",
