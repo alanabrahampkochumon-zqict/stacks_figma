@@ -12,7 +12,7 @@ import { generateTokenNode } from "../utils/Generators";
 
 describe("TokenSet Add Tests", () => {
     test("token gets added, when a valid token is passed in", () => {
-        // Given a empty token set
+        // Given an empty token set
         const name = "TokenSet";
         const type = ExtendedToken.number;
         const level = 1;

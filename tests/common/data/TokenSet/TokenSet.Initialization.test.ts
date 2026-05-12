@@ -4,7 +4,7 @@ import {
     type Levels,
 } from "@src/common/data/Token";
 import {
-    createTokenNode,
+    createTokenNode, TokenNode,
     type TokenNode_depr,
 } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
@@ -12,8 +12,8 @@ import { describe, expect, test } from "vitest";
 import { generateTokenNode } from "../utils/Generators";
 import setUpTokens from "./TokenSet.fixtures";
 
-describe("TokenSet Intialization Tests", () => {
-    test("creates tokenset with default values, when initialized with only name", () => {
+describe("TokenSet: Instantiation", () => {
+    test("creates TokenSet with default values, when initialized with only name", () => {
         // Given a tokenset initialized with only name
         const name = "TokenSet";
         const tokenSet = new TokenSet(name);
@@ -25,8 +25,8 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toStrictEqual("number");
     });
 
-    test("creates tokenset, when initialized with passed in values", () => {
-        // When a tokenset is initialized with default values
+    test("creates TokenSet, when initialized with passed in values", () => {
+        // When a TokenSet is initialized with default values
         const level = 1;
         const name = "TokenSet";
         const { numberTokens, numberTokenType } = setUpTokens();
@@ -44,12 +44,12 @@ describe("TokenSet Intialization Tests", () => {
         expect(tokenSet.type).toStrictEqual(numberTokenType);
     });
 
-    test("creates tokenset, when initialized with empty tokens", () => {
-        // Given a tokenset initialized with empty tokens
+    test("creates TokenSet, when initialized with empty tokens", () => {
+        // Given a TokenSet initialized with empty tokens
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode_depr[] = [];
+        const tokens: TokenNode[] = [];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // Then, the object contains the correct name and empty tokens
@@ -61,7 +61,7 @@ describe("TokenSet Intialization Tests", () => {
     });
 
     test("adds additional modes, when a token with addtional mode is in the list", () => {
-        // Given a tokennode with additional modes
+        // Given a TokenNode with additional modes
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
@@ -97,7 +97,7 @@ describe("TokenSet Intialization Tests", () => {
     });
 
     test("removes non-unique duplicates, when initialized", () => {
-        // Given a set of tokens with non-unique duplicates
+        // Given a TokenSet with non-unique duplicates
         const level = 1;
         const name = "TokenSet";
         const { numberTokens, numberTokenType } = setUpTokens();
@@ -120,7 +120,7 @@ describe("TokenSet Intialization Tests", () => {
     });
 
     test("throws error, when initialized with mixed token types", () => {
-        // Given a tokenset trying to get initalized with mixed types
+        // Given a TokenSet trying to get initalized with mixed types
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;

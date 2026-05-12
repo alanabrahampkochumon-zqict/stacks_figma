@@ -1,7 +1,6 @@
 import { DuplicationError } from "../error/DuplicationError";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
-import type { Group } from "./Group";
 import type { ExtendedTokenMap, Levels, TokenComparator } from "./Token";
 import {
     ExtendedToken,
@@ -13,7 +12,7 @@ import {
 import {
     createTokenNode,
     type TokenNode,
-    type TokenNode_depr,
+    type TokenNode_depr, ValueNode,
 } from "./TokenNode";
 
 /**
@@ -56,26 +55,21 @@ type TokenSetMergeOptions<K extends keyof ExtendedTokenMap> = {
  * The allowed schema types for a {@link TokenSet}.
  * Either a specific design token category or a structural 'group'.
  */
-type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
+// type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
 /**
- * A strictly-typed collection of {@link TokenNode_depr}s.
+ * A strictly-typed collection of {@link TokenNode}s.
  * @remarks
  * **Invariants:**
  * - All nodes in a set must share the same `type`.
- * - A set cannot mix {@link Group} nodes and {@link TokenNode} nodes.
- * - Names within a set should be unique.
- * @category Core
- *
- * @property {string} name          The unique name identifying this collection.
- * @property {TokenSetType} type    The mandatory schema for all members of this set.
- * @property {Levels} level         The elevation/hierarchy level (1-4). @see {@link Levels}.
- * @property {TokenNode[]} tokens   The internal collection of nodes.
+ * - Node names within a set should be unique.
+ * - The name of the token set must be unique.
  */
 export class TokenSet<K extends keyof typeof ExtendedToken> {
     name: string;
-    type: TokenSetType;
+    type: K[number];
     level: Levels;
-    tokens: TokenNode<K>[];
+    modes: Set<string>;
+    tokens: TokenNode[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, string>;
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
@@ -94,13 +88,13 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      */
     constructor(
         name: string,
-        type: TokenSetType = "number",
+        type: K[number] = ExtendedToken.number,
         level: Levels = 1,
-        tokens: TokenNode<K>[] = [],
+        tokens: TokenNode[] = [],
     ) {
         if (!name)
             throw new IllegalArgumentError(
-                `Name must be passed in for a tokenset`,
+                `Name must be passed in for a TokenSet`,
             );
         if (!isValidLevel(level))
             throw new IllegalArgumentError(
@@ -109,12 +103,13 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
 
         this.#tokenIDMap = new Map();
         this.#modes = new Set();
+        this.modes = new Set();
         // Checks if any of the token set contains a unique id
         if (!this.checkAllTokenUniqueness(tokens))
             throw new DuplicationError(
                 "Tokens cannot contain non-unique elements.",
             );
-        this._validateToken(tokens, type);
+        // TODO: Add token validation
         this.name = name;
         this.type = type;
         this.level = level;
@@ -127,17 +122,18 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
                 duplicates.add(token.name);
                 this.tokens.push(token);
             }
-            // Add modes to cache
-            if (token.value?.entityType === "token") {
-                Object.keys(token.value.valueByMode).forEach((mode) => {
-                    this.#modes.add(mode);
-                });
+            // Add modes
+            if(token instanceof ValueNode) {
+                Object.keys(token.valueByMode).forEach( mode => {
+                    this.modes.add(mode)
+                })
+            }
             }
         }
         // Add tests to ensure new modes are getting added
-        this.#modes.forEach((mode) => {
-            this.#addModeToAllTokens(mode);
-        });
+        // this.#modes.forEach((mode) => {
+        //     this.#addModeToAllTokens(mode);
+        // });
     }
 
     /**
