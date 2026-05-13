@@ -1,10 +1,9 @@
 import {DuplicationError} from "../error/DuplicationError";
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {InsertConflictPolicy, UpdatePolicy} from "./Common";
-import type {ExtendedTokenMap, ExtendedTokenType, Levels, TokenComparator} from "./Token";
+import type {ExtendedTokenType, Levels, TokenComparator} from "./Token";
 import {
     ExtendedToken,
-    isValidExtendedToken,
     isValidLevel,
     validateToken,
     validLevels,
@@ -14,6 +13,8 @@ import {
     type TokenNode,
     type TokenNode_depr, ValueNode,
 } from "./TokenNode";
+import {AST} from "eslint";
+import Token = AST.Token;
 
 // TODO: Add value by mode to reference nodes
 /**
@@ -106,13 +107,17 @@ export class TokenSet {
         this.#tokenIDMap = new Map();
         this.#modes = new Set(); // TODO: Remove
         this.modes = new Set();
+
         // Checks if any of the token set contains a unique id
         if (!this.checkAllTokenUniqueness(tokens))
             throw new DuplicationError(
                 "Tokens cannot contain non-unique elements.",
             );
-        // TODO: Add token validation
+
+        // Perform token validation
         this._validateToken(tokens, type)
+
+        // Instantiate class members
         this.name = name;
         this.type = type;
         this.level = level;
@@ -138,21 +143,19 @@ export class TokenSet {
      * Add the given mode to all the TokenNode instances that are "token" type.
      *
      * @param mode The mode to add.
-     * @remarks "group" {@link TokenNode_depr} don't have a `valueByMode` and hence are **not considered**.
      *
      */
     #addModeToAllTokens(mode: string) {
-        this.#modes.add(mode); // Add the mode if it doesn't exists.
+        this.#modes.add(mode); // Add the mode if it doesn't exist.
 
         this.tokens.forEach((token) => {
-            const {value} = token;
-            if (value?.entityType !== "token") return;
-            const modes = Object.keys(value.valueByMode);
+            if (!(token instanceof ValueNode)) return;
+            const modes = Object.keys(token.valueByMode);
             if (modes.length < 0)
-                throw new Error("Token must have atleast one mode.");
+                throw new Error("Token must have at least one mode.");
 
-            if (!(mode in value.valueByMode)) {
-                value.valueByMode[mode] = value.valueByMode[modes[0]];
+            if (!(mode in token.valueByMode)) {
+                token.valueByMode[mode] = token.valueByMode[modes[0]];
             }
         });
     }
@@ -160,44 +163,44 @@ export class TokenSet {
     /**
      * Add a node to the set while enforcing type consistency.
      *
-     * @param {TokenNode_depr} token              The node to insert.
-     * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
+     * @param token   The {@link TokenNode} to insert.
+     * @param options Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
      */
     addToken(
-        token: TokenNode_depr<K>,
+        token: TokenNode,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
             compareFn,
-        }: TokenSetAddOptions<K> = {},
+        }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
-        const tokenIndex = this.getTokenIndex(token.uid);
+        const tokenIndex = this.getTokenIndex(token.id);
         if (!this.checkTokenUniqueness(token))
             throw new DuplicationError(
                 "A token with the same name already exists.",
             );
         else if (tokenIndex === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
-            this.updateToken(token.uid, token);
+            this.updateToken(token.id, token);
 
         if (sortToken) {
             this.sort(compareFn);
         }
 
-        if (token.value?.entityType !== "token") return;
+
         // Add a new mode from the token into the token group
-        const modes = Object.keys(token.value.valueByMode);
-        const {value} = token;
+        if (!(token instanceof ValueNode)) return;
+        const modes = Object.keys(token.valueByMode);
         modes.forEach((mode) => {
             if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
         });
         this.#modes.forEach((mode) => {
             if (!(mode in modes))
-                value.valueByMode[mode] = value.valueByMode[modes[0]];
+                token.valueByMode[mode] = token.valueByMode[modes[0]];
         });
     }
 

@@ -1,13 +1,12 @@
-import { createToken } from "@src/common/data/Token";
-import { createTokenNode } from "../../../../src/common/data/TokenNode";
-import { TokenSet } from "@src/common/data/TokenSet";
-import { describe, expect, test } from "vitest";
+import {ValueNode} from "@src/common/data/TokenNode.ts";
+import {TokenSet} from "@src/common/data/TokenSet";
+import {describe, expect, test} from "vitest";
 
 describe("TokenSet Size Tests", () => {
     const tokens = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
+        new ValueNode("size-50", {default: 5}),
+        new ValueNode("size-100", {default: 10}),
+        new ValueNode("size-150", {default: 15}),
     ];
     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 
