@@ -1,6 +1,6 @@
-import { DuplicationError } from "../error/DuplicationError";
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import { InsertConflictPolicy, UpdatePolicy } from "./Common";
+import {DuplicationError} from "../error/DuplicationError";
+import {IllegalArgumentError} from "../error/IllegalArgumentError";
+import {InsertConflictPolicy, UpdatePolicy} from "./Common";
 import type {ExtendedTokenMap, ExtendedTokenType, Levels, TokenComparator} from "./Token";
 import {
     ExtendedToken,
@@ -55,6 +55,7 @@ type TokenSetMergeOptions = {
  * The allowed schema types for a {@link TokenSet}.
  * Either a specific design token category or a structural 'group'.
  */
+
 // type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
 /**
  * A strictly-typed collection of {@link TokenNode}s.
@@ -123,13 +124,13 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
                 this.tokens.push(token);
             }
             // Add modes
-            if(token instanceof ValueNode) {
-                Object.keys(token.valueByMode).forEach( mode => {
+            if (token instanceof ValueNode) {
+                Object.keys(token.valueByMode).forEach(mode => {
                     this.modes.add(mode)
                 })
             }
-            }
         }
+
         // Add tests to ensure new modes are getting added
         // this.#modes.forEach((mode) => {
         //     this.#addModeToAllTokens(mode);
@@ -147,7 +148,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         this.#modes.add(mode); // Add the mode if it doesn't exists.
 
         this.tokens.forEach((token) => {
-            const { value } = token;
+            const {value} = token;
             if (value?.entityType !== "token") return;
             const modes = Object.keys(value.valueByMode);
             if (modes.length < 0)
@@ -193,7 +194,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         if (token.value?.entityType !== "token") return;
         // Add a new mode from the token into the token group
         const modes = Object.keys(token.value.valueByMode);
-        const { value } = token;
+        const {value} = token;
         modes.forEach((mode) => {
             if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
         });
@@ -267,7 +268,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         // Add a new mode from the token into the token group
         if (newToken.value?.entityType !== "token") return;
         const modes = Object.keys(newToken.value.valueByMode);
-        const { value } = newToken;
+        const {value} = newToken;
         modes.forEach((mode) => {
             if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
         });
@@ -342,7 +343,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
                 `TokenSet mismatch while merging: {${this.name}, ${this.type}, ${this.level}} != ${tokenSet.name}, ${tokenSet.type}, ${tokenSet.level}`,
             );
         for (const token of tokenSet.tokens) {
-            this.addToken(token, { insertPolicy });
+            this.addToken(token, {insertPolicy});
         }
         if (sortToken) this.sort(compareFn);
     }
@@ -421,13 +422,13 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         let validationResult = false;
         if (tokenType === "group")
             validationResult = tokens.every(
-                ({ value: tokenValue, reference }) =>
+                ({value: tokenValue, reference}) =>
                     (tokenValue && tokenValue?.entityType === "group") ||
                     reference,
             );
         else
             validationResult = tokens.every(
-                ({ value: tokenValue, reference }) =>
+                ({value: tokenValue, reference}) =>
                     (tokenValue &&
                         tokenValue.entityType === "token" &&
                         tokenValue.type === tokenType &&
@@ -485,7 +486,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * @returns True if the name is unique within the current tokenset.
      */
     checkAllTokenUniqueness(tokens: TokenNode<K>[]): boolean {
-        for (const { name, uid } of tokens) {
+        for (const {name, uid} of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
             if (
                 this.#tokenIDMap.has(name) &&
