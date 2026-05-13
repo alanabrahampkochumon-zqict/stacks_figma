@@ -10,7 +10,7 @@ import {
     validLevels,
 } from "./Token";
 import {
-    createTokenNode,
+    createTokenNode, GroupNode,
     type TokenNode,
     type TokenNode_depr, ValueNode,
 } from "./TokenNode";
@@ -298,13 +298,13 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
     /**
      * Re-orders the internal token collection.
      *
-     * @param {TokenComparator} compareFn   The comparison logic. Defaults to a numeric-aware,
-     *                                      case-insensitive alphanumeric sort (e.g., "red-10" comes before "red-20").
+     * @param {TokenComparator} compareFn The comparison logic. Defaults to a numeric-aware,
+     *                                    case-insensitive alphanumeric sort (e.g., "red-10" comes before "red-20").
      */
     sort(
-        compareFn: TokenComparator<K> = (a, b) =>
+        compareFn: TokenComparator = (a, b) =>
             a.name.localeCompare(b.name, undefined, {
-                numeric: true, // Treat numerics inside string as numbers
+                numeric: true, // Treat numeric literals inside string as numbers
                 sensitivity: "base",
             }),
     ) {
@@ -316,8 +316,8 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * @remarks
      * Both sets must have identical `name`, `type`, and `level` to be considered compatible for merging.
      *
-     * @param {TokenSet} tokenSet   The source set to merge from.
-     * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
+     * @param {TokenSet} tokenSet          The source set to merge from.
+     * @param {TokenSetAddOptions} options Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If architectural metadata (name/type/level) does not match.
      */
@@ -327,7 +327,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
             compareFn,
-        }: TokenSetMergeOptions<K> = {},
+        }: TokenSetMergeOptions = {},
     ) {
         if (
             this.name !== tokenSet.name ||
@@ -347,6 +347,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * Returns a JSON string representation of the current set.
      * @returns A JSON string.
      */
+    // TODO: Update implementation
     toJsonString(): string {
         return JSON.stringify({
             name: this.name,
@@ -359,12 +360,14 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
     /**
      * Reconstructs a {@link TokenSet} instance from a JSON string.
      *
-     * @param {string} jsonString   A valid JSON representation of a TokenSet.
+     * @param {string} jsonString A valid JSON representation of a TokenSet.
      *
      * @returns A new, validated instance of TokenSet.
+     *
      * @throws {SyntaxError} If the string is not valid JSON.
      * @throws {IllegalArgumentError} If the hydrated data fails level or type validation.
      */
+    // TODO: Update implementation
     static fromJson<K extends keyof ExtendedTokenMap>(
         jsonString: string,
     ): TokenSet<K> {
@@ -390,49 +393,26 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * Validate a list of tokens are of the same type.
      * @remarks
      * Type must be the same among all the tokens and the parent token type.
-     * @deprecated Reason: Tokenset can contain groups
      *
      * @private
-     * @param tokens The tokens to validate.
+     * @param tokens    The tokens to validate.
      * @param tokenType The parent token type to use for validation.
      *
      * @throws {@link IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
     private _validateToken(
-        tokens: TokenNode_depr<K>[],
-        tokenType: TokenSetType,
+        tokens: TokenNode[],
+        tokenType: ExtendedTokenType,
     ) {
-        // Parent Token Type validation
-        if (
-            !(
-                tokenType === "group" ||
-                isValidExtendedToken(tokenType.toString())
-            )
-        )
-            throw new IllegalArgumentError(
-                `Invalid token type: Type must be in ${ExtendedToken}`,
-            );
-
-        // Token Type validation
         let validationResult = false;
-        if (tokenType === "group")
-            validationResult = tokens.every(
-                ({value: tokenValue, reference}) =>
-                    (tokenValue && tokenValue?.entityType === "group") ||
-                    reference,
-            );
-        else
-            validationResult = tokens.every(
-                ({value: tokenValue, reference}) =>
-                    (tokenValue &&
-                        tokenValue.entityType === "token" &&
-                        tokenValue.type === tokenType &&
-                        validateToken(
-                            tokenValue.valueByMode,
-                            tokenValue.type,
-                        )) ||
-                    reference,
-            );
+        tokens.forEach(token => {
+                if (token instanceof ValueNode) {
+                    validateToken(token.valueByMode, tokenType)
+                } else if (token instanceof GroupNode) {
+                    // TODO: Add recursive validation to GroupNode's children
+                }
+            }
+        )
 
         if (!validationResult)
             throw new IllegalArgumentError(
@@ -443,8 +423,9 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
     /**
      * Perform check on whether the name is unique in the tokenset.
      *
-     * @param {string} name The name to check.
-     * @returns {boolean} True if the name is unique within the current tokenset.
+     * @param name The name to check.
+     *
+     * @returns True if the name is unique within the current tokenset.
      */
     _checkUniqueName(name: string): boolean {
         return !this.tokens.some((token) => token.name === name);
@@ -457,8 +438,9 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * - A token is considered unique if it has the same name and ID.
      * - A token with same name but different ID will is not unique.
      *
-     * @param {string} token The name to validate.
-     * @returns {boolean} True if the name is unique within the current tokenset.
+     * @param token The name to validate.
+     *
+     * @returns True if the name is unique within the current tokenset.
      */
     checkTokenUniqueness(token: TokenNode): boolean {
         if (
@@ -471,6 +453,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         return true;
     }
 
+
     /**
      * Perform a uniqueness check on every token against every other token in a given set of token.
      * **Invariants**
@@ -478,6 +461,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * - A token with same name but different ID will is not unique.
      *
      * @param tokens The set of tokens to validate.
+     *
      * @returns True if the name is unique within the current tokenset.
      */
     checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
