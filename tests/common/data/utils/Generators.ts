@@ -1,19 +1,19 @@
 import {faker} from "@faker-js/faker";
 import type {
-    ExtendedToken,
+    ExtendedToken, ExtendedTokenType,
 } from "@src/common/data/Token";
 import {GroupNode, ReferenceNode, type TokenNode, ValueNode} from "@src/common/data/TokenNode.ts";
 import {v4} from "uuid";
 
 function generateTokenByType(
-    type: (keyof typeof ExtendedToken)[number],
+    type: ExtendedTokenType,
     randomLimit: number = 10000,
 ) {
     switch (type) {
         case "number":
         case "sizing":
         case "spacing":
-        case "corner-radius":
+        case "cornerRadius":
             return Math.round(Math.random() * randomLimit);
         case "string":
             return faker.word.words();
@@ -25,7 +25,7 @@ function generateTokenByType(
         // TODO: Implementation
         case "gradient":
         // TODO: Implementation
-        case "box-shadow":
+        case "boxShadow":
         // TODO: Implementation
         case "animation":
         // TODO: Implementation
@@ -35,7 +35,7 @@ function generateTokenByType(
 export function generateValueTokenNode(
     name: string,
     id: string,
-    type: (keyof typeof ExtendedToken)[number],
+    type: ExtendedTokenType,
     modes: string[] = ["default"],
 ): ValueNode {
     return new ValueNode(
@@ -68,7 +68,7 @@ export function generateValueTokenNode(
 export function generateTokenNode(
     name: string | undefined = undefined,
     type: "group" | "token" | "reference" = "token",
-    nodeType: (keyof typeof ExtendedToken)[number] = "number",
+    nodeType: ExtendedTokenType = "number",
     uid: string | undefined = undefined,
     referenceId: string | undefined = undefined,
     modes: string[] | undefined = undefined,

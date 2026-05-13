@@ -1,5 +1,5 @@
 import { createGroup } from "@src/common/data/Group";
-import { createToken, type ExtendedTokenTypes } from "@src/common/data/Token";
+import { createToken } from "@src/common/data/Token";
 import {
     createTokenNode, TokenNode,
     type TokenNode_depr,

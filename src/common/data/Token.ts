@@ -7,7 +7,6 @@ import { TypographyToken } from "./TypographyToken";
 
 /**
  * Basic Design System token categories.
- * @category Constants
  */
 export const BasicToken = {
     number: "number",
@@ -18,7 +17,6 @@ export const BasicToken = {
 
 /**
  * Complete list of supported Design System token categories, including effects.
- * @category Constants
  */
 export const ExtendedToken = {
     ...BasicToken,
@@ -31,6 +29,14 @@ export const ExtendedToken = {
     gradient: "gradient",
 } as const;
 
+/**
+ * Type alias for {@link ExtendedToken}.
+ */
+export type ExtendedTokenType = keyof typeof ExtendedToken
+
+
+
+//////////////////// DEPRECATED
 /**
  * @deprecated Remove
  * Primitive token types used for validationa and node classfication.
@@ -75,7 +81,7 @@ export function isValidExtendedToken(input: string): boolean {
  * @returns True if all values satisfy the type requirements, else False.
  */
 export function validateToken(
-    tokenValuesByMode: Record<keyof typeof ExtendedToken, any>,
+    tokenValuesByMode: Record<string, any>,
     tokenType: keyof typeof ExtendedToken,
 ): boolean {
     if (!tokenValuesByMode) return false;
