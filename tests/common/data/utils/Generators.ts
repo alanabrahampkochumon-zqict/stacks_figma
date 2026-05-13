@@ -50,19 +50,6 @@ export function generateValueTokenNode(
     )
 }
 
-// const usedNames = new Set();
-// let index = 0;
-// const words = faker.word.words({ count: 5000 }).split(" ");
-// function generateUniqueName() {
-//     let name = words[index];
-//     index++;
-//     while (usedNames.has(name)) {
-//         name = words[index];
-//         index++;
-//         usedNames.add(name);
-//     }
-//     return name;
-// }
 
 /**
  * Generates a {@link TokenNode} for testing.
@@ -96,10 +83,10 @@ export function generateTokenNode(
     switch (type) {
         case "group":
             const expanded = Math.random() < 0.5;
-            const childNodes = new Array(Math.round(Math.random() * 3 + 4)).map(() => generateValueTokenNode(v4(), v4(), nodeType))
+            const childNodes = new Array(Math.round(Math.random() * 3 + 4)).map(() => generateValueTokenNode(v4(), v4(), nodeType, modes))
             return new GroupNode(tokenName, childNodes, expanded, tokenId)
         case "token":
-            return generateValueTokenNode(tokenName, tokenId, nodeType)
+            return generateValueTokenNode(tokenName, tokenId, nodeType, modes)
         case "reference":
             return new ReferenceNode(tokenName, referenceId || v4(), tokenId)
     }
