@@ -130,11 +130,6 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
                 })
             }
         }
-
-        // Add tests to ensure new modes are getting added
-        // this.#modes.forEach((mode) => {
-        //     this.#addModeToAllTokens(mode);
-        // });
     }
 
     /**
@@ -485,17 +480,17 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * @param tokens The set of tokens to validate.
      * @returns True if the name is unique within the current tokenset.
      */
-    checkAllTokenUniqueness(tokens: TokenNode<K>[]): boolean {
-        for (const {name, uid} of tokens) {
+    checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
+        for (const {name, id} of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
             if (
                 this.#tokenIDMap.has(name) &&
-                this.#tokenIDMap.get(name) !== uid
+                this.#tokenIDMap.get(name) !== id
             )
                 return false;
 
             // Add the id and name
-            this.#tokenIDMap.set(name, uid);
+            this.#tokenIDMap.set(name, id);
         }
 
         return true;
