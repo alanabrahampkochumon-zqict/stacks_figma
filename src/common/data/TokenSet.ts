@@ -15,6 +15,7 @@ import {
     type TokenNode_depr, ValueNode,
 } from "./TokenNode";
 
+// TODO: Add value by mode to reference nodes
 /**
  * Options for updating the contents of a {@link TokenSet}.
  * @property updatePolicy Policy to handle conflicts if a token does not exist.
@@ -65,9 +66,9 @@ type TokenSetMergeOptions = {
  * - Node names within a set should be unique.
  * - The name of the token set must be unique.
  */
-export class TokenSet<K extends keyof typeof ExtendedToken> {
+export class TokenSet {
     name: string;
-    type: K[number];
+    type: ExtendedTokenType;
     level: Levels;
     modes: Set<string>;
     tokens: TokenNode[];
@@ -89,7 +90,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      */
     constructor(
         name: string,
-        type: K[number] = ExtendedToken.number,
+        type: ExtendedTokenType = ExtendedToken.number,
         level: Levels = 1,
         tokens: TokenNode[] = [],
     ) {
@@ -103,7 +104,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
             );
 
         this.#tokenIDMap = new Map();
-        this.#modes = new Set();
+        this.#modes = new Set(); // TODO: Remove
         this.modes = new Set();
         // Checks if any of the token set contains a unique id
         if (!this.checkAllTokenUniqueness(tokens))
@@ -111,6 +112,7 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
                 "Tokens cannot contain non-unique elements.",
             );
         // TODO: Add token validation
+        this._validateToken(tokens, type)
         this.name = name;
         this.type = type;
         this.level = level;
@@ -404,20 +406,16 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
         tokens: TokenNode[],
         tokenType: ExtendedTokenType,
     ) {
-        let validationResult = false;
         tokens.forEach(token => {
-                if (token instanceof ValueNode) {
-                    validateToken(token.valueByMode, tokenType)
+                if (token instanceof ValueNode && !validateToken(token.valueByMode, tokenType)) {
+                    throw new IllegalArgumentError(
+                        "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
+                    );
                 } else if (token instanceof GroupNode) {
                     // TODO: Add recursive validation to GroupNode's children
                 }
             }
         )
-
-        if (!validationResult)
-            throw new IllegalArgumentError(
-                "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
-            );
     }
 
     /**

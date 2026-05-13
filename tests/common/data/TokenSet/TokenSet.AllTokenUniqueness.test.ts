@@ -33,7 +33,7 @@ describe("Token Set: All Token Uniqueness", () => {
     test("returns false, if duplicate name with different id is found", () => {
         // Given a list of tokens with a duplicate name but different id token
         const { numberTokens } = setUpTokens();
-        numberTokens.push({ ...numberTokens[0], uid: v4() });
+        numberTokens.push({ ...numberTokens[0], id: v4() });
         const tks = new TokenSet("tks");
 
         // When checked for uniqueness
