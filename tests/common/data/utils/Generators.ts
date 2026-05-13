@@ -1,15 +1,12 @@
 import {faker} from "@faker-js/faker";
-import type {Group} from "@src/common/data/Group";
 import type {
     ExtendedToken,
-    ExtendedTokenTypes,
-    Token_depr,
 } from "@src/common/data/Token";
-import {GroupNode, ReferenceNode, type TokenNode, ValueNode} from "../../../../src/common/data/TokenNode";
+import {GroupNode, ReferenceNode, type TokenNode, ValueNode} from "@src/common/data/TokenNode.ts";
 import {v4} from "uuid";
 
 function generateTokenByType(
-    type: ExtendedTokenTypes,
+    type: (keyof typeof ExtendedToken)[number],
     randomLimit: number = 10000,
 ) {
     switch (type) {
@@ -25,7 +22,7 @@ function generateTokenByType(
         case "color":
             return faker.color.rgb({format: "hex"});
         case "typography":
-            // TODO
+        // TODO: Implementation
         case "gradient":
         // TODO: Implementation
         case "box-shadow":
@@ -63,8 +60,6 @@ export function generateValueTokenNode(
  *                    @see {@link ExtendedToken} for details.
  * @param uid         The Unique identifier of the token node.
  *                    Generates a random name by default.
- * @param parentId    The parentId of the token node.
- *                    Generates a parent with 50% RNG by default.
  * @param referenceId A reference id for the generated token, only applicable when setting type to "reference".
  * @param modes       The modes to use for generating {@link TokenNode}. Only applicable for {@link ValueNode}.
  *
@@ -76,7 +71,7 @@ export function generateTokenNode(
     nodeType: (keyof typeof ExtendedToken)[number] = "number",
     uid: string | undefined = undefined,
     referenceId: string | undefined = undefined,
-    modes: string[] | undefined = undefined, // TODO: Add modes
+    modes: string[] | undefined = undefined,
 ): TokenNode {
     const tokenName = name || v4();
     const tokenId = uid || v4();
