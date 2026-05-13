@@ -1,6 +1,6 @@
-import { IllegalArgumentError } from "../error/IllegalArgumentError";
-import type { TokenNode_depr } from "./TokenNode";
-import { TypographyToken } from "./TypographyToken";
+import {IllegalArgumentError} from "../error/IllegalArgumentError";
+import type {TokenNode_depr} from "./TokenNode";
+import {TypographyToken} from "./TypographyToken";
 
 // TODO: Add getGroupName
 // TODO: Add getTokenValue/getTokenValueByMode helpers
@@ -14,6 +14,7 @@ export const BasicToken = {
     boolean: "boolean",
     color: "color",
 } as const;
+
 
 /**
  * Complete list of supported Design System token categories, including effects.
@@ -29,11 +30,11 @@ export const ExtendedToken = {
     gradient: "gradient",
 } as const;
 
+
 /**
  * Type alias for {@link ExtendedToken}.
  */
 export type ExtendedTokenType = keyof typeof ExtendedToken
-
 
 
 //////////////////// DEPRECATED
