@@ -460,14 +460,14 @@ export class TokenSet<K extends keyof typeof ExtendedToken> {
      * @param {string} token The name to validate.
      * @returns {boolean} True if the name is unique within the current tokenset.
      */
-    checkTokenUniqueness(token: TokenNode<K>): boolean {
+    checkTokenUniqueness(token: TokenNode): boolean {
         if (
             this.#tokenIDMap.has(token.name) &&
-            this.#tokenIDMap.get(token.name) !== token.uid
+            this.#tokenIDMap.get(token.name) !== token.id
         )
             return false;
 
-        this.#tokenIDMap.set(token.name, token.uid);
+        this.#tokenIDMap.set(token.name, token.id);
         return true;
     }
 
