@@ -1,5 +1,5 @@
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
-import type {TokenNode_depr} from "./TokenNode";
+import {TokenNode, type TokenNode_depr} from "./TokenNode";
 import {TypographyToken} from "./TypographyToken";
 
 // TODO: Add getGroupName
@@ -187,9 +187,9 @@ export function createToken<K extends keyof ExtendedTokenMap>(
 }
 
 /**
- * Comparator definition used by {@link TokenNode_depr}.
+ * Comparator definition used by {@link TokenNode}.
  */
-export type TokenComparator<K extends keyof ExtendedTokenMap> = (
-    a: TokenNode_depr<K>,
-    b: TokenNode_depr<K>,
+export type TokenComparator = (
+    a: TokenNode,
+    b: TokenNode,
 ) => number;

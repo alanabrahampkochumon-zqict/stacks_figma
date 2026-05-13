@@ -1,7 +1,7 @@
 import { DuplicationError } from "../error/DuplicationError";
 import { IllegalArgumentError } from "../error/IllegalArgumentError";
 import { InsertConflictPolicy, UpdatePolicy } from "./Common";
-import type { ExtendedTokenMap, Levels, TokenComparator } from "./Token";
+import type {ExtendedTokenMap, ExtendedTokenType, Levels, TokenComparator} from "./Token";
 import {
     ExtendedToken,
     isValidExtendedToken,
@@ -21,10 +21,10 @@ import {
  * @property sortToken Whether to re-sort the collection after the operation.
  * @property compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type TokenSetUpdateOptions<K extends keyof ExtendedTokenMap> = {
+type TokenSetUpdateOptions = {
     updatePolicy?: UpdatePolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator<K>;
+    compareFn?: TokenComparator;
 };
 
 /**
@@ -33,10 +33,10 @@ type TokenSetUpdateOptions<K extends keyof ExtendedTokenMap> = {
  * @property sortToken Whether to re-sort the collection after the operation.
  * @property compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type TokenSetAddOptions<K extends keyof ExtendedTokenMap> = {
+type TokenSetAddOptions = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator<K>;
+    compareFn?: TokenComparator;
 };
 
 /**
@@ -45,10 +45,10 @@ type TokenSetAddOptions<K extends keyof ExtendedTokenMap> = {
  * @property sortToken Whether to re-sort the collection after the operation.
  * @property compareFn Custom sorting logic. Defaults to alphanumeric by name.
  */
-type TokenSetMergeOptions<K extends keyof ExtendedTokenMap> = {
+type TokenSetMergeOptions = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator<K>;
+    compareFn?: TokenComparator;
 };
 
 /**
