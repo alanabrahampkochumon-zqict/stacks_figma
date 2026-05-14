@@ -1,4 +1,4 @@
-import {expect, test} from "vitest";
+import {describe, expect, test} from "vitest";
 import {ReferenceNode} from "@src/common/data/TokenNode.ts";
 import {JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
 

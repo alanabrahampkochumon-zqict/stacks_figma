@@ -1,4 +1,5 @@
 import {
+    ExtendedToken,
     type ExtendedTokenType,
     type Levels,
 } from "@src/common/data/Token";
@@ -154,7 +155,7 @@ describe("TokenSet: Instantiation", () => {
         const tokenType: ExtendedTokenType = "number";
         const level = 1;
         const tokens = [
-            new ValueNode("color-50", {"default": "#fff"}),
+            new ValueNode(ExtendedToken.color, "color-50", "#fff"),
         ];
         // Then, the initializer throws an error
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();

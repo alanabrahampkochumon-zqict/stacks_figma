@@ -1,11 +1,12 @@
 import {describe, expect, test} from "vitest"
 import {GroupNode, ReferenceNode, ValueNode} from "@src/common/data/TokenNode.ts";
 import {JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
+import {ExtendedToken} from "@src/common/data/Token.ts";
 
 describe("GroupNode: Instantiation", () => {
 
     const name = "Group"
-    const childNode1 = new ValueNode("node-1", {"group": "1234"})
+    const childNode1 = new ValueNode(ExtendedToken.number, "node-1", 1234)
     const childNode2 = new GroupNode("group-1")
     const children = [childNode1, childNode2]
     const expanded = true
@@ -50,7 +51,7 @@ describe("GroupNode: Instantiation", () => {
 
 describe("GroupNode: addChild", () => {
 
-    const child1 = new ValueNode("value", {"dark": "#316316"})
+    const child1 = new ValueNode(ExtendedToken.color, "value", "#316316")
     const child2 = new GroupNode("group")
     const child3 = new ReferenceNode("reference", "1234")
 
@@ -81,7 +82,7 @@ describe("GroupNode: addChild", () => {
 
 describe("GroupNode: removeChild", () => {
 
-    const child1 = new ValueNode("value", {"dark": "#316316"})
+    const child1 = new ValueNode(ExtendedToken.color, "value", "#316316")
     const child2 = new GroupNode("group")
     const child3 = new ReferenceNode("reference", "1234")
 
@@ -134,7 +135,7 @@ describe("GroupNode: removeChild", () => {
 })
 
 describe("GroupNode: toJson", () => {
-    const child1 = new ValueNode("value", {"dark": "#316316"})
+    const child1 = new ValueNode(ExtendedToken.color, "value", "#316316")
     const child2 = new GroupNode("group")
     const child3 = new ReferenceNode("reference", "1234")
     const groupNode = new GroupNode("parent", [child1, child2, child3])

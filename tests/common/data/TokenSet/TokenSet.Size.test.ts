@@ -1,12 +1,13 @@
 import {ValueNode} from "@src/common/data/TokenNode.ts";
 import {TokenSet} from "@src/common/data/TokenSet";
 import {describe, expect, test} from "vitest";
+import {ExtendedToken} from "@src/common/data/Token.ts";
 
 describe("TokenSet Size Tests", () => {
     const tokens = [
-        new ValueNode("size-50", {default: 5}),
-        new ValueNode("size-100", {default: 10}),
-        new ValueNode("size-150", {default: 15}),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5),
+        new ValueNode(ExtendedToken.sizing, "size-100", 10),
+        new ValueNode(ExtendedToken.sizing, "size-150", 15),
     ];
     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 

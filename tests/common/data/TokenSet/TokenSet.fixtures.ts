@@ -1,4 +1,4 @@
-import {type ExtendedTokenType} from "@src/common/data/Token";
+import {ExtendedToken, type ExtendedTokenType} from "@src/common/data/Token";
 import {
     GroupNode, TokenNode,
     ValueNode,
@@ -20,7 +20,6 @@ export default function setUpTokens() {
                 numberTokenType,
                 undefined,
                 undefined,
-                undefined,
             ),
         );
     const sortedNumberToken = numberTokens.sort(
@@ -31,7 +30,6 @@ export default function setUpTokens() {
     );
 
     const colorTokenType: ExtendedTokenType = "color";
-    const colorTokenModes = ["dark", "light"];
     const colorTokens = Array(10)
         .fill(0)
         .map(() =>
@@ -41,7 +39,6 @@ export default function setUpTokens() {
                 colorTokenType,
                 undefined,
                 undefined,
-                colorTokenModes,
             ),
         );
 
@@ -50,7 +47,6 @@ export default function setUpTokens() {
     return {
         numberTokenModes,
         numberTokens,
-        colorTokenModes,
         colorTokens,
         numberTokenSet,
         sortedNumberToken,
@@ -61,67 +57,67 @@ export default function setUpTokens() {
 
 export function setUpTokenSet() {
     const originalTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 5}, "2"),
-        new ValueNode("size-150", {default: 5}, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 5, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 5, "3"),
     ];
 
     const cleanMergingTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-300", {default: 30}, "5"),
-        new ValueNode("size-250", {default: 250}, "6"),
-        new ValueNode("size-200", {default: 120}, "7"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-300", 30, "5"),
+        new ValueNode(ExtendedToken.sizing, "size-250", 250, "6"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 120, "7"),
     ];
     const cleanMergingResultTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 10}, "2"),
-        new ValueNode("size-150", {default: 15}, "3"),
-        new ValueNode("size-300", {default: 30}, "5"),
-        new ValueNode("size-250", {default: 250}, "6"),
-        new ValueNode("size-200", {default: 120}, "7"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 10, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 15, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-300", 30, "5"),
+        new ValueNode(ExtendedToken.sizing, "size-250", 250, "6"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 120, "7"),
     ];
 
     const sortedMergingResultTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 10}, "2"),
-        new ValueNode("size-150", {default: 15}, "3"),
-        new ValueNode("size-200", {default: 120}, "7"),
-        new ValueNode("size-250", {default: 250}, "6"),
-        new ValueNode("size-300", {default: 30}, "5"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 10, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 15, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 120, "7"),
+        new ValueNode(ExtendedToken.sizing, "size-250", 250, "6"),
+        new ValueNode(ExtendedToken.sizing, "size-300", 30, "5"),
     ];
     const valueByNameSortedMergingResultTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 10}, "2"),
-        new ValueNode("size-150", {default: 15}, "3"),
-        new ValueNode("size-300", {default: 30}, "5"),
-        new ValueNode("size-200", {default: 120}, "7"),
-        new ValueNode("size-250", {default: 250}, "6"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 10, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 15, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-300", 30, "5"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 120, "7"),
+        new ValueNode(ExtendedToken.sizing, "size-250", 250, "6"),
     ];
     const conflictMergingTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 15}, "2"),
-        new ValueNode("size-150", {default: 25}, "3"),
-        new ValueNode("size-200", {default: 35}, "4"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 15, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 25, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 35, "4"),
     ];
     const conflictMergingReplaceResultTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 15}, "2"),
-        new ValueNode("size-150", {default: 25}, "3"),
-        new ValueNode("size-200", {default: 35}, "4"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 15, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 25, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 35, "4"),
     ];
     const conflictMergingIgnoreResultTokens = [
-        new ValueNode("size-50", {default: 5}, "1"),
-        new ValueNode("size-100", {default: 10}, "2"),
-        new ValueNode("size-150", {default: 15}, "3"),
-        new ValueNode("size-200", {default: 35}, "4"),
+        new ValueNode(ExtendedToken.sizing, "size-50", 5, "1"),
+        new ValueNode(ExtendedToken.sizing, "size-100", 10, "2"),
+        new ValueNode(ExtendedToken.sizing, "size-150", 15, "3"),
+        new ValueNode(ExtendedToken.sizing, "size-200", 35, "4"),
     ];
     const differentTokenType = "spacing";
     const differentTokens = [
-        new ValueNode("spacing-250", {default: 25}),
-        new ValueNode("spacing-350", {default: 35}),
-        new ValueNode("spacing-450", {default: 45}),
+        new ValueNode(ExtendedToken.spacing, "spacing-250", 25),
+        new ValueNode(ExtendedToken.spacing, "spacing-350", 35),
+        new ValueNode(ExtendedToken.spacing, "spacing-450", 45),
     ];
-    const groupTokenSet = new TokenSet("groups", "group", 1, [
+    const groupTokenSet = new TokenSet("groups", ExtendedToken.number, 1, [
         new GroupNode("group-1", [], true, "1"),
         new GroupNode("group-2", [], true, "2"),
         new GroupNode("group-3", [], true, "3"),
