@@ -36,6 +36,22 @@ export const ExtendedToken = {
  */
 export type ExtendedTokenType = keyof typeof ExtendedToken
 
+/** Expected type for each type of {@link BaseToken} and {@link ExtendedToken}. */
+export type ExtendedParamType<T> =
+    T extends "number" ? number :
+        T extends "string" ? string :
+            T extends "boolean" ? boolean :
+                T extends "color" ? string :
+                    T extends "sizing" ? number :
+                        T extends "spacing" ? number :
+                            T extends "spacing" ? number :
+                                T extends "typography" ? TypographyToken :
+                                    // TODO: Add change types from any
+                                    T extends "animation" ? any :
+                                        T extends "cornerRadius" ? any :
+                                            T extends "boxShadow" ? any :
+                                                T extends "gradient" ? any : unknown;
+
 
 //////////////////// DEPRECATED
 /**
@@ -72,6 +88,7 @@ export type ExtendedTokenMap = BasicTokenMap & {
 export function isValidExtendedToken(input: string): boolean {
     return input in ExtendedToken;
 }
+
 
 /**
  * Validate the underlying values of a token against its schema definition.

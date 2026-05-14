@@ -67,8 +67,8 @@ describe("TokenSet: Instantiation", () => {
             generateTokenNode(undefined, "token", tokenType),
         );
         if(tokens[2] instanceof ValueNode) {
-            tokens[2].valueByMode = {
-                ...tokens[2].valueByMode,
+            tokens[2].value = {
+                ...tokens[2].value,
                 "another-mode": 1234,
                 "3rd-mode": 443,
             }
@@ -80,17 +80,17 @@ describe("TokenSet: Instantiation", () => {
         // Then, the all the modes are present in the other tokens
         tokenSet.tokens.slice(0, 2).forEach((token) => {
             if (token instanceof ValueNode) {
-                expect(Object.keys(token.valueByMode)).toContain(
+                expect(Object.keys(token.value)).toContain(
                     "another-mode",
                 );
-                expect(Object.keys(token.valueByMode)).toContain("3rd-mode");
+                expect(Object.keys(token.value)).toContain("3rd-mode");
 
                 // And share the default value of the pre-existing mode
-                expect(token.valueByMode["another-mode"]).toStrictEqual(
-                    token.valueByMode.default,
+                expect(token.value["another-mode"]).toStrictEqual(
+                    token.value.default,
                 );
-                expect(token.valueByMode["3rd-mode"]).toStrictEqual(
-                    token.valueByMode.default,
+                expect(token.value["3rd-mode"]).toStrictEqual(
+                    token.value.default,
                 );
             }
         });

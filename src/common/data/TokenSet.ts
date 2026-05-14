@@ -132,7 +132,7 @@ export class TokenSet {
             }
             // Add modes
             if (token instanceof ValueNode) {
-                Object.keys(token.valueByMode).forEach(mode => {
+                Object.keys(token.value).forEach(mode => {
                     this.modes.add(mode)
                 })
             }
@@ -150,12 +150,12 @@ export class TokenSet {
 
         this.tokens.forEach((token) => {
             if (!(token instanceof ValueNode)) return;
-            const modes = Object.keys(token.valueByMode);
+            const modes = Object.keys(token.value);
             if (modes.length < 0)
                 throw new Error("Token must have at least one mode.");
 
-            if (!(mode in token.valueByMode)) {
-                token.valueByMode[mode] = token.valueByMode[modes[0]];
+            if (!(mode in token.value)) {
+                token.value[mode] = token.value[modes[0]];
             }
         });
     }
@@ -194,13 +194,13 @@ export class TokenSet {
 
         // Add a new mode from the token into the token group
         if (!(token instanceof ValueNode)) return;
-        const modes = Object.keys(token.valueByMode);
+        const modes = Object.keys(token.value);
         modes.forEach((mode) => {
             if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
         });
         this.#modes.forEach((mode) => {
             if (!(mode in modes))
-                token.valueByMode[mode] = token.valueByMode[modes[0]];
+                token.value[mode] = token.value[modes[0]];
         });
     }
 
@@ -410,7 +410,7 @@ export class TokenSet {
         tokenType: ExtendedTokenType,
     ) {
         tokens.forEach(token => {
-                if (token instanceof ValueNode && !validateToken(token.valueByMode, tokenType)) {
+                if (token instanceof ValueNode && !validateToken(token.value, tokenType)) {
                     throw new IllegalArgumentError(
                         "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
                     );
