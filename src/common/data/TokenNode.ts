@@ -2,14 +2,12 @@ import {v4 as uuidv4, v4} from "uuid";
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import type {Group} from "./Group";
 import {
-    type ExtendedParamType,
     ExtendedToken,
     type ExtendedTokenMap,
     type ExtendedTokenType,
     type Token_depr, type TokenTypeMap
 } from "./Token";
 import {JSON_IDENTIFIERS} from "@src/common/utils/Constants.ts";
-import {TypographyToken} from "@src/common/data/TypographyToken.ts";
 
 
 /**
