@@ -36,22 +36,20 @@ export const ExtendedToken = {
  */
 export type ExtendedTokenType = keyof typeof ExtendedToken
 
-/** Expected type for each type of {@link BaseToken} and {@link ExtendedToken}. */
-export type ExtendedParamType<T> =
-    T extends "number" ? number :
-        T extends "string" ? string :
-            T extends "boolean" ? boolean :
-                T extends "color" ? string :
-                    T extends "sizing" ? number :
-                        T extends "spacing" ? number :
-                            T extends "spacing" ? number :
-                                T extends "typography" ? TypographyToken :
-                                    // TODO: Add change types from any
-                                    T extends "animation" ? any :
-                                        T extends "cornerRadius" ? any :
-                                            T extends "boxShadow" ? any :
-                                                T extends "gradient" ? any : unknown;
-
+/** Expected value type for each type of {@link BaseToken} and {@link ExtendedToken}. */
+export type TokenTypeMap = {
+    number: number;
+    string: string;
+    boolean: boolean;
+    color: string;
+    typography: TypographyToken;
+    sizing: number;
+    spacing: number;
+    cornerRadius: number;
+    animation: any; // TODO: Update to use a specific class
+    boxShadow: any; // TODO: Update to use a specific class
+    gradient: any; // TODO: Update to use a specific class
+};
 
 //////////////////// DEPRECATED
 /**
