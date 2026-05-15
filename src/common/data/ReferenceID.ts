@@ -35,6 +35,16 @@ class ReferenceID {
         return new ReferenceID(uid)
     }
 
+    /**
+     * Validates whether a given string is a {@link ReferenceID}
+     * @param uid The string to validate.
+     *
+     * @returns True if the given string is valid {}
+     */
+    validate(uid: string): boolean {
+        const extractedUUID = uid.substring(ReferenceID.#prefix.length - 1)
+        return isValidUUID(extractedUUID)
+    }
 
 
     /**
