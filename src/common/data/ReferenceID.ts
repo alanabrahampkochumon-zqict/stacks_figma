@@ -1,41 +1,73 @@
-import {v4} from "uuid";
+import {v4, validate as isValidUUID } from "uuid";
 
-/** ID used by the design system to uniquely identify a @see {@link TokenNode}. */
+/** ID used by the design system to uniquely identify a {@link Token}. */
 class ReferenceID {
 
-    readonly #prefix: string = "@ref:"
+    static readonly #prefix: string = "@ref:"
     readonly #uid: string
 
+    /**
+     * Constructs a ReferenceID from a UID.
+     *
+     * @param uid The unique identifier to use for instantiating a ReferenceID.
+     *
+     * @private
+     */
     private constructor(uid: string) {
         this.#uid = uid
     }
 
+    /**
+     * Generate a random {@link ReferenceID}
+     *
+     * @returns A randomly generated ReferenceID.
+     */
     static generate(): ReferenceID {
         return new ReferenceID(v4())
     };
 
+    /**
+     * Construct a {@link ReferenceID} from UID string.
+     *
+     * @param uid The uid to use for ReferenceID instantiation.
+     */
     static fromUID(uid: string): ReferenceID {
         return new ReferenceID(uid)
     }
 
+
+
+    /**
+     * Returns the underlying unique identifier of the reference ID.
+     */
     toUID(): string {
         return this.#uid
     }
 
+    /**
+     * Overrides the default toString method to ensure logs reflect a ReferenceID.
+     */
     toString():string {
-        return this.#prefix + this.#uid
+        return ReferenceID.#prefix + this.#uid
     }
 
+    /**
+     * Generate a JSON string representation of {@link ReferenceID}.
+     */
     toJSON(): string {
         return this.toString()
     }
 
+    /**
+     * Compares if two {@link ReferenceID} are equal.
+     * @remarks
+     * Use this method when comparing {@link ReferenceID} for equality,
+     * both loose (==) and strict equality(===) will **not work** for equality checks.
+     *
+     * @param other The other ID to compare.
+     */
     equals(other: ReferenceID): boolean {
         return this.#uid === other.#uid
-    }
-
-    valueOf(): string {
-        return this.#uid
     }
 }
 
