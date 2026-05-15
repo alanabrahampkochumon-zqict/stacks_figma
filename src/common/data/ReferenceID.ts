@@ -1,7 +1,45 @@
-import { v4 } from "uuid";
+import {v4} from "uuid";
 
 /** ID used by the design system to uniquely identify a @see {@link TokenNode}. */
-export type ReferenceID = string & { __brand: "__referenceID" };
+class ReferenceID {
+
+    readonly #prefix: string = "@ref:"
+    readonly #uid: string
+
+    private constructor(uid: string) {
+        this.#uid = uid
+    }
+
+    static generate(): ReferenceID {
+        return new ReferenceID(v4())
+    };
+
+    static fromUID(uid: string): ReferenceID {
+        return new ReferenceID(uid)
+    }
+
+    toUID(): string {
+        return this.#uid
+    }
+
+    toString():string {
+        return this.#prefix + this.#uid
+    }
+
+    toJSON(): string {
+        return this.toString()
+    }
+
+    equals(other: ReferenceID): boolean {
+        return this.#uid === other.#uid
+    }
+
+    valueOf(): string {
+        return this.#uid
+    }
+}
+
+// export type ReferenceID = string & { __brand: "__referenceID" };
 
 export const ReferenceIDPrefix = "reference_";
 

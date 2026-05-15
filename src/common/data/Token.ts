@@ -1,6 +1,7 @@
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {TokenNode, type TokenNode_depr} from "./TokenNode";
 import {TypographyToken} from "./TypographyToken";
+import type {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 // TODO: Add getGroupName
 // TODO: Add getTokenValue/getTokenValueByMode helpers
@@ -50,6 +51,18 @@ export type TokenTypeMap = {
     boxShadow: any; // TODO: Update to use a specific class
     gradient: any; // TODO: Update to use a specific class
 };
+
+
+class Token<T extends ExtendedTokenType> {
+    readonly type: string
+    name: string
+    valueByMode: Record<string, TokenTypeMap[T] | ReferenceID>
+    group: string[],
+    uid: ReferenceID
+    //
+    // constructor(type: T, name: string, valueByMode:Record<string, TokenTypeMap[T] | ReferenceID>, group: string[], uid: ReferenceID = ReferenceID ) {
+    // }
+}
 
 //////////////////// DEPRECATED
 /**
