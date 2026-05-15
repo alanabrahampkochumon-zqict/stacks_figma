@@ -1,7 +1,7 @@
 import {v4, validate as isValidUUID } from "uuid";
 
 /** ID used by the design system to uniquely identify a {@link Token}. */
-class ReferenceID {
+export class ReferenceID {
 
     static readonly #prefix: string = "@ref:"
     readonly #uid: string
@@ -41,8 +41,9 @@ class ReferenceID {
      *
      * @returns True if the given string is valid {}
      */
-    validate(uid: string): boolean {
-        const extractedUUID = uid.substring(ReferenceID.#prefix.length - 1)
+    static validate(uid: string): boolean {
+        const extractedUUID = uid.substring(ReferenceID.#prefix.length)
+        console.log(extractedUUID)
         return isValidUUID(extractedUUID)
     }
 
@@ -50,12 +51,12 @@ class ReferenceID {
     /**
      * Returns the underlying unique identifier of the reference ID.
      */
-    toUID(): string {
+    toUUID(): string {
         return this.#uid
     }
 
     /**
-     * Overrides the default toString method to ensure logs reflect a ReferenceID.
+     * Return a string representation of {@link ReferenceID}.
      */
     toString():string {
         return ReferenceID.#prefix + this.#uid

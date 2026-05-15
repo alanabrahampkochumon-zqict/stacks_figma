@@ -1,16 +1,27 @@
+import {v4} from "uuid"
 import {
     generateReferenceID,
-    isReferenceID,
+    isReferenceID, ReferenceID,
     ReferenceIDPrefix,
 } from "@src/common/data/ReferenceID";
-import { describe, expect, test } from "vitest";
+import {describe, expect, test} from "vitest";
 
-describe("ReferenceIDGenerator", () => {
-    test("Generates a UID with correct prefix", () => {
-        const refID = generateReferenceID();
+describe("ReferenceID: validate", () => {
+    test("Validates a generate ID", () => {
+        const refId = ReferenceID.generate()
 
-        expect(refID.startsWith(ReferenceIDPrefix)).toBeTruthy();
+        expect(ReferenceID.validate(refId.toString())).toBeTruthy();
     });
+
+    test("Does not validate a UUID", () => {
+        const refId = v4()
+        expect(ReferenceID.validate(refId)).toBeFalsy();
+    })
+
+    test("Does not validate a random string", () => {
+        const refId = "some random string"
+        expect(ReferenceID.validate(refId)).toBeFalsy();
+    })
 });
 
 describe("ReferenceIDValidator", () => {
