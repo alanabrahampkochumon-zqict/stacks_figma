@@ -1,4 +1,4 @@
-import {v4, validate as isValidUUID } from "uuid";
+import {v4, validate as isValidUUID} from "uuid";
 
 /** ID used by the design system to uniquely identify a {@link Token}. */
 export class ReferenceID {
@@ -31,7 +31,7 @@ export class ReferenceID {
      *
      * @param uid The uid to use for ReferenceID instantiation.
      */
-    static fromUID(uid: string): ReferenceID {
+    static fromUUID(uid: string): ReferenceID {
         return new ReferenceID(uid)
     }
 
@@ -43,7 +43,6 @@ export class ReferenceID {
      */
     static validate(uid: string): boolean {
         const extractedUUID = uid.substring(ReferenceID.#prefix.length)
-        console.log(extractedUUID)
         return isValidUUID(extractedUUID)
     }
 
@@ -58,7 +57,7 @@ export class ReferenceID {
     /**
      * Return a string representation of {@link ReferenceID}.
      */
-    toString():string {
+    toString(): string {
         return ReferenceID.#prefix + this.#uid
     }
 
@@ -66,7 +65,10 @@ export class ReferenceID {
      * Generate a JSON string representation of {@link ReferenceID}.
      */
     toJSON(): string {
-        return this.toString()
+        return JSON.stringify({
+            prefix: ReferenceID.#prefix,
+            uid: this.#uid
+        })
     }
 
     /**

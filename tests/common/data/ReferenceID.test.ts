@@ -1,9 +1,8 @@
 import {v4} from "uuid"
 import {
-    generateReferenceID,
-    isReferenceID, ReferenceID,
-    ReferenceIDPrefix,
+    ReferenceID,
 } from "@src/common/data/ReferenceID";
+
 import {describe, expect, test} from "vitest";
 
 describe("ReferenceID: validate", () => {
@@ -24,16 +23,32 @@ describe("ReferenceID: validate", () => {
     })
 });
 
-describe("ReferenceIDValidator", () => {
-    test("Validates RefID with prefix as true", () => {
-        const refID = ReferenceIDPrefix + "123845925914-1239482134";
-
-        expect(isReferenceID(refID)).toBeTruthy();
+describe("ReferenceID: generate", () => {
+    test("returns a ReferenceID instance", () => {
+        expect(ReferenceID.generate()).toBeInstanceOf(ReferenceID)
     });
 
-    test("Validates RefID without prefix as false", () => {
-        const refID = "123845925914-1239482134";
-
-        expect(isReferenceID(refID)).toBeFalsy();
-    });
+    test("returns a non-empty id", () => {
+        expect(ReferenceID.generate().toString()).toBeDefined()
+        expect(ReferenceID.generate().toString().length).toBeGreaterThan(0)
+    })
 });
+
+
+describe("ReferenceID: fromUUID/toUUID", () => {
+    test("returns a ReferenceID with the passed in UUID", () => {
+        const uuid = v4()
+        const refId = ReferenceID.fromUUID(uuid)
+        expect(refId.toUUID()).toStrictEqual(uuid)
+    })
+})
+
+describe("ReferenceID: toJSON", () => {
+    test("returns a valid JSON string", () => {
+        const uuid = v4()
+        const refId = ReferenceID.fromUUID(uuid)
+        const json = refId.toJSON()
+
+        expect(JSON.parse(json).uid).toStrictEqual(uuid)
+    })
+})
