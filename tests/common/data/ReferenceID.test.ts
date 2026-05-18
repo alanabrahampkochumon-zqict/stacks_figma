@@ -52,3 +52,18 @@ describe("ReferenceID: toJSON", () => {
         expect(JSON.parse(json).uid).toStrictEqual(uuid)
     })
 })
+
+describe("ReferenceID: equals", () => {
+    const refID1 = ReferenceID.fromUUID(v4())
+    const refID2 = ReferenceID.fromUUID(refID1.toUUID())
+    const refID3 = ReferenceID.fromUUID(v4())
+
+    test("returns true, when comparing two reference id with equal uuid", () => {
+        expect(refID1.equals(refID2)).toBeTruthy()
+    })
+
+    test("returns false, when comparing two ReferenceID with different uuid", () => {
+        expect(refID1.equals(refID3)).toBeFalsy()
+    })
+
+})
