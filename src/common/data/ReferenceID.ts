@@ -1,4 +1,5 @@
 import {v4, validate as isValidUUID} from "uuid";
+import {IllegalArgumentError} from "@src/common/error/IllegalArgumentError.ts";
 
 /** ID used by the design system to uniquely identify a {@link Token}. */
 export class ReferenceID {
@@ -70,6 +71,22 @@ export class ReferenceID {
             uid: this.#uid
         })
     }
+
+    /**
+     * Creates a {@link ReferenceID} from a JSON object.
+     *
+     * @param data The parsed JSON data.
+     *
+     * @returns The {@link ReferenceID} instance.
+     *
+     * @throws {@link IllegalArugmentError} if the passed-in data is not a valid {@link ReferenceID}.
+     */
+    static fromJSON(data: any): ReferenceID {
+        if(typeof data === "object" && Object.keys(data).includes("uid"))
+            return ReferenceID.fromUUID(data.uid)
+        throw new IllegalArgumentError("The object cannot be parsed to a ReferenceID")
+    }
+
 
     /**
      * Compares if two {@link ReferenceID} are equal.

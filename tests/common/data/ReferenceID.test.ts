@@ -65,5 +65,19 @@ describe("ReferenceID: equals", () => {
     test("returns false, when comparing two ReferenceID with different uuid", () => {
         expect(refID1.equals(refID3)).toBeFalsy()
     })
+})
 
+describe("ReferenceID: fromJSON", () => {
+    const refID = ReferenceID.fromUUID(v4())
+
+    test("returns new ReferenceID, passed-in with valid JSON", () => {
+        const json = refID.toJSON()
+        const data = JSON.parse(json)
+        const newRefID = ReferenceID.fromJSON(data)
+        expect(refID.equals(newRefID)).toBeTruthy()
+    })
+
+    test.each([{data: "1234"}, {id: v4()}, "{uid: 1234}", `{uid: ${v4()}}`, v4()])(`throws error, when passed with %o`, (data) => {
+        expect(() => ReferenceID.fromJSON(data)).toThrow()
+    })
 })
