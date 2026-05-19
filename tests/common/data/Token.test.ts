@@ -148,6 +148,32 @@ describe("Token: addMode", () => {
     })
 })
 
+describe('Token: removeMode', () => {
+    test.each(["", "invalid-mode"])("returns false, for invalid mode(%o)", (mode) => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        expect(token.removeMode(mode)).toBeFalsy()
+    })
+
+    test("returns true, when a valid mode is removed", () => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        expect(token.removeMode("dark")).toBeTruthy()
+    })
+
+    test("removes mode from valueByMode, when a valid mode is removed", () => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        token.removeMode("dark")
+        expect(token.valueByMode["dark"]).toBeUndefined()
+    })
+
+    test("invalidates cache, when a mode is removed", () => {
+        // We can't directly test this since cache is private(JS)
+        // But we can rely on insert to test this since insertion throws an error when inserting a duplicate mode
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        token.removeMode("dark")
+        expect(() => token.addMode("dark")).not.toThrow()
+    })
+});
+
 describe("Token Validator Tests", () => {
     const testCases: {
         name: string;

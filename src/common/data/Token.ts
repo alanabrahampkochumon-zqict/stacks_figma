@@ -128,7 +128,26 @@ export class Token<T extends ExtendedTokenType> {
         this.#modeCache.add(mode)
     }
 
-    // Add mode
+    /**
+     * Remove a mode and its associated value from token.
+     * @param mode The mode to remove.
+     *
+     * @returns True if the mode was removed.
+     *
+     * @throws {@link IllegalArgumentError} if the passed-in mode is the sole (default) mode of the token.
+     */
+    removeMode(mode: string): boolean {
+        if (!this.#modeCache.has(mode)) return false
+
+        if (this.#modeCache.size < 2)
+            throw new IllegalArgumentError("Cannot remove the default mode!")
+
+        this.#modeCache.delete(mode)
+        delete this.valueByMode[mode]
+
+        return true;
+    }
+
     // Remove mode
     // Has mode
     // Remove group
