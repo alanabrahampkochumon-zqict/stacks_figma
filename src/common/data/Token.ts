@@ -2,6 +2,9 @@ import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {TokenNode, type TokenNode_depr} from "./TokenNode";
 import {TypographyToken} from "./TypographyToken";
 import {ReferenceID} from "@src/common/data/ReferenceID.ts";
+import {AST} from "eslint";
+import TokenType = AST.TokenType;
+import {DuplicationError} from "@src/common/error/DuplicationError.ts";
 
 // TODO: Add getGroupName
 // TODO: Add getTokenValue/getTokenValueByMode helpers
@@ -62,6 +65,7 @@ export class Token<T extends ExtendedTokenType> {
     name: string
     valueByMode: Record<string, TokenTypeMap[T] | ReferenceID>
     group: string[]
+    #modeCache: Set<string>
 
     /**
      * Construct a {@link Token} primitive.
@@ -86,19 +90,35 @@ export class Token<T extends ExtendedTokenType> {
      */
     constructor(type: T, name: string, valueByMode: Record<string, TokenTypeMap[T] | ReferenceID>, group: string[] = [], uid: ReferenceID = ReferenceID.generate()) {
 
-        if(!(type in ExtendedToken))
+        if (!(type in ExtendedToken))
             throw new IllegalArgumentError("Invalid token type. Must be an ExtendedToken or BasicToken.")
         if (Object.keys(valueByMode).length < 1)
             throw new IllegalArgumentError("Token(valueByMode) cannot be empty!")
-        if(name.length < 1)
+        if (name.length < 1)
             throw new IllegalArgumentError("Token name cannot be left blank!")
-        if(!ReferenceID.validate(uid.toString()))
+        if (!ReferenceID.validate(uid.toString()))
             throw new IllegalArgumentError("Invalid ReferenceID!")
         this.type = type
         this.name = name
         this.valueByMode = valueByMode
         this.group = group
         this.uid = uid
+        this.#modeCache = new Set<string>(Object.keys(valueByMode))
+    }
+
+
+    addMode(mode: string, value?: TokenTypeMap[T] | ReferenceID) {
+        if (mode.length < 0)
+            throw new IllegalArgumentError("Mode cannot be empty!")
+        if (this.#modeCache.has(mode))
+            throw new DuplicationError("Mode already exists!")
+
+        if (value) {
+            this.valueByMode[mode] = value
+        } else {
+            this.valueByMode[mode] = this.valueByMode[Object.keys(this.valueByMode)[0]]
+        }
+        this.#modeCache.add(mode)
     }
 
     // Add mode
