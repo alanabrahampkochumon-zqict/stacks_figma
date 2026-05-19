@@ -179,11 +179,29 @@ describe('Token: removeMode', () => {
     })
 });
 
-// describe("Token: hasMode", () => {
-//     test.each(["", "invalid-mode"], "returns false, for invalid mode(%o)", () => {
-//         const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
-//     })
-// })
+describe("Token: hasMode", () => {
+    test.each(["", "invalid-mode"])("returns false, for invalid mode(%o)", (mode) => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        expect(token.hasMode(mode)).toBeFalsy()
+    })
+
+    test("returns true for existing mode", () => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        expect(token.hasMode("light")).toBeTruthy()
+    })
+
+    test("returns true for added mode", () => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        token.addMode("new-mode")
+        expect(token.hasMode("new-mode")).toBeTruthy()
+    })
+
+    test("returns false for removed mode", () => {
+        const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+        token.removeMode("light")
+        expect(token.hasMode("light")).toBeFalsy()
+    })
+})
 
 describe("Token Validator Tests", () => {
     const testCases: {
