@@ -1,7 +1,7 @@
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {TokenNode, type TokenNode_depr} from "./TokenNode";
 import {TypographyToken} from "./TypographyToken";
-import type {ReferenceID} from "@src/common/data/ReferenceID.ts";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 // TODO: Add getGroupName
 // TODO: Add getTokenValue/getTokenValueByMode helpers
@@ -53,15 +53,59 @@ export type TokenTypeMap = {
 };
 
 
-class Token<T extends ExtendedTokenType> {
+/**
+ * Basic primitive of the design system.
+ */
+export class Token<T extends ExtendedTokenType> {
     readonly type: string
+    readonly uid: ReferenceID
     name: string
     valueByMode: Record<string, TokenTypeMap[T] | ReferenceID>
-    group: string[],
-    uid: ReferenceID
-    //
-    // constructor(type: T, name: string, valueByMode:Record<string, TokenTypeMap[T] | ReferenceID>, group: string[], uid: ReferenceID = ReferenceID ) {
-    // }
+    group: string[]
+
+    /**
+     * Construct a {@link Token} primitive.
+     *
+     * @param type        The type of tokens. See {@link ExtendedTokenType} for details.
+     * @param name        The name of the token.
+     * @param valueByMode A key-value pair of modes and their respective values for the token.
+     *                    { dark: "#111", light: "#eee" }
+     * @param group       The group that this token belongs to.
+     *                    ["primitives", "colors"] translates to "primitives/colors/token-name"
+     * @param uid         The unique identifier of this token. Must be a {@link ReferenceID}.
+     *
+     * @example Usage
+     * // Token with grouping
+     * new Token(ExtendedToken.colors, "blue-500", { dark: "#2f9bfa", light: "#007ce8"}, ["primitives", "colors"])
+     *
+     * // Token without grouping
+     * new Token(ExtendedToken.colors, "blue-500", { dark: "#2f9bfa", light: "#007ce8"})
+     *
+     * @throws {@link IllegalArgumentError} if name or valueByMode is empty, or if an invalid uid or type is passed in.
+     *
+     */
+    constructor(type: T, name: string, valueByMode: Record<string, TokenTypeMap[T] | ReferenceID>, group: string[] = [], uid: ReferenceID = ReferenceID.generate()) {
+
+        if(!(type in ExtendedToken))
+            throw new IllegalArgumentError("Invalid token type. Must be an ExtendedToken or BasicToken.")
+        if (Object.keys(valueByMode).length < 1)
+            throw new IllegalArgumentError("Token(valueByMode) cannot be empty!")
+        if(name.length < 1)
+            throw new IllegalArgumentError("Token name cannot be left blank!")
+        if(!ReferenceID.validate(uid.toString()))
+            throw new IllegalArgumentError("Invalid ReferenceID!")
+        this.type = type
+        this.name = name
+        this.valueByMode = valueByMode
+        this.group = group
+        this.uid = uid
+    }
+
+    // Add mode
+    // Remove mode
+    // Has mode
+    // Remove group
+    // Add group
 }
 
 //////////////////// DEPRECATED
