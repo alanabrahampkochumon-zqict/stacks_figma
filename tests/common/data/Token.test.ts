@@ -46,7 +46,7 @@ describe("TokenLevel Validator Tests", () => {
     );
 });
 
-describe("Token Initialization Tests", () => {
+describe("Token: Initialization", () => {
     test("returns Token with name, type and valueByMode and defaults for value and mode", () => {
         // When a token is created with createToken
         const tokenValue = {default: "#fff", dark: "#000"};
@@ -122,6 +122,31 @@ describe("Token Initialization Tests", () => {
         expect(() => new Token(tokenType, "", tokenValue, [], uid)).toThrow();
     });
 });
+
+describe("Token: addMode", () => {
+
+    test("adds mode with first mode's value, when a value is not passed-in", () => {
+        const token = new Token("color", "color", {"light": "#333", "high-contrast": "#000"})
+        token.addMode("dark")
+        expect(token.valueByMode["dark"]).toStrictEqual("#333")
+    })
+
+    test("add mode with value, when a mode with value is passed-in", () => {
+        const token = new Token("color", "color", {"light": "#333"})
+        token.addMode("dark", "#eee")
+        expect(token.valueByMode["dark"]).toStrictEqual("#eee")
+    })
+
+    test("throws error, when a empty mode is passed-in", () => {
+        const token = new Token("color", "color", {"light": "#333"})
+        expect(() => token.addMode("")).toThrow()
+    })
+
+    test("throws error, when an existing mode mode is passed-in", () => {
+        const token = new Token("color", "color", {"light": "#333"})
+        expect(() => token.addMode("light")).toThrow()
+    })
+})
 
 describe("Token Validator Tests", () => {
     const testCases: {

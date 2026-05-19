@@ -106,9 +106,16 @@ export class Token<T extends ExtendedTokenType> {
         this.#modeCache = new Set<string>(Object.keys(valueByMode))
     }
 
-
+    /**
+     * Adds a mode to token.
+     * @param mode  The mode to add.
+     * @param value The value to associate with the mode.
+     *              By default, the first mode's value will be used.
+     *
+     * @throws {@link DuplicationError} if the mode already exists, or {@link IllegalArgumentError} if the name is empty.
+     */
     addMode(mode: string, value?: TokenTypeMap[T] | ReferenceID) {
-        if (mode.length < 0)
+        if (mode.length < 1)
             throw new IllegalArgumentError("Mode cannot be empty!")
         if (this.#modeCache.has(mode))
             throw new DuplicationError("Mode already exists!")
