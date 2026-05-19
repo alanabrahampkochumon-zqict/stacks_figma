@@ -1,7 +1,7 @@
 import {DuplicationError} from "../error/DuplicationError";
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {InsertConflictPolicy, UpdatePolicy} from "./Common";
-import type {ExtendedTokenType, Levels, TokenComparator} from "./Token";
+import {type ExtendedTokenType, type Levels, Token, type TokenComparator} from "./Token";
 import {
     ExtendedToken,
     isValidLevel,
@@ -13,8 +13,6 @@ import {
     type TokenNode,
     type TokenNode_depr, ValueNode,
 } from "./TokenNode";
-import {AST} from "eslint";
-import Token = AST.Token;
 
 // TODO: Add value by mode to reference nodes
 /**
@@ -67,12 +65,12 @@ type TokenSetMergeOptions = {
  * - Node names within a set should be unique.
  * - The name of the token set must be unique.
  */
-export class TokenSet {
+export class TokenSet<T extends ExtendedTokenType> {
     name: string;
     type: ExtendedTokenType;
     level: Levels;
     modes: Set<string>;
-    tokens: TokenNode[];
+    tokens: T;
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, string>;
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
@@ -93,7 +91,7 @@ export class TokenSet {
         name: string,
         type: ExtendedTokenType = ExtendedToken.number,
         level: Levels = 1,
-        tokens: TokenNode[] = [],
+        tokens: Token<T>[] = [],
     ) {
         if (!name)
             throw new IllegalArgumentError(

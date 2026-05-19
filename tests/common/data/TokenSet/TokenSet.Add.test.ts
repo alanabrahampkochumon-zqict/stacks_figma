@@ -1,6 +1,6 @@
 import { InsertConflictPolicy } from "@src/common/data/Common";
 import { createGroup } from "@src/common/data/Group";
-import { createToken, ExtendedToken } from "@src/common/data/Token";
+import {createToken, ExtendedToken, Token} from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
@@ -16,7 +16,7 @@ describe("TokenSet Add Tests", () => {
         const name = "TokenSet";
         const type = ExtendedToken.number;
         const level = 1;
-        const tokens: TokenNode<typeof type>[] = [];
+        const tokens: Token<"color">[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added

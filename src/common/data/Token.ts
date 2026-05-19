@@ -66,6 +66,7 @@ export class Token<T extends ExtendedTokenType> {
     valueByMode: Record<string, TokenTypeMap[T] | ReferenceID>
     group: string[]
     #modeCache: Set<string>
+    #groupCache: Set<string>
 
     /**
      * Construct a {@link Token} primitive.
@@ -104,6 +105,7 @@ export class Token<T extends ExtendedTokenType> {
         this.group = group
         this.uid = uid
         this.#modeCache = new Set<string>(Object.keys(valueByMode))
+        this.#groupCache = new Set<string>(group)
     }
 
     /**
@@ -158,10 +160,6 @@ export class Token<T extends ExtendedTokenType> {
     hasMode(mode: string): boolean {
         return this.#modeCache.has(mode)
     }
-
-    // Has mode
-    // Remove group
-    // Add group
 }
 
 //////////////////// DEPRECATED
