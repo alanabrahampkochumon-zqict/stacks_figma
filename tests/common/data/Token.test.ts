@@ -172,7 +172,18 @@ describe('Token: removeMode', () => {
         token.removeMode("dark")
         expect(() => token.addMode("dark")).not.toThrow()
     })
+
+    test("throws error, when attempting to remove the only mode", () => {
+        const token = new Token("color", "color", {"light": "#333"})
+        expect(() => token.removeMode("light")).toThrow()
+    })
 });
+
+// describe("Token: hasMode", () => {
+//     test.each(["", "invalid-mode"], "returns false, for invalid mode(%o)", () => {
+//         const token = new Token("color", "color", {"light": "#333", "dark": "#fff"})
+//     })
+// })
 
 describe("Token Validator Tests", () => {
     const testCases: {

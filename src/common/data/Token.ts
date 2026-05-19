@@ -148,7 +148,17 @@ export class Token<T extends ExtendedTokenType> {
         return true;
     }
 
-    // Remove mode
+
+    /**
+     * Returns whether a mode is present in the current token.
+     * @param mode The mode to check.
+     *
+     * @returns True if the mode exists on the token.
+     */
+    hasMode(mode: string): boolean {
+        return this.#modeCache.has(mode)
+    }
+
     // Has mode
     // Remove group
     // Add group
