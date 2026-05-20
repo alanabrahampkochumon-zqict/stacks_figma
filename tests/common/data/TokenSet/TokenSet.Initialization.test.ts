@@ -8,7 +8,7 @@ import {
 } from "@src/common/data/TokenNode.ts";
 import {TokenSet} from "@src/common/data/TokenSet";
 import {describe, expect, test} from "vitest";
-import {generateTokenNode} from "../utils/Generators";
+import {generateToken} from "../utils/Generators";
 import setUpTokens from "./TokenSet.fixtures";
 
 describe("TokenSet: Instantiation", () => {
@@ -65,7 +65,7 @@ describe("TokenSet: Instantiation", () => {
         const tokenType = "number";
         const level = 1;
         const tokens = [1, 2, 3].map(() =>
-            generateTokenNode(undefined, "token", tokenType),
+            generateToken(undefined, "token", tokenType),
         );
         if(tokens[2] instanceof ValueNode) {
             tokens[2].value = {
@@ -204,7 +204,7 @@ describe("TokenSet: Instantiation", () => {
         const level = 1;
         const name = "TokenSet";
         const {numberTokens, numberTokenType} = setUpTokens();
-        const dupToken = generateTokenNode(numberTokens[0].name);
+        const dupToken = generateToken(numberTokens[0].name);
         expect(
             () =>
                 new TokenSet(name, numberTokenType, level, [

@@ -1,7 +1,7 @@
 import type { TokenNode_depr } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 
 describe("TokenSet: Remove Mode", () => {
     test("removes mode, when a valid mode is passed-in", () => {
@@ -11,7 +11,7 @@ describe("TokenSet: Remove Mode", () => {
         const level = 1;
         const modes = ["default", "small", "large"];
         const tokens: TokenNode_depr[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,
@@ -43,7 +43,7 @@ describe("TokenSet: Remove Mode", () => {
         const level = 1;
         const modes = ["default"];
         const tokens: TokenNode_depr[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,
@@ -67,7 +67,7 @@ describe("TokenSet: Remove Mode", () => {
         const level = 1;
         const modes = ["default"];
         const tokens: TokenNode_depr[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,

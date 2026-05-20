@@ -1,7 +1,7 @@
 import type { ExtendedTokenType } from "@src/common/data/Token";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 
 describe("Token Uniqueness", () => {
     test("returns true, tokens with duplicate id and name", () => {
@@ -9,7 +9,7 @@ describe("Token Uniqueness", () => {
         const tokenType: ExtendedTokenType = "number";
         const tokens = Array(2)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "token", tokenType));
+            .map(() => generateToken(undefined, "token", tokenType));
         tokens.push(tokens[0]);
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
 
@@ -23,7 +23,7 @@ describe("Token Uniqueness", () => {
         const tokenType: ExtendedTokenType = "number";
         const tokens = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "token", tokenType));
+            .map(() => generateToken(undefined, "token", tokenType));
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
 
         // When checked for uniqueness of first element.
@@ -36,8 +36,8 @@ describe("Token Uniqueness", () => {
         const tokenType: ExtendedTokenType = "number";
         const tokens = Array(2)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "token", tokenType));
-        const duplicateToken = generateTokenNode(tokens[0].name);
+            .map(() => generateToken(undefined, "token", tokenType));
+        const duplicateToken = generateToken(tokens[0].name);
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
 
         // When checked for uniqueness of duplicate element

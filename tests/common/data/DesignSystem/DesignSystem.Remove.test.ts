@@ -1,7 +1,7 @@
 import { DesignSystem } from "@src/common/data/DesignSystem";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 import { setUpDesignSystem } from "./DesignSystem.fixtures";
 
 describe("Design System Remove TokenSet", () => {
@@ -24,7 +24,7 @@ describe("Design System Remove TokenSet", () => {
             tokenSets: [primitiveTokenSet],
         } = setUpDesignSystem();
         const aliasTokens = primitiveTokenSet.tokens.map((token) =>
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 "number",
@@ -58,7 +58,7 @@ describe("Design System Remove TokenSet", () => {
             tokenSets: [primitiveTokenSet],
         } = setUpDesignSystem();
         const aliasTokens = primitiveTokenSet.tokens.map((token) =>
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 "number",
@@ -68,7 +68,7 @@ describe("Design System Remove TokenSet", () => {
             ),
         );
         const semanticTokens = aliasTokens.map((token) =>
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 "number",
@@ -109,7 +109,7 @@ describe("Design System Remove TokenSet", () => {
             tokenSets: [primitiveTokenSet],
         } = setUpDesignSystem();
         const aliasTokens = primitiveTokenSet.tokens.map((token) =>
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 "number",

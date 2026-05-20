@@ -6,7 +6,7 @@ import {
 } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 import setUpTokens from "./TokenSet.fixtures";
 
 describe("TokenSet Update Tests", () => {
@@ -37,7 +37,7 @@ describe("TokenSet Update Tests", () => {
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const tokenToUpdate = generateTokenNode(
+        const tokenToUpdate = generateToken(
             undefined,
             "token",
             type,
@@ -47,7 +47,7 @@ describe("TokenSet Update Tests", () => {
             [modes[0]],
         );
         const tokens: TokenNode_depr[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,
@@ -86,7 +86,7 @@ describe("TokenSet Update Tests", () => {
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const secondToken = generateTokenNode(
+        const secondToken = generateToken(
             undefined,
             "token",
             type,
@@ -95,7 +95,7 @@ describe("TokenSet Update Tests", () => {
             undefined,
             [modes[0]],
         );
-        const tokenToUpdate = generateTokenNode(
+        const tokenToUpdate = generateToken(
             secondToken.name,
             "token",
             type,
@@ -105,7 +105,7 @@ describe("TokenSet Update Tests", () => {
             modes,
         );
         const tokens: TokenNode_depr[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,

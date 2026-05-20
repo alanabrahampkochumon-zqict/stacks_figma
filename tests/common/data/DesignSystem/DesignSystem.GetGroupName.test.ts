@@ -2,14 +2,14 @@ import { DesignSystem } from "@src/common/data/DesignSystem";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 
 describe("Design System: Get Group Name", () => {
     test("returns group name, when passed in with valid id", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const designSystem = new DesignSystem("ds", [
             new TokenSet("groups", "group", 1, tokenNodes),
         ]);
@@ -26,7 +26,7 @@ describe("Design System: Get Group Name", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const designSystem = new DesignSystem("ds", [
             new TokenSet("groups", "group", 1, tokenNodes),
         ]);
@@ -43,7 +43,7 @@ describe("Design System: Get Group Name", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const designSystem = new DesignSystem("ds", [
             new TokenSet("groups", "group", 1, tokenNodes),
         ]);
@@ -63,13 +63,13 @@ describe("Design System: Get Group Name", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const designSystem = new DesignSystem("ds", [
             new TokenSet("groups", "group", 1, tokenNodes),
         ]);
         const tokenNodes2 = Array(5)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
 
         // After the name of a token set is updated
         designSystem.addTokenSet(
@@ -87,13 +87,13 @@ describe("Design System: Get Group Name", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const designSystem = new DesignSystem("ds", [
             new TokenSet("groups", "group", 1, tokenNodes),
         ]);
         const tokenNodes2 = Array(5)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
 
         // After the tokenset is updated
         designSystem.updateTokenSet(
@@ -117,7 +117,7 @@ describe("Design System: Get Group Name", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const tks = new TokenSet("groups", "group", 1, tokenNodes);
         const designSystem = new DesignSystem("ds", [tks]);
 
@@ -134,7 +134,7 @@ describe("Design System: Get Group Name", () => {
         // Given token nodes
         const tokenNodes = Array(10)
             .fill(0)
-            .map(() => generateTokenNode(undefined, "group"));
+            .map(() => generateToken(undefined, "group"));
         const tks = new TokenSet("groups", "group", 1, tokenNodes);
         const tks2 = new TokenSet(
             "groups new",
@@ -142,7 +142,7 @@ describe("Design System: Get Group Name", () => {
             1,
             Array(5)
                 .fill(0)
-                .map(() => generateTokenNode(undefined, "group")),
+                .map(() => generateToken(undefined, "group")),
         );
         const designSystem = new DesignSystem("ds", [tks, tks2]);
 

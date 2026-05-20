@@ -1,9 +1,9 @@
 import {faker} from "@faker-js/faker";
-import type {
-    ExtendedToken, ExtendedTokenType, TokenTypeMap,
+import {
+    ExtendedToken, type ExtendedTokenType, Token, type TokenTypeMap,
 } from "@src/common/data/Token";
-import {GroupNode, ReferenceNode, type TokenNode, ValueNode} from "@src/common/data/TokenNode.ts";
 import {v4} from "uuid";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 function generateTokenByType<K extends ExtendedTokenType>(
     type: K,
@@ -28,58 +28,48 @@ function generateTokenByType<K extends ExtendedTokenType>(
         case "boxShadow":
         // TODO: Implementation
         case "animation":
-        // TODO: Implementation
+            // TODO: Implementation
             return 0 as never;
     }
 }
 
-export function generateValueTokenNode<K extends ExtendedTokenType>(
-    name: string,
-    id: string,
-    type: K,
-): ValueNode<K> {
-    return new ValueNode(
-        type,
-        name,
-        generateTokenByType(type),
-        id,
-    )
-}
+// export function generateValueTokenNode<K extends ExtendedTokenType>(
+//     name: string,
+//     id: string,
+//     type: K,
+// ): ValueNode<K> {
+//     return new ValueNode(
+//         type,
+//         name,
+//         generateTokenByType(type),
+//         id,
+//     )
+// }
 
 
 /**
- * Generates a {@link TokenNode} for testing.
+ * Generates a {@link Token} for testing.
  *
  * @export
+ * @param type        The type of node.
+ *                    See {@link ExtendedToken} for details.
  * @param name        The name of the generated token node.
  *                    Generates a random name by default.
- * @param type        The type of TokenNode to generate.
- *                    Available options are "value", "group", "reference"
- * @param nodeType    The type of node. Only applicable for {@link ValueNode} and {@link ReferenceNode}.
- *                    See {@link ExtendedToken} for details.
+ * @param valueByMode A key-value pair of mode to specific value.
+ * @param groups      A list having the grouping of the current token.
  * @param uid         The Unique identifier of the token node.
  *                    Generates a random name by default.
- * @param referenceId A reference id for the generated token, only applicable when setting type to "reference".
  *
- * @returns {[TokenNode, string]} The generated token node and its string representation.
+ * @returns {Token} The generated token.
  */
-export function generateTokenNode(
+export function generateToken<T extends ExtendedTokenType>(
+    type: T = ExtendedToken.number as T,
     name: string | undefined = undefined,
-    type: "group" | "token" | "reference" = "token",
-    nodeType: ExtendedTokenType = "number",
-    uid: string | undefined = undefined,
-    referenceId: string | undefined = undefined,
-): TokenNode {
+    groups: string[] = [],
+    valueByMode: Record<string, TokenTypeMap[T] | ReferenceID> | undefined = undefined,
+    uid: ReferenceID | undefined = ReferenceID.generate(),
+): Token<T> {
     const tokenName = name || v4();
-    const tokenId = uid || v4();
-    switch (type) {
-        case "group":
-            const expanded = Math.random() < 0.5;
-            const childNodes = new Array(Math.round(Math.random() * 3 + 4)).map(() => generateValueTokenNode(v4(), v4(), nodeType))
-            return new GroupNode(tokenName, childNodes, expanded, tokenId)
-        case "token":
-            return generateValueTokenNode(tokenName, tokenId, nodeType)
-        case "reference":
-            return new ReferenceNode(tokenName, referenceId || v4(), tokenId)
-    }
+    const value = valueByMode || {"default": generateTokenByType(type)}
+    return new Token<T>(type, tokenName, value, groups, uid)
 }

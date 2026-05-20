@@ -3,11 +3,11 @@ import type { TokenNode_depr } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 
 describe("Design System: Unlink Token", () => {
     function setUp() {
-        const primitiveToken = generateTokenNode(
+        const primitiveToken = generateToken(
             undefined,
             "token",
             "number",
@@ -15,7 +15,7 @@ describe("Design System: Unlink Token", () => {
             undefined,
             undefined,
         );
-        const updatedPrimitiveToken = generateTokenNode(
+        const updatedPrimitiveToken = generateToken(
             undefined,
             "token",
             "number",

@@ -4,7 +4,7 @@ import {createToken, ExtendedToken, Token} from "@src/common/data/Token";
 import { createTokenNode, type TokenNode } from "../../../../src/common/data/TokenNode";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 
 // Regex
 // \{\s*type:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*name:\s*(.*)\s*\} -> createToken($3, $2, $1)
@@ -20,7 +20,7 @@ describe("TokenSet Add Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const validToken = generateTokenNode(
+        const validToken = generateToken(
             "50",
             createToken({ default: 10 }, type),
         );
@@ -37,7 +37,7 @@ describe("TokenSet Add Tests", () => {
         const level = 1;
         const modes = ["default", "small", "large"];
         const tokens: TokenNode[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,
@@ -80,7 +80,7 @@ describe("TokenSet Add Tests", () => {
         const level = 1;
         const modes = ["default", "small", "large"];
         const tokens: TokenNode[] = [
-            generateTokenNode(
+            generateToken(
                 undefined,
                 "token",
                 type,

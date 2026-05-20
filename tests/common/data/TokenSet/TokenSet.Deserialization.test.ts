@@ -1,6 +1,6 @@
 import { TokenSet } from "@src/common/data/TokenSet";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 import { setUpTokenSet } from "./TokenSet.fixtures";
 
 describe("TokenSet Deserialization Tests", () => {
@@ -142,7 +142,7 @@ describe("TokenSet Deserialization Tests", () => {
     // Non-unique -> Same name and same id
     test("create token node, when deserializing a json string with non-unique duplicate values", () => {
         // When a JSON string with duplicate entries is converted to a tokenset
-        const tokenNode1 = generateTokenNode(
+        const tokenNode1 = generateToken(
             undefined,
             "token",
             "number",
@@ -150,7 +150,7 @@ describe("TokenSet Deserialization Tests", () => {
             undefined,
             false,
         );
-        const tokenNode2 = generateTokenNode(
+        const tokenNode2 = generateToken(
             undefined,
             "token",
             "number",
@@ -181,9 +181,9 @@ describe("TokenSet Deserialization Tests", () => {
 
     test("throws error, when deserializing a json string with duplicate values", () => {
         // When a JSON string with duplicate entries is converted to a tokenset
-        const tokenNode1 = generateTokenNode(undefined, "token", "number");
-        const tokenNode2 = generateTokenNode(undefined, "token", "number");
-        const dupTokenNode = generateTokenNode(tokenNode1.name);
+        const tokenNode1 = generateToken(undefined, "token", "number");
+        const tokenNode2 = generateToken(undefined, "token", "number");
+        const dupTokenNode = generateToken(tokenNode1.name);
         const json = `
         {
             "name": "test",

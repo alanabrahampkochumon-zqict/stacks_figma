@@ -2,14 +2,14 @@ import { DesignSystem } from "@src/common/data/DesignSystem";
 import { TokenSet } from "@src/common/data/TokenSet";
 import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
-import { generateTokenNode } from "../utils/Generators";
+import { generateToken } from "../utils/Generators";
 
 describe("Design System: Hydrate Token", () => {
     function setUp() {
         const primitiveTokens = Array(10)
             .fill(0)
             .map(() =>
-                generateTokenNode(
+                generateToken(
                     undefined,
                     "token",
                     "number",

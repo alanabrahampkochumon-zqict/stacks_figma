@@ -4,7 +4,7 @@ import {
     ValueNode,
 } from "@src/common/data/TokenNode.ts";
 import {TokenSet} from "@src/common/data/TokenSet";
-import {generateTokenNode} from "../utils/Generators";
+import {generateToken} from "../utils/Generators";
 
 // createTokenNode\(\s*(".*"),\s*createToken\((\{.*\}),\s*"[a-z-]+"\),\s*(".*"),{0,1}\s*\) -> new ValueNode($1, $2, $3)
 
@@ -14,7 +14,7 @@ export default function setUpTokens() {
     const numberTokens: Token[] = Array(10)
         .fill(0)
         .map(() =>
-            generateTokenNode(
+            generateToken(
                 undefined,
                 undefined,
                 numberTokenType,
@@ -33,7 +33,7 @@ export default function setUpTokens() {
     const colorTokens = Array(10)
         .fill(0)
         .map(() =>
-            generateTokenNode(
+            generateToken(
                 undefined,
                 undefined,
                 colorTokenType,
