@@ -1,11 +1,8 @@
 import {
     ExtendedToken,
     type ExtendedTokenType,
-    type Levels,
+    type Levels, Token,
 } from "@src/common/data/Token";
-import {
-    TokenNode, ValueNode,
-} from "@src/common/data/TokenNode.ts";
 import {TokenSet} from "@src/common/data/TokenSet";
 import {describe, expect, test} from "vitest";
 import {generateToken} from "../utils/Generators";
@@ -48,7 +45,7 @@ describe("TokenSet: Instantiation", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode[] = [];
+        const tokens: Token<"number">[] = [];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // Then, the object contains the correct name and empty tokens
@@ -59,41 +56,35 @@ describe("TokenSet: Instantiation", () => {
         expect(tokenSet.type).toStrictEqual(tokenType);
     });
 
-    test("adds additional modes, when a token with additional mode is in the list", () => {
+    test.only("adds additional modes, when a token with additional mode is in the list", () => {
         // Given a TokenNode with additional modes
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
         const tokens = [1, 2, 3].map(() =>
-            generateToken(undefined, "token", tokenType),
+            generateToken(tokenType)
         );
-        if(tokens[2] instanceof ValueNode) {
-            tokens[2].value = {
-                ...tokens[2].value,
-                "another-mode": 1234,
-                "3rd-mode": 443,
-            }
-        }
+
+        tokens[2].addMode("another-mode", 1234)
+        tokens[2].addMode("3rd-mode", 443)
 
         // When a TokenSet is initialized
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // Then, the all the modes are present in the other tokens
         tokenSet.tokens.slice(0, 2).forEach((token) => {
-            if (token instanceof ValueNode) {
-                expect(Object.keys(token.value)).toContain(
-                    "another-mode",
-                );
-                expect(Object.keys(token.value)).toContain("3rd-mode");
+            expect(Object.keys(token.valueByMode)).toContain(
+                "another-mode",
+            );
+            expect(Object.keys(token.valueByMode)).toContain("3rd-mode");
 
-                // And share the default value of the pre-existing mode
-                expect(token.value["another-mode"]).toStrictEqual(
-                    token.value.default,
-                );
-                expect(token.value["3rd-mode"]).toStrictEqual(
-                    token.value.default,
-                );
-            }
+            // And share the default value of the pre-existing mode
+            expect(token.valueByMode["another-mode"]).toStrictEqual(
+                token.valueByMode.default,
+            );
+            expect(token.valueByMode["3rd-mode"]).toStrictEqual(
+                token.valueByMode.default,
+            );
         });
     });
 
@@ -155,7 +146,7 @@ describe("TokenSet: Instantiation", () => {
         const tokenType: ExtendedTokenType = "number";
         const level = 1;
         const tokens = [
-            new ValueNode(ExtendedToken.color, "color-50", "#fff"),
+            new Token(ExtendedToken.color, "color-50", {"light": "#fff"}),
         ];
         // Then, the initializer throws an error
         expect(() => new TokenSet(name, tokenType, level, tokens)).toThrow();
@@ -204,7 +195,7 @@ describe("TokenSet: Instantiation", () => {
         const level = 1;
         const name = "TokenSet";
         const {numberTokens, numberTokenType} = setUpTokens();
-        const dupToken = generateToken(numberTokens[0].name);
+        const dupToken = generateToken("number", numberTokens[0].name);
         expect(
             () =>
                 new TokenSet(name, numberTokenType, level, [

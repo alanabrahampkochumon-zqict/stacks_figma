@@ -5,7 +5,6 @@ import {type ExtendedTokenType, type Levels, Token, type TokenComparator} from "
 import {
     ExtendedToken,
     isValidLevel,
-    validateToken,
     validLevels,
 } from "./Token";
 import {
@@ -13,6 +12,7 @@ import {
     type TokenNode,
     type TokenNode_depr, ValueNode,
 } from "./TokenNode";
+import type {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 // TODO: Add value by mode to reference nodes
 /**
@@ -67,12 +67,12 @@ type TokenSetMergeOptions = {
  */
 export class TokenSet<T extends ExtendedTokenType> {
     name: string;
-    type: ExtendedTokenType;
+    type: T;
     level: Levels;
     modes: Set<string>;
-    tokens: T;
+    tokens: Token<T>[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
-    #tokenIDMap: Map<string, string>;
+    #tokenIDMap: Map<string, ReferenceID>;
     /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
     // #modes: Map<string, Set<String>>;
     /* Internal map for storing all modes to ensure data integrity. */
@@ -117,7 +117,7 @@ export class TokenSet<T extends ExtendedTokenType> {
 
         // Instantiate class members
         this.name = name;
-        this.type = type;
+        this.type = type as T;
         this.level = level;
         this.tokens = [];
 
@@ -129,11 +129,9 @@ export class TokenSet<T extends ExtendedTokenType> {
                 this.tokens.push(token);
             }
             // Add modes
-            if (token instanceof ValueNode) {
-                Object.keys(token.value).forEach(mode => {
-                    this.modes.add(mode)
-                })
-            }
+            Object.keys(token.valueByMode).forEach(mode => {
+                this.#addModeToAllTokens(mode)
+            })
         }
     }
 
@@ -144,31 +142,26 @@ export class TokenSet<T extends ExtendedTokenType> {
      *
      */
     #addModeToAllTokens(mode: string) {
-        this.#modes.add(mode); // Add the mode if it doesn't exist.
+        this.modes.add(mode) // Add the token to the current token set
+        this.#modes.add(mode); // Add the mode if it doesn't exist. // TODO: Remove
 
+        // Add the token to each token in the token set
         this.tokens.forEach((token) => {
-            if (!(token instanceof ValueNode)) return;
-            const modes = Object.keys(token.value);
-            if (modes.length < 0)
-                throw new Error("Token must have at least one mode.");
-
-            if (!(mode in token.value)) {
-                token.value[mode] = token.value[modes[0]];
-            }
+            token.addMode(mode)
         });
     }
 
     /**
      * Add a node to the set while enforcing type consistency.
      *
-     * @param token   The {@link TokenNode} to insert.
+     * @param token   The {@link Token} to insert.
      * @param options Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      * @throws {DuplicationError}     If the token name is non-unique and the ID is unique.
      */
     addToken(
-        token: TokenNode,
+        token: Token<T>,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,
@@ -176,7 +169,7 @@ export class TokenSet<T extends ExtendedTokenType> {
         }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
-        const tokenIndex = this.getTokenIndex(token.id);
+        const tokenIndex = this.getTokenIndex(token.uid);
         if (!this.checkTokenUniqueness(token))
             throw new DuplicationError(
                 "A token with the same name already exists.",
@@ -211,14 +204,14 @@ export class TokenSet<T extends ExtendedTokenType> {
     }
 
     /**
-     * Get the index of the token in the sset, if it exist.
+     * Get the index of the token in the set, if it exists.
      *
      * @param {string} tokenId The unique identifier of the token.
      *
      * @returns The index if the token is present; else -1.
      */
-    getTokenIndex(tokenId: string) {
-        return this.tokens.findIndex((t) => t.uid === tokenId);
+    getTokenIndex(tokenId: ReferenceID) {
+        return this.tokens.findIndex((t) => t.uid.equals(tokenId));
     }
 
     /**
@@ -404,11 +397,11 @@ export class TokenSet<T extends ExtendedTokenType> {
      * @throws {@link IllegalArgumentError} If the tokens type is not the same across the set or the passed-in elements.
      */
     private _validateToken(
-        tokens: TokenNode[],
+        tokens: Token<any>[],
         tokenType: ExtendedTokenType,
     ) {
         tokens.forEach(token => {
-                if (token instanceof ValueNode && !validateToken(token.value, tokenType)) {
+                if (token.type !== tokenType) {
                     throw new IllegalArgumentError(
                         "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
                     );
@@ -441,14 +434,15 @@ export class TokenSet<T extends ExtendedTokenType> {
      *
      * @returns True if the name is unique within the current tokenset.
      */
-    checkTokenUniqueness(token: TokenNode): boolean {
+    checkTokenUniqueness(token: Token<any>): boolean {
+        const matchingToken = this.#tokenIDMap.get(token.name)
         if (
-            this.#tokenIDMap.has(token.name) &&
-            this.#tokenIDMap.get(token.name) !== token.id
+            matchingToken &&
+            !matchingToken.equals(token.uid)
         )
             return false;
 
-        this.#tokenIDMap.set(token.name, token.id);
+        this.#tokenIDMap.set(token.name, token.uid);
         return true;
     }
 
@@ -461,19 +455,20 @@ export class TokenSet<T extends ExtendedTokenType> {
      *
      * @param tokens The set of tokens to validate.
      *
-     * @returns True if the name is unique within the current tokenset.
+     * @returns True if the name is unique within the current {@link TokenSet}.
      */
-    checkAllTokenUniqueness(tokens: TokenNode[]): boolean {
-        for (const {name, id} of tokens) {
+    checkAllTokenUniqueness(tokens: Token<any>[]): boolean {
+        for (const {name, uid} of tokens) {
             // If token is name is already in the set with a different ID, then it's not unique.
+            const matchingToken = this.#tokenIDMap.get(name)
             if (
-                this.#tokenIDMap.has(name) &&
-                this.#tokenIDMap.get(name) !== id
+                matchingToken &&
+                !matchingToken.equals(uid)
             )
                 return false;
 
             // Add the id and name
-            this.#tokenIDMap.set(name, id);
+            this.#tokenIDMap.set(name, uid);
         }
 
         return true;

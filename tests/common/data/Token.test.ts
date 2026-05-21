@@ -142,9 +142,10 @@ describe("Token: addMode", () => {
         expect(() => token.addMode("")).toThrow()
     })
 
-    test("throws error, when an existing mode mode is passed-in", () => {
+    test("does not add mode, when an existing mode mode is passed-in", () => {
         const token = new Token("color", "color", {"light": "#333"})
-        expect(() => token.addMode("light")).toThrow()
+        token.addMode("light")
+        expect(Object.keys(token.valueByMode).length).toStrictEqual(1)
     })
 })
 

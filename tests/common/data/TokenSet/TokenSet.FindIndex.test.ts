@@ -1,12 +1,13 @@
-import { createToken } from "@src/common/data/Token";
-import { createTokenNode } from "../../../../src/common/data/TokenNode";
-import { TokenSet } from "@src/common/data/TokenSet";
-import { describe, expect, test } from "vitest";
-describe("TokenSet Find Tests", () => {
+import {Token} from "@src/common/data/Token";
+import {TokenSet} from "@src/common/data/TokenSet";
+import {describe, expect, test} from "vitest";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
+
+describe("TokenSet: findIndex", () => {
     const tokens = [
-        createTokenNode("size-50", createToken({ default: 5 }, "sizing")),
-        createTokenNode("size-100", createToken({ default: 10 }, "sizing")),
-        createTokenNode("size-150", createToken({ default: 15 }, "sizing")),
+        new Token("sizing", "size-50", {default: 5}),
+        new Token("sizing", "size-100", {default: 10}),
+        new Token("sizing", "size-150", {default: 15}),
     ];
     const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
 
@@ -25,7 +26,7 @@ describe("TokenSet Find Tests", () => {
         // Given a token set
 
         // When an index of non-existing token is queried
-        const index = tokenSet.getTokenIndex("invalid-id");
+        const index = tokenSet.getTokenIndex(ReferenceID.generate());
 
         // Then, it returns -1
         expect(index).toStrictEqual(-1);
@@ -36,7 +37,7 @@ describe("TokenSet Find Tests", () => {
         const emptyTokenSet = new TokenSet("empty", "string");
 
         // When an index of non-existing token is queried
-        const index = emptyTokenSet.getTokenIndex("invalid-id");
+        const index = emptyTokenSet.getTokenIndex(ReferenceID.generate());
 
         // Then, it returns -1
         expect(index).toStrictEqual(-1);

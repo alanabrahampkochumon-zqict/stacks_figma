@@ -2,8 +2,6 @@ import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {TokenNode, type TokenNode_depr} from "./TokenNode";
 import {TypographyToken} from "./TypographyToken";
 import {ReferenceID} from "@src/common/data/ReferenceID.ts";
-import {AST} from "eslint";
-import TokenType = AST.TokenType;
 import {DuplicationError} from "@src/common/error/DuplicationError.ts";
 
 // TODO: Add getGroupName
@@ -120,7 +118,8 @@ export class Token<T extends ExtendedTokenType> {
         if (mode.length < 1)
             throw new IllegalArgumentError("Mode cannot be empty!")
         if (this.#modeCache.has(mode))
-            throw new DuplicationError("Mode already exists!")
+            return
+            // throw new DuplicationError("Mode already exists!")
 
         if (value) {
             this.valueByMode[mode] = value
