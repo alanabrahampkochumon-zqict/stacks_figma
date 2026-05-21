@@ -1,9 +1,9 @@
-import { generateReferenceID } from "@src/common/data/ReferenceID";
 import {
     isValidFontDecoration,
     TypographyToken,
 } from "@src/common/data/TypographyToken";
-import { describe, expect, test } from "vitest";
+import {describe, expect, test} from "vitest";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 describe("Font Decoration Validator", () => {
     const testCases: {
@@ -39,13 +39,13 @@ describe("Font Decoration Validator", () => {
         },
     ];
 
-    test.each(testCases)("$name", ({ value, expected }) => {
+    test.each(testCases)("$name", ({value, expected}) => {
         expect(isValidFontDecoration(value)).toStrictEqual(expected);
     });
 });
 
 describe("Typography Validator", () => {
-    const id = generateReferenceID();
+    const id = ReferenceID.generate();
     const vFontFamily = "Roboto";
     const vFontSize = 24;
     const vFontWeight = "Bold";
@@ -189,7 +189,7 @@ describe("Typography Validator", () => {
         },
     ];
 
-    test.each(testCases)("$name", ({ value, expected }: TestCase) => {
+    test.each(testCases)("$name", ({value, expected}: TestCase) => {
         expect(TypographyToken.validate(value)).toStrictEqual(expected);
     });
 });

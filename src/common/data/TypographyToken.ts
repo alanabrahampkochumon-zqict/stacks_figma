@@ -1,4 +1,4 @@
-import { isReferenceID, type ReferenceID } from "./ReferenceID";
+import {ReferenceID} from "./ReferenceID";
 
 /**
  * Define a typography token.
@@ -41,14 +41,13 @@ export class TypographyToken {
         const validationResult = Object.entries(schema).every(
             ([key, value]) =>
                 typeof token[key as keyof typeof schema] === value ||
-                isReferenceID(token[key as keyof typeof schema]),
+                ReferenceID.validate(token[key as keyof typeof schema].toString()),
         );
 
         if (!validationResult) return false;
 
         return (
-            isValidFontDecoration(token.fontDecoration) ||
-            isReferenceID(token.fontDecoration)
+            isValidFontDecoration(token.fontDecoration) || ReferenceID.validate(token.fontDecoration.toString())
         );
     }
 }
