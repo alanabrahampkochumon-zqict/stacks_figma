@@ -10,7 +10,7 @@ import {
 import {
     createTokenNode, GroupNode,
     type TokenNode,
-    type TokenNode_depr, ValueNode,
+    type TokenNode_depr,
 } from "./TokenNode";
 import type {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
@@ -36,7 +36,7 @@ type TokenSetUpdateOptions = {
 type TokenSetAddOptions = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator;
+    compareFn?: TokenComparator<T>;
 };
 
 /**
@@ -195,6 +195,7 @@ export class TokenSet<T extends ExtendedTokenType> {
 
     /**
      * Get the size of the current token set.
+     *
      * @returns Non-zero number if the token set is not empty; else 0.
      */
     size() {
@@ -204,7 +205,7 @@ export class TokenSet<T extends ExtendedTokenType> {
     /**
      * Get the index of the token in the set, if it exists.
      *
-     * @param {string} tokenId The unique identifier of the token.
+     * @param tokenId The unique identifier of the token.
      *
      * @returns The index if the token is present; else -1.
      */
@@ -225,20 +226,20 @@ export class TokenSet<T extends ExtendedTokenType> {
      * @remarks
      * **Important:** If the token is not in the tokenset, it will added a per option.updatePolicy.
      *
-     * @param {string} tokenId               The unique identifier of the token.
-     * @param {TokenNode_depr} newToken           The token to update.
-     * @param {TokenSetAddOptions} options   Configuration for conflict resolution and sorting.
+     * @param tokenId  The unique identifier of the token.
+     * @param newToken The token to update.
+     * @param options  Configuration for conflict resolution and sorting.
      *
      * @throws {IllegalArgumentError} If the token type does not match the set's {@link type}.
      */
     updateToken(
-        tokenId: string,
-        newToken: TokenNode_depr<K>,
+        tokenId: ReferenceID,
+        newToken: Token<T>,
         {
             updatePolicy = UpdatePolicy.INSERT,
             sortToken = false,
             compareFn = undefined,
-        }: TokenSetUpdateOptions<K> = {},
+        }: TokenSetUpdateOptions = {},
     ) {
         this._validateToken([newToken], this.type);
 
@@ -255,16 +256,13 @@ export class TokenSet<T extends ExtendedTokenType> {
         if (sortToken) this.sort(compareFn);
 
         // Add a new mode from the token into the token group
-        if (newToken.value?.entityType !== "token") return;
-        const modes = Object.keys(newToken.value.valueByMode);
-        const {value} = newToken;
+        const modes = Object.keys(newToken.valueByMode);
         modes.forEach((mode) => {
             if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
         });
-        this.#modes.forEach((mode) => {
-            if (!(mode in modes))
-                value.valueByMode[mode] = value.valueByMode[modes[0]];
-        });
+
+        // Add all the existing modes to the current token
+        this.#modes.forEach(mode => newToken.addMode(mode))
     }
 
     /**
@@ -316,7 +314,7 @@ export class TokenSet<T extends ExtendedTokenType> {
      * @throws {IllegalArgumentError} If architectural metadata (name/type/level) does not match.
      */
     mergeTokenSet(
-        tokenSet: TokenSet<K>,
+        tokenSet: TokenSet<T>,
         {
             insertPolicy = InsertConflictPolicy.IGNORE,
             sortToken = false,

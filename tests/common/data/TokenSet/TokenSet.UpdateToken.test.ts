@@ -1,5 +1,5 @@
 import { UpdatePolicy } from "@src/common/data/Common";
-import { createToken } from "@src/common/data/Token";
+import {createToken, Token} from "@src/common/data/Token";
 import {
     createTokenNode,
     type TokenNode_depr,
@@ -15,15 +15,12 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const type = "number";
         const level = 1;
-        const tokens: TokenNode_depr[] = [];
+        const tokens: Token<typeof type>[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to insert
-        const validToken = createTokenNode(
-            "50",
-            createToken({ default: 10 }, type),
-        );
-        tokenSet.updateToken(validToken.name, validToken, {
+        const validToken = new Token(type, "50", { default: 10 });
+        tokenSet.updateToken(validToken.uid, validToken, {
             updatePolicy: UpdatePolicy.INSERT,
         });
 
@@ -146,10 +143,7 @@ describe("TokenSet Update Tests", () => {
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is updated with policy set to ignore
-        const validToken = createTokenNode(
-            "50",
-            createToken({ default: 10 }, type),
-        );
+        const validToken = new Token(type, "50", { default: 10 });
         tokenSet.updateToken(validToken.name, validToken, {
             updatePolicy: UpdatePolicy.IGNORE,
         });
@@ -384,16 +378,10 @@ describe("TokenSet Update Tests", () => {
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
-        const tokens: TokenNode_depr[] = [
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-            ),
-            createTokenNode(
-                "size-150",
-                createToken({ default: 15 }, tokenType),
-            ),
-            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
+        const tokens = [
+            new Token(tokenType, "size-100", { default: 10 }),
+            new Token(tokenType, "size-150", { default: 15 }),
+            new Token(tokenType, "size-0", { default: 0 }),
         ];
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
@@ -414,21 +402,15 @@ describe("TokenSet Update Tests", () => {
         const tokenType = "number";
         const level = 1;
         const tokens: TokenNode_depr[] = [
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-            ),
-            createTokenNode("size-50", createToken({ default: 15 }, tokenType)),
-            createTokenNode("size-0", createToken({ default: 0 }, tokenType)),
+            new Token(tokenType, "size-100", { default: 10 }),
+            new Token(tokenType, "size-50", { default: 15 }),
+            new Token(tokenType, "size-0", { default: 0 }),
         ];
 
         const tokenSet = new TokenSet(name, tokenType, level, tokens);
 
         // When a token is updated(upserted) with invalid valueByNames
-        const updatedToken = createTokenNode(
-            "size-50",
-            createToken({ default: "test" }, tokenType),
-        );
+        const updatedToken = new Token(tokenType, "size-50", { default: "test" });
         // Then, an error is thrown
         expect(() => tokenSet.updateToken("size-50", updatedToken)).toThrow();
     });
