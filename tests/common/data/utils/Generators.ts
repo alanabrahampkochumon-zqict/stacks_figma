@@ -4,6 +4,7 @@ import {
 } from "@src/common/data/Token";
 import {v4} from "uuid";
 import {ReferenceID} from "@src/common/data/ReferenceID.ts";
+import {TypographyToken} from "@src/common/data/TypographyToken.ts";
 
 function generateTokenByType<K extends ExtendedTokenType>(
     type: K,
@@ -22,7 +23,7 @@ function generateTokenByType<K extends ExtendedTokenType>(
         case "color":
             return faker.color.rgb({format: "hex"}) as TokenTypeMap[K];
         case "typography":
-        // TODO: Implementation
+            return new TypographyToken("roboto", Math.round(Math.random() * 100), ["bold", "light", "normal"][Math.round(Math.random() * 3)], Math.round(Math.random() * 100), Math.round(Math.random() * 100), "None") as TokenTypeMap[K]
         case "gradient":
         // TODO: Implementation
         case "boxShadow":
