@@ -1,7 +1,8 @@
 import { TokenSet } from "@src/common/data/TokenSet";
-import { v4 } from "uuid";
 import { describe, expect, test } from "vitest";
 import setUpTokens from "./TokenSet.fixtures";
+import {Token} from "@src/common/data/Token.ts";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 describe("Token Set: All Token Uniqueness", () => {
     test("returns true, if duplicate name with same id is found", () => {
@@ -33,7 +34,7 @@ describe("Token Set: All Token Uniqueness", () => {
     test("returns false, if duplicate name with different id is found", () => {
         // Given a list of tokens with a duplicate name but different id token
         const { numberTokens } = setUpTokens();
-        numberTokens.push({ ...numberTokens[0], id: v4() });
+        numberTokens.push(new Token("number", numberTokens[0].name, numberTokens[0].valueByMode, numberTokens[0].group, ReferenceID.generate()))
         const tks = new TokenSet("tks");
 
         // When checked for uniqueness
