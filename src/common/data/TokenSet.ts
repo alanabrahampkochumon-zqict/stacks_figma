@@ -176,7 +176,7 @@ export class TokenSet<T extends ExtendedTokenType> {
             );
         else if (tokenIndex === -1) this.tokens.push(token);
         else if (insertPolicy === InsertConflictPolicy.REPLACE)
-            this.updateToken(token.id, token);
+            this.updateToken(token.uid, token);
 
         if (sortToken) {
             this.sort(compareFn);
@@ -184,15 +184,13 @@ export class TokenSet<T extends ExtendedTokenType> {
 
 
         // Add a new mode from the token into the token group
-        if (!(token instanceof ValueNode)) return;
-        const modes = Object.keys(token.value);
+        const modes = Object.keys(token.valueByMode);
         modes.forEach((mode) => {
             if (!this.#modes.has(mode)) this.#addModeToAllTokens(mode);
         });
-        this.#modes.forEach((mode) => {
-            if (!(mode in modes))
-                token.value[mode] = token.value[modes[0]];
-        });
+
+        // Add all the existing modes to the current token
+        this.#modes.forEach(mode => token.addMode(mode))
     }
 
     /**

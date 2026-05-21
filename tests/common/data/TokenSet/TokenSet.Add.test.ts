@@ -1,28 +1,33 @@
-import { InsertConflictPolicy } from "@src/common/data/Common";
-import { createGroup } from "@src/common/data/Group";
-import {createToken, ExtendedToken, Token} from "@src/common/data/Token";
-import { createTokenNode, type TokenNode } from "../../../../src/common/data/TokenNode";
-import { TokenSet } from "@src/common/data/TokenSet";
-import { describe, expect, test } from "vitest";
-import { generateToken } from "../utils/Generators";
+import {InsertConflictPolicy} from "@src/common/data/Common";
+import {ExtendedToken, Token} from "@src/common/data/Token";
+import {TokenSet} from "@src/common/data/TokenSet";
+import {describe, expect, test} from "vitest";
+import {generateToken} from "../utils/Generators";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
+import {v4} from "uuid";
 
 // Regex
 // \{\s*type:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*name:\s*(.*)\s*\} -> createToken($3, $2, $1)
 // \{\s*name:\s*(.*),\s*valueByMode:\s*(\{.*\}),\s*type:\s*(.*)\s*\} -> createToken($1, $2, $3)
 
 describe("TokenSet Add Tests", () => {
+
+    const uuidPool = Array(10).fill(0).map(() => v4())
+    const name = "TokenSet";
+
     test("token gets added, when a valid token is passed in", () => {
         // Given an empty token set
         const name = "TokenSet";
         const type = ExtendedToken.number;
         const level = 1;
-        const tokens: Token<"color">[] = [];
+        const tokens: Token<typeof type>[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const validToken = generateToken(
+        const validToken = new Token(
+            type,
             "50",
-            createToken({ default: 10 }, type),
+            {default: 10}
         );
         tokenSet.addToken(validToken);
 
@@ -31,46 +36,29 @@ describe("TokenSet Add Tests", () => {
     });
 
     test("modes get added to new token, when a token with only default mode is passed in", () => {
-        // Given a tokenset with more than 1 mode
+        // Given a TokenSet with more than 1 mode
         const name = "TokenSet";
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const tokens: TokenNode[] = [
-            generateToken(
-                undefined,
-                "token",
-                type,
-                undefined,
-                undefined,
-                undefined,
-                modes,
-            ),
+        const tokens = [
+            generateToken(type, undefined, [], {"default": 10, small: 20, large: 30})
         ];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const validToken = createTokenNode(
-            "50",
-            createToken({ [modes[0]]: 10 }, type),
-        );
+        const validToken = generateToken(type, "50", [], {default: 10})
         tokenSet.addToken(validToken);
 
         // Then, the added token has the existing modes
-        if (tokenSet.tokens[1].value?.entityType !== "token")
-            return expect.fail();
-        const value = tokenSet.tokens[1].value;
-        expect(Object.keys(value.valueByMode)).toContain(modes[0]);
-        expect(Object.keys(value.valueByMode)).toContain(modes[1]);
-        expect(Object.keys(value.valueByMode)).toContain(modes[2]);
+        const value = tokenSet.tokens[1].valueByMode;
+        expect(Object.keys(value)).toContain(modes[0]);
+        expect(Object.keys(value)).toContain(modes[1]);
+        expect(Object.keys(value)).toContain(modes[2]);
 
         // And their values default to default mode value
-        expect(value.valueByMode[modes[1]]).toStrictEqual(
-            value.valueByMode[modes[0]],
-        );
-        expect(value.valueByMode[modes[2]]).toStrictEqual(
-            value.valueByMode[modes[0]],
-        );
+        expect(value[modes[0]]).toStrictEqual(value[modes[0]]);
+        expect(value[modes[2]]).toStrictEqual(value[modes[0]]);
     });
 
     test("modes get added, when added token contains additional modes", () => {
@@ -79,33 +67,17 @@ describe("TokenSet Add Tests", () => {
         const type = "number";
         const level = 1;
         const modes = ["default", "small", "large"];
-        const tokens: TokenNode[] = [
-            generateToken(
-                undefined,
-                "token",
-                type,
-                undefined,
-                undefined,
-                undefined,
-                [modes[0]],
-            ),
+        const tokens = [
+            generateToken(type, undefined)
         ];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token with new mode(s) is added
-        const validToken = createTokenNode(
-            "50",
-            createToken(
-                { [modes[0]]: 5, [modes[1]]: 10, [modes[2]]: 15 },
-                type,
-            ),
-        );
+        const validToken = new Token(type, "50", {[modes[0]]: 5, [modes[1]]: 10, [modes[2]]: 15})
         tokenSet.addToken(validToken);
 
         // Then, the existing token gets the new modes
-        if (tokenSet.tokens[0].value?.entityType !== "token")
-            return expect.fail();
-        const value = tokenSet.tokens[0].value;
+        const value = tokenSet.tokens[0];
         expect(Object.keys(value.valueByMode)).toContain(modes[0]);
         expect(Object.keys(value.valueByMode)).toContain(modes[1]);
         expect(Object.keys(value.valueByMode)).toContain(modes[2]);
@@ -119,36 +91,16 @@ describe("TokenSet Add Tests", () => {
         );
     });
 
-    test("group gets added, when a valid group is passed in", () => {
-        // Given a empty token set
-        const name = "TokenSet";
-        const type = "group";
-        const level = 1;
-        const tokens: TokenNode[] = [];
-        const tokenSet = new TokenSet(name, type, level, tokens);
-
-        // When a group is added
-        const validGroup = createTokenNode("group", createGroup(true));
-        tokenSet.addToken(validGroup);
-
-        // Then, the token is added to the set
-        expect(tokenSet.tokens[0]).toStrictEqual(validGroup);
-    });
-
     test("token gets upserted, when an existing token is passed in with insert policy of replace", () => {
         // Given a non-empty token set
-        const name = "TokenSet";
         const type = "number";
         const level = 1;
         const tokens = [
-            createTokenNode("50", createToken({ default: 55 }, type)),
+            new Token(type, "50", {default: 55})
         ];
         const tokenSet = new TokenSet(name, type, level, tokens);
-        const validToken = createTokenNode(
-            "50",
-            createToken({ default: 10 }, type),
-            tokens[0].uid,
-        );
+        const validToken =
+            new Token(type, "50", {default: 10}, [], tokens[0].uid)
 
         // When a token is added with same name and policy set to update
         tokenSet.addToken(validToken, {
@@ -159,232 +111,90 @@ describe("TokenSet Add Tests", () => {
         expect(tokenSet.tokens).toStrictEqual([validToken]);
     });
 
-    test("group gets upserted, when an existing group is passed in with insert policy of replace", () => {
-        // Given a non-empty token set
-        const name = "TokenSet";
-        const type = "group";
-        const level = 1;
-        const groups = [createTokenNode(type, createGroup(true))];
-        const tokenSet = new TokenSet(name, type, level, groups);
-        const validGroup = createTokenNode(
-            type,
-            createGroup(true),
-            groups[0].uid,
-        );
-
-        // When a token is added with same name and policy set to update
-        tokenSet.addToken(validGroup, {
-            insertPolicy: InsertConflictPolicy.REPLACE,
-        });
-
-        // Then, then the token is updated
-        expect(tokenSet.tokens).toStrictEqual([validGroup]);
-    });
-
     test("token added and sorted, when sort is turned on", () => {
         // Given a non-empty token set
-        const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
         const initialToken = [
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-                "1",
-            ),
-            createTokenNode(
-                "size-150",
-                createToken({ default: 15 }, tokenType),
-                "2",
-            ),
-            createTokenNode(
-                "size-0",
-                createToken({ default: 0 }, tokenType),
-                "3",
-            ),
+            new Token(tokenType, "size-100", {default: 10}, [], ReferenceID.fromUUID(uuidPool[0])),
+            new Token(tokenType, "size-150", {default: 15}, [], ReferenceID.fromUUID(uuidPool[1])),
+            new Token(tokenType, "size-0", {default: 0}, [], ReferenceID.fromUUID(uuidPool[2])),
         ];
 
         const sortedTokens = [
-            createTokenNode(
-                "size-0",
-                createToken({ default: 0 }, tokenType),
-                "3",
-            ),
-            createTokenNode(
-                "size-50",
-                createToken({ default: 5 }, tokenType),
-                "4",
-            ),
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-                "1",
-            ),
-            createTokenNode(
-                "size-150",
-                createToken({ default: 15 }, tokenType),
-                "2",
-            ),
+            new Token(tokenType, "size-0", {default: 0}, [], ReferenceID.fromUUID(uuidPool[2])),
+            new Token(tokenType, "size-50", {default: 5}, [], ReferenceID.fromUUID(uuidPool[3])),
+            new Token(tokenType, "size-100", {default: 10}, [], ReferenceID.fromUUID(uuidPool[0])),
+            new Token(tokenType, "size-150", {default: 15}, [], ReferenceID.fromUUID(uuidPool[1])),
         ];
-        const token = createTokenNode(
-            "size-50",
-            createToken({ default: 5 }, tokenType),
-            "4",
-        );
+        const token =
+            new Token(tokenType, "size-50", {default: 5}, [], ReferenceID.fromUUID(uuidPool[3]))
 
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
         // When a token is added with sorting on
-        tokenSet.addToken(token, { sortToken: true });
+        tokenSet.addToken(token, {sortToken: true});
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
     });
 
     test("token added and sorted, when sort is turned on and comparator is provided", () => {
         // Given a non-empty token set
-        const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
         const initialToken = [
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-                "1",
-            ),
-            createTokenNode(
-                "size-150",
-                createToken({ default: 15 }, tokenType),
-                "2",
-            ),
-            createTokenNode(
-                "size-0",
-                createToken({ default: 0 }, tokenType),
-                "3",
-            ),
+            new Token(tokenType, "size-100", {default: 10}, [], ReferenceID.fromUUID(uuidPool[0])),
+            new Token(tokenType, "size-150", {default: 15}, [], ReferenceID.fromUUID(uuidPool[1])),
+            new Token(tokenType, "size-0", {default: 0}, [], ReferenceID.fromUUID(uuidPool[2])),
         ];
         const sortedTokens = [
-            createTokenNode(
-                "size-0",
-                createToken({ default: 0 }, tokenType),
-                "3",
-            ),
-            createTokenNode(
-                "size-50",
-                createToken({ default: 5 }, tokenType),
-                "4",
-            ),
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-                "1",
-            ),
-            createTokenNode(
-                "size-150",
-                createToken({ default: 15 }, tokenType),
-                "2",
-            ),
+            new Token(tokenType, "size-0", {default: 0}, [], ReferenceID.fromUUID(uuidPool[2])),
+            new Token(tokenType, "size-50", {default: 5}, [], ReferenceID.fromUUID(uuidPool[3])),
+            new Token(tokenType, "size-100", {default: 10}, [], ReferenceID.fromUUID(uuidPool[0])),
+            new Token(tokenType, "size-150", {default: 15}, [], ReferenceID.fromUUID(uuidPool[1])),
         ];
-        const token = createTokenNode(
-            "size-50",
-            createToken({ default: 5 }, tokenType),
-            "4",
-        );
+        const token =
+            new Token(tokenType, "size-50", {default: 5}, [], ReferenceID.fromUUID(uuidPool[3]))
+
         const tokenSet = new TokenSet(name, tokenType, level, initialToken);
 
         // When a token is added with sorting on
         tokenSet.addToken(token, {
             sortToken: true,
             compareFn: (a, b) =>
-                Object.values(
-                    a.value?.entityType === "token" && a.value.valueByMode,
-                )[0] -
-                Object.values(
-                    b.value?.entityType === "token" && b.value.valueByMode,
-                )[0],
+                Object.values(a.valueByMode)[0] - Object.values(b.valueByMode)[0]
         });
         // Then, the token is in sorted order
         expect(tokenSet.tokens).toStrictEqual(sortedTokens);
     });
 
-    test("throws error, when a group is passed to a token set", () => {
-        // Given a non-empty "token" set
-        const name = "TokenSet";
-        const type = "number";
-        const level = 1;
-        const tokens = [
-            createTokenNode("50", createToken({ default: 55 }, type)),
-        ];
-        const tokenSet = new TokenSet(name, type, level, tokens);
-
-        // When a group is added
-        const validGroup = createTokenNode("group", createGroup(true));
-
-        // Then, an error is thrown
-        expect(() => tokenSet.addToken(validGroup)).toThrow();
-    });
-
-    test("throws error, when a token is passed to a group set", () => {
-        // Given a non-empty "group" set
-        const name = "TokenSet";
-        const type = "group";
-        const level = 1;
-        const tokens = [createTokenNode(type, createGroup(true))];
-        const tokenSet = new TokenSet(name, type, level, tokens);
-
-        // When a group is added
-        const validToken = createTokenNode(
-            "50",
-            createToken({ default: 55 }, "number"),
-        );
-
-        // Then, an error is thrown
-        expect(() => tokenSet.addToken(validToken)).toThrow();
-    });
-
     test("throws error, when a token with mismatching type is passed in", () => {
-        // Given a empty token set
-        const name = "TokenSet";
+        // Given an empty token set
         const type = "number";
         const level = 1;
-        const tokens: TokenNode[] = [];
+        const tokens: Token<any>[] = [];
         const tokenSet = new TokenSet(name, type, level, tokens);
 
         // When a token is added
-        const invalidToken = createTokenNode(
-            "50",
-            createToken({ default: 10 }, "string"),
-        );
+        const invalidToken = new Token("string", "50", {"default": 10 as any});
         // Then, an error is thrown
         expect(() => tokenSet.addToken(invalidToken)).toThrow();
     });
 
     test("throws error, when adding token node with non-unique name and different id", () => {
         // Given a non-empty token set
-        const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
+
         const initialTokens = [
-            createTokenNode(
-                "size-100",
-                createToken({ default: 10 }, tokenType),
-                "1",
-            ),
-            createTokenNode(
-                "size-150",
-                createToken({ default: 15 }, tokenType),
-                "2",
-            ),
-            createTokenNode(
-                "size-0",
-                createToken({ default: 0 }, tokenType),
-                "3",
-            ),
+            new Token(tokenType, "size-100", {default: 10}, [], ReferenceID.fromUUID(uuidPool[0])),
+            new Token(tokenType, "size-150", {default: 15}, [], ReferenceID.fromUUID(uuidPool[1])),
+            new Token(tokenType, "size-0", {default: 0}, [], ReferenceID.fromUUID(uuidPool[2])),
         ];
-        const token = createTokenNode(
-            "size-100",
-            createToken({ default: 15 }, tokenType),
-            "50",
-        );
+
+        const token =
+            new Token(tokenType, "size-100", {default: 15}, [], ReferenceID.fromUUID(uuidPool[8]))
+
         // When a token with duplicate name and unique id is added
         const tokenSet = new TokenSet(name, tokenType, level, initialTokens);
 

@@ -315,6 +315,6 @@ export function createToken<K extends keyof ExtendedTokenMap>(
  * Comparator definition used by {@link TokenNode}.
  */
 export type TokenComparator = (
-    a: TokenNode,
-    b: TokenNode,
+    a: Token<any>,
+    b: Token<any>,
 ) => number;
