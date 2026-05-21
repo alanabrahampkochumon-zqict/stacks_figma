@@ -216,7 +216,7 @@ export class TokenSet<T extends ExtendedTokenType> {
      * Remove a token from the set.
      * @param {TokenNode_depr} token The token node to remove.
      */
-    removeToken(token: TokenNode_depr<K>) {
+    removeToken(token: Token<T>) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
 
