@@ -1,8 +1,4 @@
 import {ExtendedToken, type ExtendedTokenType, Token} from "@src/common/data/Token";
-import {
-    GroupNode, TokenNode,
-    ValueNode,
-} from "@src/common/data/TokenNode.ts";
 import {TokenSet} from "@src/common/data/TokenSet";
 import {generateToken} from "../utils/Generators";
 
@@ -11,16 +7,10 @@ import {generateToken} from "../utils/Generators";
 export default function setUpTokens() {
     const numberTokenModes = ["default"];
     const numberTokenType: ExtendedTokenType = "number";
-    const numberTokens: Token[] = Array(10)
+    const numberTokens = Array(10)
         .fill(0)
         .map(() =>
-            generateToken(
-                undefined,
-                undefined,
-                numberTokenType,
-                undefined,
-                undefined,
-            ),
+            generateToken(numberTokenType)
         );
     const sortedNumberToken = numberTokens.sort(
         (t, u) =>
@@ -33,13 +23,7 @@ export default function setUpTokens() {
     const colorTokens = Array(10)
         .fill(0)
         .map(() =>
-            generateToken(
-                undefined,
-                undefined,
-                colorTokenType,
-                undefined,
-                undefined,
-            ),
+            generateToken(colorTokenType)
         );
 
     const numberTokenSet = new TokenSet("Number", "number", 1, numberTokens);
@@ -113,16 +97,10 @@ export function setUpTokenSet() {
     ];
     const differentTokenType = "spacing";
     const differentTokens = [
-        new ValueNode(ExtendedToken.spacing, "spacing-250", 25),
-        new ValueNode(ExtendedToken.spacing, "spacing-350", 35),
-        new ValueNode(ExtendedToken.spacing, "spacing-450", 45),
+        new Token(ExtendedToken.sizing, "spacing-250", {default: 25}),
+        new Token(ExtendedToken.sizing, "spacing-350", {default: 35}),
+        new Token(ExtendedToken.sizing, "spacing-450", {default: 45}),
     ];
-    // const groupTokenSet = new TokenSet("groups", ExtendedToken.number, 1, [
-    //     new GroupNode("group-1", [], true, "1"),
-    //     new GroupNode("group-2", [], true, "2"),
-    //     new GroupNode("group-3", [], true, "3"),
-    // ]);
-    // const groupJson = JSON.stringify(groupTokenSet);
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
     const originalTokenSetString = JSON.stringify(originalTokenSet);
