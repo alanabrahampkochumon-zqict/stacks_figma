@@ -9,7 +9,7 @@ describe("Token Uniqueness", () => {
         const tokenType: ExtendedTokenType = "number";
         const tokens = Array(2)
             .fill(0)
-            .map(() => generateToken(undefined, "token", tokenType));
+            .map(() => generateToken(tokenType));
         tokens.push(tokens[0]);
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
 
@@ -23,7 +23,7 @@ describe("Token Uniqueness", () => {
         const tokenType: ExtendedTokenType = "number";
         const tokens = Array(10)
             .fill(0)
-            .map(() => generateToken(undefined, "token", tokenType));
+            .map(() => generateToken(tokenType));
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
 
         // When checked for uniqueness of first element.
@@ -36,8 +36,8 @@ describe("Token Uniqueness", () => {
         const tokenType: ExtendedTokenType = "number";
         const tokens = Array(2)
             .fill(0)
-            .map(() => generateToken(undefined, "token", tokenType));
-        const duplicateToken = generateToken(tokens[0].name);
+            .map(() => generateToken(tokenType));
+        const duplicateToken = generateToken(tokenType, tokens[0].name);
         const tokenSet = new TokenSet("tks", tokenType, 1, tokens);
 
         // When checked for uniqueness of duplicate element

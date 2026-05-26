@@ -25,8 +25,8 @@ describe("TokenSet Remove Tests", () => {
         expect(tokenSet.tokens).toContain(tokens[2]);
     });
 
-    test("doesnot remove a token, when a token not in the set is passed in", () => {
-        // Given a tokenset initialized tokens
+    test("does not remove a token, when a token not in the set is passed in", () => {
+        // Given a TokenSet initialized tokens
         const name = "TokenSet";
         const tokenType = "number";
         const level = 1;
