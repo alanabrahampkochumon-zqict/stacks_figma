@@ -56,7 +56,7 @@ describe("TokenSet: Instantiation", () => {
         expect(tokenSet.type).toStrictEqual(tokenType);
     });
 
-    test.only("adds additional modes, when a token with additional mode is in the list", () => {
+    test("adds additional modes, when a token with additional mode is in the list", () => {
         // Given a TokenNode with additional modes
         const name = "TokenSet";
         const tokenType = "number";

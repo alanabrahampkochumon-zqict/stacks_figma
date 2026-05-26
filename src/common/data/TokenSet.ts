@@ -266,7 +266,7 @@ export class TokenSet<T extends ExtendedTokenType> {
     }
 
     /**
-     * Remove a mode from the tokenset.
+     * Remove a mode from the current TokenSet.
      *
      * @param mode The mode to remove.
      *
@@ -280,10 +280,8 @@ export class TokenSet<T extends ExtendedTokenType> {
             throw new IllegalArgumentError(
                 `Cannot remove the default token mode. Consider removing the TokenSet if you need to remove the entire TokenSet.`,
             );
-        this.tokens.forEach((token) => {
-            if (token.value?.entityType === "token")
-                delete token.value.valueByMode[mode];
-        });
+        
+        this.tokens.forEach((token) => token.removeMode(mode))
         this.#modes.delete(mode);
     }
 
