@@ -36,7 +36,7 @@ type TokenSetUpdateOptions = {
 type TokenSetAddOptions = {
     insertPolicy?: InsertConflictPolicy;
     sortToken?: boolean;
-    compareFn?: TokenComparator<T>;
+    compareFn?: TokenComparator;
 };
 
 /**
