@@ -1,15 +1,11 @@
-import {ValueNode} from "@src/common/data/TokenNode.ts";
 import {TokenSet} from "@src/common/data/TokenSet";
 import {describe, expect, test} from "vitest";
-import {ExtendedToken} from "@src/common/data/Token.ts";
+import {generateToken} from "../utils/Generators.ts";
 
 describe("TokenSet Size Tests", () => {
-    const tokens = [
-        new ValueNode(ExtendedToken.sizing, "size-50", 5),
-        new ValueNode(ExtendedToken.sizing, "size-100", 10),
-        new ValueNode(ExtendedToken.sizing, "size-150", 15),
-    ];
-    const tokenSet = new TokenSet("ts", "sizing", 2, tokens);
+    const size = 3
+    const tokens = Array(size).fill(0).map(() => generateToken("spacing"))
+    const tokenSet = new TokenSet("ts", "spacing", 2, tokens);
 
     test("returns correct size, when set is non-empty", () => {
         // Given a token set
