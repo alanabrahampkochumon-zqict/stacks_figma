@@ -51,6 +51,9 @@ function generateTokenByType<K extends ExtendedTokenType>(
 /**
  * Generates a {@link Token} for testing.
  *
+ * @remarks
+ * valueByMode takes precedence over modes.
+ *
  * @export
  * @param type        The type of node.
  *                    See {@link ExtendedToken} for details.
@@ -60,6 +63,7 @@ function generateTokenByType<K extends ExtendedTokenType>(
  * @param groups      A list having the grouping of the current token.
  * @param uid         The Unique identifier of the token node.
  *                    Generates a random name by default.
+ * @param modes       The list of modes to generate the random token values for.
  *
  * @returns {Token} The generated token.
  */
@@ -69,8 +73,19 @@ export function generateToken<T extends ExtendedTokenType>(
     groups: string[] = [],
     valueByMode: Record<string, TokenTypeMap[T] | ReferenceID> | undefined = undefined,
     uid: ReferenceID | undefined = ReferenceID.generate(),
+    modes: string[] = []
 ): Token<T> {
     const tokenName = name || v4();
-    const value = valueByMode || {"default": generateTokenByType(type)}
+    let value: Record<string, ReferenceID | TokenTypeMap[T]>
+    if (valueByMode) {
+        value = valueByMode
+    } else if (modes.length > 0) {
+        // Map and associate each mode with a randomly generate value
+        value = modes.reduce((tokens, mode) => {
+            return {...tokens, [mode]: generateTokenByType(type)}
+        }, {})
+    } else {
+        value = {default: generateTokenByType(type)}
+    }
     return new Token<T>(type, tokenName, value, groups, uid)
 }
