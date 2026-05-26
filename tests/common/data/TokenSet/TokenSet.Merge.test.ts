@@ -1,11 +1,11 @@
-import { InsertConflictPolicy } from "@src/common/data/Common";
-import { describe, expect, test } from "vitest";
-import { setUpTokenSet } from "./TokenSet.fixtures";
+import {InsertConflictPolicy} from "@src/common/data/Common";
+import {describe, expect, test} from "vitest";
+import {setUpTokenSet} from "./TokenSet.fixtures";
 
 describe("TokenSet Merge Tests", () => {
-    test("throws error, when tokensets don't have the same name", () => {
-        // When two tokenset of different names are merged
-        const { originalTokenSet, cleanMergingTokenSet } = setUpTokenSet();
+    test("throws error, when TokenSets don't have the same name", () => {
+        // When two TokenSet of different names are merged
+        const {originalTokenSet, cleanMergingTokenSet} = setUpTokenSet();
         cleanMergingTokenSet.name = "bad name";
 
         // Then, error is thrown
@@ -14,10 +14,11 @@ describe("TokenSet Merge Tests", () => {
         ).toThrow();
     });
 
-    test("throws error, when tokensets don't have the same type", () => {
-        // When two tokenset of different types are merged
-        const { originalTokenSet, cleanMergingTokenSet } = setUpTokenSet();
-        cleanMergingTokenSet.type = "color";
+
+    test("throws error, when TokenSets don't have the same type", () => {
+        // When two TokenSet of different types are merged
+        const {originalTokenSet, cleanMergingTokenSet} = setUpTokenSet();
+        cleanMergingTokenSet.type = "color" as any;
 
         // Then, error is thrown
         expect(() =>
@@ -25,9 +26,10 @@ describe("TokenSet Merge Tests", () => {
         ).toThrow();
     });
 
-    test("throws error, when tokensets don't have the same level", () => {
-        // When two tokenset of different levels are merged
-        const { originalTokenSet, cleanMergingTokenSet } = setUpTokenSet();
+
+    test("throws error, when TokenSets don't have the same level", () => {
+        // When two TokenSet of different levels are merged
+        const {originalTokenSet, cleanMergingTokenSet} = setUpTokenSet();
         cleanMergingTokenSet.level = 3;
 
         // Then, error is thrown
@@ -36,8 +38,9 @@ describe("TokenSet Merge Tests", () => {
         ).toThrow();
     });
 
-    test("merged without duplicates, when tokensets are of same name, type, and level", () => {
-        // When two tokenset are merged
+
+    test("merged without duplicates, when TokenSets are of same name, type, and level", () => {
+        // When two TokenSet are merged
         const {
             originalTokenSet,
             cleanMergingTokenSet,
@@ -49,8 +52,9 @@ describe("TokenSet Merge Tests", () => {
         expect(originalTokenSet).toStrictEqual(cleanMergingResultTokenSet);
     });
 
+
     test("merged with conflicting elements replaced, policy set to replace", () => {
-        // When two tokenset are merged with insertion policy set to replace
+        // When two TokenSet are merged with insertion policy set to replace
         const {
             originalTokenSet,
             conflictMergingTokenSet,
@@ -67,8 +71,9 @@ describe("TokenSet Merge Tests", () => {
         );
     });
 
+
     test("merged with conflicting elements ignored, policy set to ignore", () => {
-        // When two tokenset are merged
+        // When two TokenSet are merged
         const {
             originalTokenSet,
             conflictMergingTokenSet,
@@ -84,9 +89,10 @@ describe("TokenSet Merge Tests", () => {
         );
     });
 
+
     test("merged with sorting, when sort is turned on", () => {
-        // When two tokenset are merged with sorting on
-        const { originalTokenSet, cleanMergingTokenSet, sortedResultTokenSet } =
+        // When two TokenSet are merged with sorting on
+        const {originalTokenSet, cleanMergingTokenSet, sortedResultTokenSet} =
             setUpTokenSet();
         originalTokenSet.mergeTokenSet(cleanMergingTokenSet, {
             sortToken: true,
@@ -96,8 +102,9 @@ describe("TokenSet Merge Tests", () => {
         expect(originalTokenSet).toStrictEqual(sortedResultTokenSet);
     });
 
+
     test("merged with sorting by valueByName, a sort function is provided", () => {
-        // When two tokenset are merged with sorting on and a function provided
+        // When two TokenSet are merged with sorting on and a function provided
         const {
             originalTokenSet,
             cleanMergingTokenSet,
@@ -106,12 +113,7 @@ describe("TokenSet Merge Tests", () => {
         originalTokenSet.mergeTokenSet(cleanMergingTokenSet, {
             sortToken: true,
             compareFn: (a, b) =>
-                Object.values(
-                    a.value?.entityType === "token" && a.value.valueByMode,
-                )[0] -
-                Object.values(
-                    b.value?.entityType === "token" && b.value.valueByMode,
-                )[0],
+                Object.values(a.valueByMode)[0] - Object.values(b.valueByMode)[0],
         });
 
         // Then, the token sets contains elements sorted by valueByName.

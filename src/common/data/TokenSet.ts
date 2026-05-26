@@ -280,7 +280,7 @@ export class TokenSet<T extends ExtendedTokenType> {
             throw new IllegalArgumentError(
                 `Cannot remove the default token mode. Consider removing the TokenSet if you need to remove the entire TokenSet.`,
             );
-        
+
         this.tokens.forEach((token) => token.removeMode(mode))
         this.#modes.delete(mode);
     }
@@ -399,8 +399,6 @@ export class TokenSet<T extends ExtendedTokenType> {
                     throw new IllegalArgumentError(
                         "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
                     );
-                } else if (token instanceof GroupNode) {
-                    // TODO: Add recursive validation to GroupNode's children
                 }
             }
         )
