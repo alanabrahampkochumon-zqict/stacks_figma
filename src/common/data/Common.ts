@@ -9,6 +9,7 @@ export const InsertConflictPolicy = {
     REPLACE: "replace",
     IGNORE: "ignore",
     MERGE: "merge",
+    THROW: "throw"
 } as const;
 
 export type InsertConflictPolicy =

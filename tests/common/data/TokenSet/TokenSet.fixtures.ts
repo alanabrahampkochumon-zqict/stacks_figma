@@ -95,7 +95,7 @@ export function setUpTokenSet() {
         new Token(ExtendedToken.sizing, "size-150", {default: 15}),
         new Token(ExtendedToken.sizing, "size-200", {default: 35}),
     ];
-    const differentTokenType = "spacing";
+    const differentTokenType = ExtendedToken.sizing;
     const differentTokens = [
         new Token(ExtendedToken.sizing, "spacing-250", {default: 25}),
         new Token(ExtendedToken.sizing, "spacing-350", {default: 35}),
@@ -110,7 +110,7 @@ export function setUpTokenSet() {
 
     const cleanMergingTokenSet = new TokenSet(
         "ts",
-        "sizing",
+        ExtendedToken.sizing,
         2,
         cleanMergingTokens,
     );
@@ -122,7 +122,7 @@ export function setUpTokenSet() {
     );
     const conflictMergingTokenSet = new TokenSet(
         "ts",
-        "sizing",
+        differentTokenType,
         2,
         conflictMergingTokens,
     );

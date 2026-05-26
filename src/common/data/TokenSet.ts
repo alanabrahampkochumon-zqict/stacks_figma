@@ -163,20 +163,27 @@ export class TokenSet<T extends ExtendedTokenType> {
     addToken(
         token: Token<T>,
         {
-            insertPolicy = InsertConflictPolicy.IGNORE,
+            insertPolicy = InsertConflictPolicy.THROW,
             sortToken = false,
             compareFn,
         }: TokenSetAddOptions = {},
     ) {
         this._validateToken([token], this.type);
+
         const tokenIndex = this.getTokenIndex(token.uid);
-        if (!this.checkTokenUniqueness(token))
-            throw new DuplicationError(
-                "A token with the same name already exists.",
-            );
-        else if (tokenIndex === -1) this.tokens.push(token);
-        else if (insertPolicy === InsertConflictPolicy.REPLACE)
-            this.updateToken(token.uid, token);
+
+        if (!this.checkTokenUniqueness(token) || tokenIndex !== -1) {
+            if (insertPolicy === InsertConflictPolicy.IGNORE)
+                return // Do nothing when the conflict policy is "ignore" and the current token is a duplicate
+            else if (insertPolicy === InsertConflictPolicy.REPLACE)
+                this.updateToken(token.uid, token);
+            else
+                throw new DuplicationError(
+                    "A token with the same name already exists.",
+                );
+        } else {
+            this.tokens.push(token);
+        }
 
         if (sortToken) {
             this.sort(compareFn);
