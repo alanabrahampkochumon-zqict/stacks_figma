@@ -12,7 +12,7 @@ import {
     type TokenNode,
     type TokenNode_depr,
 } from "./TokenNode";
-import type {ReferenceID} from "@src/common/data/ReferenceID.ts";
+import {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
 // TODO: Add value by mode to reference nodes
 /**
@@ -340,13 +340,12 @@ export class TokenSet<T extends ExtendedTokenType> {
      * Returns a JSON string representation of the current TokenSet.
      * @returns A JSON string.
      */
-    // TODO: Update implementation
     toJSON(): string {
         return JSON.stringify({
             name: this.name,
             type: this.type,
             level: this.level,
-            modes: [...this.modes],
+            modes: [...this.modes], // TODO: Remove modes
             tokens: this.tokens,
         });
     }
@@ -370,14 +369,8 @@ export class TokenSet<T extends ExtendedTokenType> {
             data?.name,
             data?.type,
             data?.level,
-            data?.tokens?.map((token: TokenNode_depr<K>) =>
-                createTokenNode(
-                    token?.name,
-                    token?.value,
-                    token.uid,
-                    token?.parentId,
-                    token?.reference,
-                ),
+            data?.tokens?.map((token: Token<any>) =>
+                new Token(token.type as ExtendedTokenType, token.name, token.valueByMode, token.group, ReferenceID.fromUUID(token.uid.toUUID()))
             ),
         );
     }

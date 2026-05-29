@@ -1,10 +1,10 @@
-import { TokenSet } from "@src/common/data/TokenSet";
-import { describe, expect, test } from "vitest";
-import { generateToken } from "../utils/Generators";
-import { setUpTokenSet } from "./TokenSet.fixtures";
+import {TokenSet} from "@src/common/data/TokenSet";
+import {describe, expect, test} from "vitest";
+import {generateToken} from "../utils/Generators";
+import {setUpTokenSet} from "./TokenSet.fixtures";
 
 describe("TokenSet Deserialization Tests", () => {
-    test("returns correct tokenset, when json string with name is passed in", () => {
+    test("returns correct TokenSet, when json string with name is passed in", () => {
         // Given a json string with name only
         const nameOnlyTokenJSON = `
         {
@@ -23,7 +23,7 @@ describe("TokenSet Deserialization Tests", () => {
         expect(ts?.tokens).toStrictEqual([]);
     });
 
-    test("returns correct tokenset, when json string with name and type is passed in", () => {
+    test("returns correct TokenSet, when json string with name and type is passed in", () => {
         // Given a json string with name and type
         const nameAndTypeTokenJSON = `
         {
@@ -43,8 +43,8 @@ describe("TokenSet Deserialization Tests", () => {
         expect(ts?.tokens).toStrictEqual([]);
     });
 
-    test("returns correct tokenset, when json string with additional properties are passed in", () => {
-        // Given a json string with additioanl properties
+    test("returns correct TokenSet, when json string with additional properties are passed in", () => {
+        // Given a json string with additional properties
         const nameAndTypeTokenJSON = `
         {
             "name": "test",
@@ -64,39 +64,29 @@ describe("TokenSet Deserialization Tests", () => {
         expect(ts?.tokens).toStrictEqual([]);
     });
 
-    test("returns correct tokenset, when json string with name, type, and level is passed in", () => {
+    test("returns correct TokenSet, when json string with name, type, and level is passed in", () => {
         // Given a json string with name, type and level
-        const { emptyTokenSet, emptyTokenSetString } = setUpTokenSet();
+        const {emptyTokenSet} = setUpTokenSet();
 
         // When converted to token set
-        const ts = TokenSet.fromJson(emptyTokenSetString);
+        const ts = TokenSet.fromJson(emptyTokenSet.toJSON());
 
         // Then a token set is created with the correct valueByNames
         expect(ts).toBeDefined();
         expect(ts).toStrictEqual(emptyTokenSet);
     });
 
-    test("returns correct tokenset, when json string with name, type, level, and valueByNames is passed in", () => {
+    test("returns correct TokenSet, when json string with name, type, level, and valueByNames is passed in", () => {
         // Given a json string with name only
-        const { originalTokenSet, originalTokenSetString } = setUpTokenSet();
+        const {originalTokenSet} = setUpTokenSet();
 
         // When converted to token set
-        const ts = TokenSet.fromJson(originalTokenSetString);
+        const ts = TokenSet.fromJson(originalTokenSet.toJSON());
         // Then a token set is created with the correct valueByNames
         expect(ts).toBeDefined();
         expect(ts).toStrictEqual(originalTokenSet);
     });
 
-    test("returns correct tokenset, when json string with name, type, and group is passed in is passed in", () => {
-        // Given a json string with name only
-        const { groupJson, groupTokenSet } = setUpTokenSet();
-
-        // When converted to token set
-        const ts = TokenSet.fromJson(groupJson);
-        // Then a token set is created with the correct valueByNames
-        expect(ts).toBeDefined();
-        expect(ts).toStrictEqual(groupTokenSet);
-    });
 
     test("throws error, when json string with no name is passed in", () => {
         // Given a JSON string with level only
@@ -140,24 +130,10 @@ describe("TokenSet Deserialization Tests", () => {
     });
 
     // Non-unique -> Same name and same id
-    test("create token node, when deserializing a json string with non-unique duplicate values", () => {
-        // When a JSON string with duplicate entries is converted to a tokenset
-        const tokenNode1 = generateToken(
-            undefined,
-            "token",
-            "number",
-            undefined,
-            undefined,
-            false,
-        );
-        const tokenNode2 = generateToken(
-            undefined,
-            "token",
-            "number",
-            undefined,
-            undefined,
-            false,
-        );
+    test("create token, when deserializing a json string with non-unique duplicate values", () => {
+        // When a JSON string with duplicate entries is converted to a TokenSet
+        const tokenNode1 = generateToken("number", undefined, ["first-group", "second-group"]);
+        const tokenNode2 = generateToken("number");
 
         const json = `
         {
@@ -180,10 +156,10 @@ describe("TokenSet Deserialization Tests", () => {
     });
 
     test("throws error, when deserializing a json string with duplicate values", () => {
-        // When a JSON string with duplicate entries is converted to a tokenset
-        const tokenNode1 = generateToken(undefined, "token", "number");
-        const tokenNode2 = generateToken(undefined, "token", "number");
-        const dupTokenNode = generateToken(tokenNode1.name);
+        // When a JSON string with duplicate entries is converted to a TokenSet
+        const tokenNode1 = generateToken("number");
+        const tokenNode2 = generateToken("number");
+        const dupTokenNode = generateToken("number", tokenNode1.name);
         const json = `
         {
             "name": "test",
