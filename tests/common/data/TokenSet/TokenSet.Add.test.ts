@@ -181,7 +181,7 @@ describe("TokenSet Add Tests", () => {
         expect(() => tokenSet.addToken(invalidToken)).toThrow();
     });
 
-    test("throws error, when adding token node with non-unique name and different id", () => {
+    test( "throws error, when adding token node with non-unique name and different id", () => {
         // Given a non-empty token set
         const tokenType = "number";
         const level = 1;

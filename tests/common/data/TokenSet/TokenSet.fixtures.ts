@@ -52,6 +52,7 @@ export function setUpTokenSet() {
         new Token(ExtendedToken.sizing, "size-250", {default: 250}),
         new Token(ExtendedToken.sizing, "size-200", {default: 120}),
     ];
+
     const cleanMergingResultTokens = [
         new Token(ExtendedToken.sizing, "size-50", {default: 5}),
         new Token(ExtendedToken.sizing, "size-100", {default: 10}),
@@ -69,6 +70,7 @@ export function setUpTokenSet() {
         new Token(ExtendedToken.sizing, "size-250", {default: 250}),
         new Token(ExtendedToken.sizing, "size-300", {default: 30}),
     ];
+
     const valueByNameSortedMergingResultTokens = [
         new Token(ExtendedToken.sizing, "size-50", {default: 5}),
         new Token(ExtendedToken.sizing, "size-100", {default: 10}),
@@ -77,24 +79,28 @@ export function setUpTokenSet() {
         new Token(ExtendedToken.sizing, "size-200", {default: 120}),
         new Token(ExtendedToken.sizing, "size-250", {default: 250}),
     ];
+
     const conflictMergingTokens = [
         new Token(ExtendedToken.sizing, "size-50", {default: 5}),
         new Token(ExtendedToken.sizing, "size-100", {default: 15}),
         new Token(ExtendedToken.sizing, "size-150", {default: 25}),
         new Token(ExtendedToken.sizing, "size-200", {default: 35}),
     ];
+
     const conflictMergingReplaceResultTokens = [
         new Token(ExtendedToken.sizing, "size-50", {default: 5}),
         new Token(ExtendedToken.sizing, "size-100", {default: 15}),
         new Token(ExtendedToken.sizing, "size-150", {default: 25}),
         new Token(ExtendedToken.sizing, "size-200", {default: 35}),
     ];
+
     const conflictMergingIgnoreResultTokens = [
         new Token(ExtendedToken.sizing, "size-50", {default: 5}),
         new Token(ExtendedToken.sizing, "size-100", {default: 10}),
         new Token(ExtendedToken.sizing, "size-150", {default: 15}),
         new Token(ExtendedToken.sizing, "size-200", {default: 35}),
     ];
+
     const differentTokenType = ExtendedToken.sizing;
     const differentTokens = [
         new Token(ExtendedToken.sizing, "spacing-250", {default: 25}),
@@ -103,10 +109,22 @@ export function setUpTokenSet() {
     ];
 
     const originalTokenSet = new TokenSet("ts", "sizing", 2, originalTokens);
-    const originalTokenSetString = JSON.stringify(originalTokenSet);
+    const originalTokenSetObject = {
+        name: originalTokenSet.name,
+        type: originalTokenSet.type,
+        level: originalTokenSet.level,
+        modes: [...originalTokenSet.modes],
+        tokens: JSON.parse(JSON.stringify(originalTokens))
+    }
 
     const emptyTokenSet = new TokenSet("empty", "animation", 4);
-    const emptyTokenSetString = JSON.stringify(emptyTokenSet);
+    const emptyTokenSetObject = {
+        name: emptyTokenSet.name,
+        type: emptyTokenSet.type,
+        level: emptyTokenSet.level,
+        modes: [...emptyTokenSet.modes],
+        tokens: JSON.parse(JSON.stringify(emptyTokenSet.tokens))
+    }
 
     const cleanMergingTokenSet = new TokenSet(
         "ts",
@@ -114,42 +132,49 @@ export function setUpTokenSet() {
         2,
         cleanMergingTokens,
     );
+
     const cleanMergingResultTokenSet = new TokenSet(
         originalTokenSet.name,
         originalTokenSet.type,
         originalTokenSet.level,
         cleanMergingResultTokens,
     );
+
     const conflictMergingTokenSet = new TokenSet(
         "ts",
         differentTokenType,
         2,
         conflictMergingTokens,
     );
+
     const differentTokenSet = new TokenSet(
         "ts",
         differentTokenType,
         1,
         differentTokens,
     );
+
     const conflictMergingReplaceResultTokenSet = new TokenSet(
         originalTokenSet.name,
         originalTokenSet.type,
         originalTokenSet.level,
         conflictMergingReplaceResultTokens,
     );
+
     const conflictMergingIgnoreResultTokenSet = new TokenSet(
         originalTokenSet.name,
         originalTokenSet.type,
         originalTokenSet.level,
         conflictMergingIgnoreResultTokens,
     );
+
     const sortedResultTokenSet = new TokenSet(
         originalTokenSet.name,
         originalTokenSet.type,
         originalTokenSet.level,
         sortedMergingResultTokens,
     );
+
     const valueByNameSortedResultTokenSet = new TokenSet(
         originalTokenSet.name,
         originalTokenSet.type,
@@ -167,8 +192,8 @@ export function setUpTokenSet() {
         conflictMergingIgnoreResultTokenSet,
         sortedResultTokenSet,
         valueByNameSortedResultTokenSet,
-        originalTokenSetString,
+        originalTokenSetObject,
         emptyTokenSet,
-        emptyTokenSetString
+        emptyTokenSetObject
     };
 }

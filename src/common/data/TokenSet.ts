@@ -1,7 +1,7 @@
 import {DuplicationError} from "../error/DuplicationError";
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {InsertConflictPolicy, UpdatePolicy} from "./Common";
-import {type ExtendedTokenType, type Levels, Token, type TokenComparator} from "./Token";
+import {type ExtendedTokenMap, type ExtendedTokenType, type Levels, Token, type TokenComparator} from "./Token";
 import {
     ExtendedToken,
     isValidLevel,
@@ -94,13 +94,9 @@ export class TokenSet<T extends ExtendedTokenType> {
         tokens: Token<T>[] = [],
     ) {
         if (!name)
-            throw new IllegalArgumentError(
-                `Name must be passed in for a TokenSet`,
-            );
+            throw new IllegalArgumentError(`Name must be passed in for a TokenSet`);
         if (!isValidLevel(level))
-            throw new IllegalArgumentError(
-                `Invalid level: Level must be in ${validLevels}`,
-            );
+            throw new IllegalArgumentError(`Invalid level: Level must be in ${validLevels}`);
 
         this.#tokenIDMap = new Map();
         this.#modes = new Set(); // TODO: Remove
@@ -108,9 +104,7 @@ export class TokenSet<T extends ExtendedTokenType> {
 
         // Checks if any of the token set contains a unique id
         if (!this.checkAllTokenUniqueness(tokens))
-            throw new DuplicationError(
-                "Tokens cannot contain non-unique elements.",
-            );
+            throw new DuplicationError("Tokens cannot contain non-unique elements.");
 
         // Perform token validation
         this._validateToken(tokens, type)
@@ -220,6 +214,7 @@ export class TokenSet<T extends ExtendedTokenType> {
         return this.tokens.findIndex((t) => t.uid.equals(tokenId));
     }
 
+
     /**
      * Remove a token from the set.
      * @param {TokenNode_depr} token The token node to remove.
@@ -227,6 +222,7 @@ export class TokenSet<T extends ExtendedTokenType> {
     removeToken(token: Token<T>) {
         this.tokens = this.tokens.filter((t) => t !== token);
     }
+
 
     /**
      * Update a token with tokenId with the given token.
@@ -341,15 +337,16 @@ export class TokenSet<T extends ExtendedTokenType> {
     }
 
     /**
-     * Returns a JSON string representation of the current set.
+     * Returns a JSON string representation of the current TokenSet.
      * @returns A JSON string.
      */
     // TODO: Update implementation
-    toJsonString(): string {
+    toJSON(): string {
         return JSON.stringify({
             name: this.name,
             type: this.type,
             level: this.level,
+            modes: [...this.modes],
             tokens: this.tokens,
         });
     }
@@ -365,7 +362,7 @@ export class TokenSet<T extends ExtendedTokenType> {
      * @throws {IllegalArgumentError} If the hydrated data fails level or type validation.
      */
     // TODO: Update implementation
-    static fromJson<K extends keyof ExtendedTokenMap>(
+    static fromJson<K extends ExtendedTokenType>(
         jsonString: string,
     ): TokenSet<K> {
         const data = JSON.parse(jsonString);
@@ -404,7 +401,7 @@ export class TokenSet<T extends ExtendedTokenType> {
         tokens.forEach(token => {
                 if (token.type !== tokenType) {
                     throw new IllegalArgumentError(
-                        "Invalid token set. Make sure that all the tokens are of the same type and are valid.",
+                        "Invalid token set. Make sure that all the tokens are of the same type and are valid."
                     );
                 }
             }

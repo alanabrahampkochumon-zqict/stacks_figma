@@ -4,23 +4,26 @@ import { setUpTokenSet } from "./TokenSet.fixtures";
 describe("TokenSet Serialization Tests", () => {
     test("returns serialized string, when provided with correct tokenset", () => {
         // Given a token set
-        const { originalTokenSet, originalTokenSetString } = setUpTokenSet();
+        const { originalTokenSet, originalTokenSetObject } = setUpTokenSet();
 
         // When serialized to JSON
-        const jsonString = originalTokenSet.toJsonString();
+        const jsonString = originalTokenSet.toJSON();
+        const result = JSON.parse(jsonString)
 
         // Then the serialized string contains all the properties
-        expect(jsonString).toStrictEqual(originalTokenSetString);
+        expect(result).toEqual(originalTokenSetObject);
     });
 
     test("returns serialized string, when provided with correct tokenset", () => {
         // Given an empty token set
-        const { emptyTokenSetString, emptyTokenSet } = setUpTokenSet();
+        const { emptyTokenSetObject, emptyTokenSet } = setUpTokenSet();
 
         // When serialized to JSON
-        const jsonString = emptyTokenSet.toJsonString();
+        const jsonString = emptyTokenSet.toJSON();
+        const result = JSON.parse(jsonString)
+
 
         // Then the serialized string contains all the properties
-        expect(jsonString).toStrictEqual(emptyTokenSetString);
+        expect(result).toStrictEqual(emptyTokenSetObject);
     });
 });
