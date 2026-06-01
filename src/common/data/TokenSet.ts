@@ -1,20 +1,17 @@
 import {DuplicationError} from "../error/DuplicationError";
 import {IllegalArgumentError} from "../error/IllegalArgumentError";
 import {InsertConflictPolicy, UpdatePolicy} from "./Common";
-import {type ExtendedTokenMap, type ExtendedTokenType, type Levels, Token, type TokenComparator} from "./Token";
+import {type ExtendedTokenType, type Levels, Token, type TokenComparator} from "./Token";
 import {
     ExtendedToken,
     isValidLevel,
     validLevels,
 } from "./Token";
 import {
-    createTokenNode, GroupNode,
     type TokenNode,
-    type TokenNode_depr,
 } from "./TokenNode";
 import {ReferenceID} from "@src/common/data/ReferenceID.ts";
 
-// TODO: Add value by mode to reference nodes
 /**
  * Options for updating the contents of a {@link TokenSet}.
  * @property updatePolicy Policy to handle conflicts if a token does not exist.
@@ -52,12 +49,6 @@ type TokenSetMergeOptions = {
 };
 
 /**
- * The allowed schema types for a {@link TokenSet}.
- * Either a specific design token category or a structural 'group'.
- */
-
-// type TokenSetType = keyof ExtendedTokenMap | Group["entityType"];
-/**
  * A strictly-typed collection of {@link TokenNode}s.
  * @remarks
  * **Invariants:**
@@ -73,9 +64,6 @@ export class TokenSet<T extends ExtendedTokenType> {
     tokens: Token<T>[];
     /* Internal map for storing name to uid map to prevent duplicate entry. */
     #tokenIDMap: Map<string, ReferenceID>;
-    /* Internal map for storing UID of a token against all the modes variables to ensure data integrity. */
-    // #modes: Map<string, Set<String>>;
-    /* Internal map for storing all modes to ensure data integrity. */
     #modes: Set<string>;
 
     /**
